@@ -1,3 +1,4 @@
+var CONST_SITE = "SIGM";
 var CONST_CURRENT_VER = "3.0.1";
 var CONST_SITE_TARGET_DIR = "/_site/";
 
@@ -9,7 +10,7 @@ function getActiveDocumentationVersionInView(returnBlankIfNoVersion) {
     var href = location.href;
     var uri = new URI(document.location);
     // Saber si estamos viendo la versión en local o en GitHub
-    var refLocal=( "SIGM" == uri.segment(0) ) ? 3 : 2 ;
+    var refLocal=( CONST_SITE == uri.segment(0) ) ? 3 : 2 ;
 
     var currentVersion = CONST_CURRENT_VER;
     var index = isDocumentationSiteViewedLocally() ? href.indexOf(CONST_SITE_TARGET_DIR) : -1;
@@ -114,12 +115,27 @@ function hideDevelopmentVersionWarning() {
     }
 }
 
+function getActiveVersionInView() {
+    var uri = new URI(document.location);
+
+    var retVal="";
+    // La URL que estamos viendo... ¿empieza por SIGM?
+    if ( CONST_SITE == uri.segment(0) ) {
+       // Sip, estamos en GitHub
+       retVal= uri.segment(0) + "/" + uri.segment(1); 
+    } else {
+       // No, estamos en Local
+       retVal= uri.segment(0) ; 
+    }
+    return retVal;
+}
+
 function generateSidebarLinksForActiveVersion() {
     $('#sidebar a').each(function () {
         var href = this.href;
 
         if (href.indexOf("$version") != -1) {
-            href = href.replace("$version", "" + getActiveDocumentationVersionInView());
+            href = href.replace("$version", "" + getActiveVersionInView());
             $(this).attr('href', href);
         }
     });
