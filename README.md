@@ -35,7 +35,7 @@ La documentación está organizada siguiendo los siguientes bloques:
 
 - La documentación de cada versión de AL SIGM estará organizada en un directorio diferente (*ejemplo: `3.0.1`*)
 - Las revisiones que se realicen sobre versiones, también se organizarán en directorios diferentes (*ejemplo: `3.0.1-rev-carm`*), con la intención de identificar las aportaciones sobre la documentación oficial, mientras no se acelere el proceso de publicación de nuevas versiones.
-- Cada versión (directorio) tendrá sus propio índice, en un fichero llamada `sidebar.md`. Este fichero será incluído automáticamente vía JavaScript, desde el `layout` por defecto. *Es la única forma que hemos visto viable con Jekyll y Markdown*
+- Cada versión (directorio) tendrá sus propio índice, en un fichero llamado `sidebar.md`. Este fichero será incluído automáticamente vía JavaScript, desde el `layout` por defecto. *Es la única forma que hemos visto viable con Jekyll y Markdown*
 - El directorio `current` apunta a la versión de la documentación en desarrollo.
 - El fichero raíz `index.html` apuntará siempre `current/index.html`.
 
