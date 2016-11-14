@@ -3,5 +3,5 @@
 .sass-cache
 _site
 Gemfile.lock
-.*.swp
-*/.*.swp
+.*.sw?
+*/.*.sw?
