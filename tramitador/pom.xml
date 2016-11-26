@@ -145,7 +145,7 @@
 								<phase>package</phase>
 								<configuration>
 									<tasks>
-										<property name="dist.dir" value="/invesFlow/${pom.version}"/>
+										<property name="dist.dir" value="${project.build.directory}/invesFlow/${pom.version}"/>
 
 										<delete dir="${dist.dir}"/>
 										<mkdir dir="${dist.dir}" />
