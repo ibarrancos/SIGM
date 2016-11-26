@@ -220,7 +220,7 @@
 			<resource>
 				<filtering>true</filtering>
 				<directory>${unpack.config.directory}/SIGEM_RegistroPresencial/Isicres</directory>
-				<targetPath>/SIGEM_RegistroPresencial</targetPath>
+				<!--targetPath>/SIGEM_RegistroPresencial</targetPath-->
 				<excludes>
 					<exclude>**/log4j.xml</exclude>
 				</excludes>
