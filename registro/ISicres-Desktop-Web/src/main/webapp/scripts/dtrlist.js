@@ -136,24 +136,29 @@ function ExpandAll(oTableParent)
 
 
 // abre una carpeta de la distribucion
-function OpenFolderDtr(strNameArch, iFolderId, iArchiveId)
-{
+function OpenFolderDtr(strNameArch, iFolderId, iArchiveId, viewEditDistAcept) {
    var strArchivePId = top.g_ArchivePId.toString();
 
    if (top.g_ArchiveId != iArchiveId) {
       strArchivePId = 0;
    }
 
-   top.OpenNewWindow(top.g_URL + "/default.jsp?AppId=" + top.g_AppId.toString()
-               + "&SessionPId=" + top.g_SessionPId + "&FolderView=1&ArchiveId=" + iArchiveId.toString()
-               + "&ArchiveName=" + strNameArch
-               + "&ArchivePId=" + strArchivePId
-               + "&FolderId=" + iFolderId.toString()
-               + "&VldSave=1" + "&Idioma=" + top.Idioma.toString()
-               + "&numIdioma=" + top.numIdioma.toString()
-               + "&OpenType=0&OpenFolderDtr=1", "", "10000", "10000", "auto","yes");
+	var URL = top.g_URL + "/default.jsp?AppId=" + top.g_AppId.toString()
+			+ "&SessionPId=" + top.g_SessionPId + "&FolderView=1&ArchiveId="
+			+ iArchiveId.toString() + "&ArchiveName=" + strNameArch
+			+ "&ArchivePId=" + strArchivePId + "&FolderId="
+			+ iFolderId.toString() + "&VldSave=1" + "&Idioma="
+			+ top.Idioma.toString() + "&numIdioma=" + top.numIdioma.toString()
+			+ "&FdrQryPId=" + top.g_FdrQryPId.toString()
+			+ "&OpenType=0&OpenFolderDtr=1";
+
+	if (viewEditDistAcept) {
+		URL += "&OpenEditDistr=1";
 }
 
+	top.OpenNewWindow(URL, "", "10000", "10000", "auto", "yes");
+
+}
 
 function ShowRemarksEx(msg, isAceptar, caseSensitive)
 {

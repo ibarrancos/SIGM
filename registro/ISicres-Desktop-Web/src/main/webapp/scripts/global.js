@@ -80,6 +80,9 @@ var g_OpenFolderDtr=false;
 // para saber si se abre una carpeta desde url
 var g_OpenFolderPenDtr=false;
 
+// para saber si se abre la carpeta desde distribución en modo edición
+var g_OpenEditDistr = false;
+
 //IDENTIFICADORES de CAMPOS
 var g_FLD_DATEREG = 2;
 
@@ -131,6 +134,9 @@ var g_actionInitFormInter = null;
 // esta pendiente de guardar (se utiliza para el uso de teclas de acceso rapido, y llevar un control del boton guardar)
 var g_changeDataRegistro = false;
 
+//variable que indica si un usuario puede borrar ficheros adjuntados a un registro
+var g_deleteFilePerms = 0;
+
 
 function FormDataLoaded()
 {
@@ -146,7 +152,8 @@ function FormDataLoaded()
 		strParams += "&FdrQryPId=" + top.g_FdrQryPId.toString();
 		strParams += "&Row=" + top.g_FolderSel.toString();
 		strParams += "&Form=" + top.g_Form;
-		strParams += "&OpenFolderDtr=" + g_OpenFolderDtr.toString();
+		strParams += "&OpenFolderDtr=" + top.g_OpenFolderDtr.toString();
+		strParams += "&OpenEditDistr=" + top.g_OpenEditDistr.toString();
 
 		if (top.g_CopyFdr != 0)	{
 			strParams += "&CopyFdr=" + top.g_CopyFdr.toString();
@@ -352,10 +359,33 @@ function ResponseFrmData()
 
 		doc.body.style.cursor = "cursor";
 
+		if( top.g_FolderId != -1 ){
+			// Activamos botón Nuevo Registro
+			asignarClassName("NewBtn", "SubOptions");
+			// Activamos botón Intercambio Registral
+			asignarClassName("SendIRBtn", "SubOptions");
+			// Activamos botón Limpiar
+			asignarClassName("ClearRegBtn", "SubOptions");
+			// Activamos botón Imprimir
+			asignarClassName("btnPrintReg", "SubOptions");
+			// Activamos botón Sello
+			asignarClassName("selloReg", "SubOptions");
+			// Activamos botón Compulsa
+			asignarClassName("compulsa", "SubOptions");
+		}
+
 		setTimeout("top.Main.Folder.FolderData.FolderFormData.SetFormFocus()", 10);
 	}
 }
 
+// Funcion que aplica el estilo que se indique como parametro al boton indicado
+function asignarClassName(boton, className){
+	//comprobamos si el boton existe
+	if(top.Main.Folder.FolderBar.document.getElementById(boton)){
+		//si existe le aplicamos el estilo
+		top.Main.Folder.FolderBar.document.getElementById(boton).className=className;
+	}
+}
 
 function CallActionForm(Action, Code, FldId, Init, fnCallback)
 {
@@ -556,8 +586,8 @@ function OpenNewWindow(URL, Name, Width, Height, Scroll,strResize)
 	var winl = (screen.availWidth - Width) / 2;
 	var wint = (screen.availHeight - Height) / 2;
 
-	Props = 'height='+Height+',width='+Width+',top='+wint+',left='+winl+',scrollbars='+Scroll+',resizable='+strResize+',location=no'
-	win = window.open(URL, Name, Props,true)
+	Props = 'height='+Height+',width='+Width+',top='+wint+',left='+winl+',scrollbars='+Scroll+',resizable='+strResize+',location=no';
+	win = window.open(URL, Name, Props,true);
 
 	if (parseInt(navigator.appVersion) >= 4) {
 		win.window.focus();
@@ -685,6 +715,38 @@ function ShowDistribution(strClassName)
 	}
 }
 
+//Funcion que limpia el formulario del registro
+function ClearFormRegister(strClassName){
+
+	if (strClassName != "SubOptionsDisabled"){
+		//Deshabilitamos el botón guardar, de esta forma no se muestra el alert de confirmación
+		top.Main.Folder.FolderBar.document.getElementById("SaveMenuBtn").className = "SubOptionsDisabled";
+
+		//Generamos el array de parámetros
+		var strParams = "";
+		strParams = "ArchiveId=" + g_ArchiveId.toString();
+		strParams += "&ArchivePId=" + g_ArchivePId.toString();
+		strParams += "&SessionPId=" + g_SessionPId.toString();
+		strParams += "&FolderId=" + g_FolderId.toString();
+		strParams += "&FolderPId=" + g_FolderPId.toString();
+		strParams += "&FdrQryPId=" + top.g_FdrQryPId.toString();
+		strParams += "&Row=" + top.g_FolderSel.toString();
+		strParams += "&Form=" + top.g_Form;
+		strParams += "&OpenFolderDtr=" + g_OpenFolderDtr.toString();
+
+		//comprobamos si el limpiar se aplica sobre un registro abierto o un nuevo registro
+		if ( (top.g_FolderId != -1)) {
+			//si es sobre un registro abierto
+			//cerramos los datos del registro (desbloqueamos el registro)
+			top.CloseFolder();
+			//recargamos los datos del registro en pantalla
+			top.XMLHTTPRequestGet(top.g_URL + "/openfolder.jsp?" + strParams, ResponseOpenFolder, true);
+		}else{
+			//cargamos los datos para un nuevo registro
+			top.XMLHTTPRequestGet(top.g_URL + "/newfolder.jsp?" + strParams, ResponseNewFolder, true);
+		}
+	}
+}
 
 function ChangeOffice(strClassName)
 {
@@ -721,7 +783,7 @@ function NewFolder(obj)
         + "&FolderView=1&ArchiveId=" + g_ArchiveId.toString()
         + "&ArchiveName=" + g_ArchiveName.toString()
         + "&ArchivePId=" + g_ArchivePId.toString()
-        + "&FolderPId=" + top.g_FolderPId.toString()
+        + "&FolderPId=" + (top.g_FolderPId+1).toString()
         + "&Idioma=" + Idioma.toString()
         + "&numIdioma=" + numIdioma.toString()
         + "&OpenType=1", "", "10000", "10000", "auto","yes");
@@ -892,7 +954,7 @@ function OpenFolder(FolderId, index, total)
 			+ "&SessionPId=" + top.g_SessionPId + "&FolderView=1&ArchiveId=" + top.g_ArchiveId.toString()
             + "&ArchiveName=" + top.g_ArchiveName.toString()
             + "&ArchivePId=" + top.g_ArchivePId.toString()
-            + "&FolderPId=" + top.g_FolderPId.toString()
+            + "&FolderPId=" + (top.g_FolderPId+1).toString()
             + "&FolderId=" + FolderId.toString()
             + "&VldSave=1" + "&Idioma=" + top.Idioma.toString()
             + "&numIdioma=" + top.numIdioma.toString()
@@ -1087,7 +1149,7 @@ function setFormFocus(oForm, iPosX, iPosY)
 // Consigue la URL donde esta una aplicacion en un servidor
 function getURL()
 {
-   	var sProtocol = top.document.location.protocol
+   	var sProtocol = top.document.location.protocol;
    	var strPathName = top.document.location.pathname;
    	var iPosFin = 0;
 
@@ -1875,15 +1937,15 @@ function HandleFocus(aEvent)
 {
 	if (top.g_WinModal){
 		if (!top.g_WinModal.closed){
-			top.g_WinModal.focus()
+			top.g_WinModal.focus();
 		}
 		else{
-			window.top.releaseEvents (Event.CLICK|Event.FOCUS)
-			window.top.onclick = ""
+			window.top.releaseEvents (Event.CLICK|Event.FOCUS);
+			window.top.onclick = "";
 		}
 	}
 
-	return false
+	return false;
 }
 
 function SetTableFocus(obj)

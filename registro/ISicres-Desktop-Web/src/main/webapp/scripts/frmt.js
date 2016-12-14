@@ -159,12 +159,14 @@ function AddHistoricIntercambioRegistral()
 {
 	if (top.g_FolderId > 0) {
 		document.getElementById("UL0").innerHTML += '<LI class="CL5" id="liHistInterCambioReg">'
-            + '<IMG src="images/clock_go.png" border="0" style="cursor:pointer;margin-right:2px" onclick="SelElem( 5, this.parentNode.id );OpenPageHistIntercambioRegistral(event);bloqueoDePantallaRegistro();"/>'
-            + '<A class="Item" onmouseover="OverArchive();" onmouseout="OutArchive();" onclick="SelElem( 5, this.parentNode.id );OpenPageHistIntercambioRegistral(event);bloqueoDePantallaRegistro();"'
-            + ' onkeydown="if (top.GetKeyCode(event)==13){SelElem( 5, this.parentNode.id );OpenPageHistIntercambioRegistral(event);bloqueoDePantallaRegistro();}" tabIndex="1">'
+            + '<IMG src="images/clock_go.png" border="0" style="cursor:pointer;margin-right:2px" onclick="SelElem( 5, this.parentNode.id );OpenPageHistIntercambioRegistral(event);"/>'
+            + '<A class="Item" onmouseover="OverArchive();" onmouseout="OutArchive();" onclick="SelElem( 5, this.parentNode.id );OpenPageHistIntercambioRegistral(event);"'
+            + ' onkeydown="if (top.GetKeyCode(event)==13){SelElem( 5, this.parentNode.id );OpenPageHistIntercambioRegistral(event);}" tabIndex="1">'
             + top.GetIdsLan("IDS_TIT_HIST_INTERCAMBIO_REG") + '</A></LI>';
     }
 }
+
+
 
 // Agrega en el arbol la opcion de historico de modificaciones del registro
 function AddHistoricReg()
@@ -221,8 +223,6 @@ function OpenPageDistr(aEvent)
    }
 }
 
-
-//Abre el historico de intercambio registral
 function OpenPageHistIntercambioRegistral(aEvent)
 {
 	//comprobamos si se debe ocultar el frame de visualizacion de documentos
@@ -251,6 +251,11 @@ function OpenPageHistIntercambioRegistral(aEvent)
         top.g_ActivateTree = false;
    }
 }
+
+
+
+
+
 
 // Abre el historico de modificaciones del registro
 function OpenPageModifReg(aEvent)
