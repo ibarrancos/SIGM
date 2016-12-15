@@ -16,6 +16,10 @@ import es.ieci.tecdoc.fwktd.dir3.core.type.CriterioUnidadOrganicaEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosOficina;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosUnidadOrganica;
+import es.ieci.tecdoc.fwktd.dir3.api.helper.RelacionesUnidOrgOficinaHelper;
+import es.ieci.tecdoc.fwktd.dir3.api.manager.DatosBasicosRelacionUnidOrgOficinaManager;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosRelacionUnidOrgOficinaVO;
+import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosRelacionUnidOrgOficina;
 
 /**
  * Implementación local del servicio de consulta del Directorio Común (DIR3).
@@ -42,6 +46,8 @@ public class ServicioConsultaDirectorioComunImpl implements
 	 * Gestor de unidades orgánicas.
 	 */
 	private DatosBasicosUnidadOrganicaManager datosBasicosUnidadOrganicaManager;
+
+	private DatosBasicosRelacionUnidOrgOficinaManager datosBasicosRelacionUnidOrgOficinaManager;
 
 	/**
 	 * Constructor.
@@ -163,4 +169,26 @@ public class ServicioConsultaDirectorioComunImpl implements
 						.get(id));
 	}
 
+	public DatosBasicosRelacionUnidOrgOficinaManager getDatosBasicosRelacionUnidOrgOficinaManager() {
+		return this.datosBasicosRelacionUnidOrgOficinaManager;
+	}
+
+	public void setDatosBasicosRelacionUnidOrgOficinaManager(DatosBasicosRelacionUnidOrgOficinaManager datosBasicosRelacionUnidOrgOficinaManager) {
+		this.datosBasicosRelacionUnidOrgOficinaManager = datosBasicosRelacionUnidOrgOficinaManager;
+	}
+
+	public List<DatosBasicosUnidadOrganica> findUnidadesOrganicasByEntidad(String codeEntity, String codeUnid, String nameUnid) {
+		DatosBasicosRelacionUnidOrgOficinaVO relacion = new DatosBasicosRelacionUnidOrgOficinaVO();
+		relacion.setCodigoOficina(codeEntity);
+		relacion.setCodigoUnidadOrganica(codeUnid);
+		relacion.setDenominacionUnidadOrganica(nameUnid);
+		return UnidadOrganicaHelper.getDatosBasicosUnidadesOrganicas(this.getDatosBasicosUnidadOrganicaManager().findUnidadesOrganicasByEntidad(relacion));
+	}
+
+	public DatosBasicosRelacionUnidOrgOficina getDatosBasicosRelacionUnidOrgOficinaByCodes(String codOficina, String codUnidOrg) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Llamada a getDatosBasicosRelacionUnidOrgOficinaByCodes: codOficina=[{").append(codOficina).append("}] y codUnidOrg=[{").append(codUnidOrg).append("}]");
+		logger.info(sb.toString());
+		return RelacionesUnidOrgOficinaHelper.getDatosBasicosRelacionUnidOrgOficina(this.getDatosBasicosRelacionUnidOrgOficinaManager().getRelacionesByOficinaAndUnidad(codOficina, codUnidOrg));
+	}
 }

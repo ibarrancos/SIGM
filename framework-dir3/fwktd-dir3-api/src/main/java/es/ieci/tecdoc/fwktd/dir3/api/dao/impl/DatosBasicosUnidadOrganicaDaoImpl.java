@@ -15,6 +15,7 @@ import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
 import es.ieci.tecdoc.fwktd.server.dao.ibatis.IbatisGenericDaoImpl;
 import es.ieci.tecdoc.fwktd.server.pagination.PageInfo;
 import es.ieci.tecdoc.fwktd.server.pagination.PaginatedArrayList;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosRelacionUnidOrgOficinaVO;
 
 /**
  * DAO de datos básicos de unidades orgánicas.
@@ -29,6 +30,7 @@ public class DatosBasicosUnidadOrganicaDaoImpl extends
 
 	protected static final String COUNT_FIND_UNIDADES_ORGANICAS = "DatosBasicosUnidadOrganicaVO.countFindUnidadesOrganicas";
 	protected static final String FIND_UNIDADES_ORGANICAS = "DatosBasicosUnidadOrganicaVO.findUnidadesOrganicas";
+	protected static final String FIND_UNIDADES_ORGANICAS_BY_ENTIDAD = "DatosBasicosUnidadOrganicaVO.findUnidadesOrganicasByEntidad";
 
 	/**
 	 * Constructor con parámetros de la clase. Establece el tipo de entidad a
@@ -126,5 +128,14 @@ public class DatosBasicosUnidadOrganicaDaoImpl extends
 		} else {
 			return (List<DatosBasicosUnidadOrganicaVO>) getSqlMapClientTemplate().queryForList(FIND_UNIDADES_ORGANICAS, map);
 		}
+	}
+
+	@Override
+	public List<DatosBasicosUnidadOrganicaVO> findUnidadesOrganicasByEntidad(DatosBasicosRelacionUnidOrgOficinaVO relacion) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("codeEntity", relacion.getCodigoOficina());
+		params.put("codeUnid", relacion.getCodigoUnidadOrganica());
+		params.put("nameUnid", relacion.getDenominacionUnidadOrganica());
+		return this.getSqlMapClientTemplate().queryForList("DatosBasicosUnidadOrganicaVO.findUnidadesOrganicasByEntidad", params);
 	}
 }

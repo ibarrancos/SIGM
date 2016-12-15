@@ -6,6 +6,7 @@ import es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosUnidadOrganicaVO;
 import es.ieci.tecdoc.fwktd.dir3.core.type.CriterioUnidadOrganicaEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
 import es.ieci.tecdoc.fwktd.server.dao.BaseDao;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosRelacionUnidOrgOficinaVO;
 
 /**
  * Interfaz de los DAOs de datos básicos de unidades orgánicas.
@@ -38,4 +39,5 @@ public interface DatosBasicosUnidadOrganicaDao extends
 	public List<DatosBasicosUnidadOrganicaVO> findUnidadesOrganicas(
 			Criterios<CriterioUnidadOrganicaEnum> criterios);
 
+	public List<DatosBasicosUnidadOrganicaVO> findUnidadesOrganicasByEntidad(DatosBasicosRelacionUnidOrgOficinaVO var1);
 }

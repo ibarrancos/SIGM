@@ -9,6 +9,7 @@ public class ScriptFilesHelper {
 	public static final String INIT = "inicializacion";
 	public static final String UPDATE = "actualizacion";
 	public static final String UNIDADES = "unidadesOrganicas";
+	public static final String RELACIONES_UNID_ORG_OFIC = "relacionesUnidOrgOfic";
 	
 	private static final String SCRIPT_DCO = "script_dco";
 	private static final String SCRIPT_FILE_NAME_SEPARATOR = "_";

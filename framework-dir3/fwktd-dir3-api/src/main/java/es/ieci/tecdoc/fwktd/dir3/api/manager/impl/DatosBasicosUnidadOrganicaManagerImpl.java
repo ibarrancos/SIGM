@@ -16,6 +16,7 @@ import es.ieci.tecdoc.fwktd.dir3.core.type.CriterioUnidadOrganicaEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
 import es.ieci.tecdoc.fwktd.server.dao.BaseDao;
 import es.ieci.tecdoc.fwktd.server.manager.impl.BaseManagerImpl;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosRelacionUnidOrgOficinaVO;
 
 /**
  * Implementación del manager de datos básicos de unidades orgánicas.
@@ -172,11 +173,11 @@ public class DatosBasicosUnidadOrganicaManagerImpl extends
 	 *
 	 */
 	private void guardarUnidadOrganica(OrganismoVO organismo) {
-		DatosBasicosUnidadOrganicaVO datosBasicosUnidadOrganica = new DatosBasicosUnidadOrganicaVO();
-		//parseamos el organismoVO a un tipo DatosBasicosUnidadOrganicaVO
-		setDatosBasicosOrganismo(datosBasicosUnidadOrganica,organismo);
-		//almacenamos los datos basicos de la unidad
-		((DatosBasicosUnidadOrganicaDao) getDao()).save(datosBasicosUnidadOrganica);
+		if ("V".equals(organismo.getDatosVigencia().getEstado())) {
+			DatosBasicosUnidadOrganicaVO datosBasicosUnidadOrganica = new DatosBasicosUnidadOrganicaVO();
+			this.setDatosBasicosOrganismo(datosBasicosUnidadOrganica, organismo);
+			((DatosBasicosUnidadOrganicaDao)this.getDao()).save((Object)datosBasicosUnidadOrganica);
+		}
 	}
 
 	/**
@@ -199,4 +200,7 @@ public class DatosBasicosUnidadOrganicaManagerImpl extends
 
 	}
 
+	public List<DatosBasicosUnidadOrganicaVO> findUnidadesOrganicasByEntidad(DatosBasicosRelacionUnidOrgOficinaVO relacion) {
+		return ((DatosBasicosUnidadOrganicaDao)this.getDao()).findUnidadesOrganicasByEntidad(relacion);
+	}
 }

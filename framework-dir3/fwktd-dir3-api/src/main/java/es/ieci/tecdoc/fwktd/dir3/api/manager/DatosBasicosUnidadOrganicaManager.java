@@ -7,6 +7,7 @@ import es.ieci.tecdoc.fwktd.dir3.api.vo.unidad.OrganismosVO;
 import es.ieci.tecdoc.fwktd.dir3.core.type.CriterioUnidadOrganicaEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
 import es.ieci.tecdoc.fwktd.server.manager.BaseManager;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosRelacionUnidOrgOficinaVO;
 
 /**
  * Interfaz para los managers de datos básicos de unidades orgánicas.
@@ -60,4 +61,6 @@ public interface DatosBasicosUnidadOrganicaManager extends
 	 * @param organismosDCO
 	 */
 	public void updateDatosBasicosUnidadesOrganicas(OrganismosVO organismosDCO);
+
+	public List<DatosBasicosUnidadOrganicaVO> findUnidadesOrganicasByEntidad(DatosBasicosRelacionUnidOrgOficinaVO var1);
 }

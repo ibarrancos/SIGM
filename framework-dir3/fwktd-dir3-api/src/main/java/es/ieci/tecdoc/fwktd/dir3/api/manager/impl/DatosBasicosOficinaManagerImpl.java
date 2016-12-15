@@ -172,9 +172,11 @@ public class DatosBasicosOficinaManagerImpl extends
 	 *            - Datos de la oficina
 	 */
 	private void guardarDatosBasicosOficina(OficinaVO oficina) {
-		DatosBasicosOficinaVO datosBasicosOficina = new DatosBasicosOficinaVO();
-		setDatosBasicosOficina(datosBasicosOficina,oficina);
-		((DatosBasicosOficinaDao) getDao()).save(datosBasicosOficina);
+		if ("V".equals(oficina.getDatosVigencia().getEstadoOficina())) {
+			DatosBasicosOficinaVO datosBasicosOficina = new DatosBasicosOficinaVO();
+			this.setDatosBasicosOficina(datosBasicosOficina, oficina);
+			((DatosBasicosOficinaDao)this.getDao()).save((Object)datosBasicosOficina);
+		}
 	}
 
 

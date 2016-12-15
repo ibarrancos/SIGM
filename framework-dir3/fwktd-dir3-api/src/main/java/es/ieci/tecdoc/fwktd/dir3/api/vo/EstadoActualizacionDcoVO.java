@@ -11,19 +11,9 @@ public class EstadoActualizacionDcoVO extends Entity {
 	 */
 	private static final long serialVersionUID = 1763557309106784979L;
 
-	private String id;
 	private Date fechaActualizacion;
 	private String estado;
 	
-
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;

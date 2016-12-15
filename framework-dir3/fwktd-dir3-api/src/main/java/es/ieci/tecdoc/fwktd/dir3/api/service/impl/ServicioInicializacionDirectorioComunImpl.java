@@ -1,131 +1,152 @@
 package es.ieci.tecdoc.fwktd.dir3.api.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import es.ieci.tecdoc.fwktd.dir3.api.helper.XmlDcoToObject;
 import es.ieci.tecdoc.fwktd.dir3.api.manager.DatosBasicosOficinaManager;
+import es.ieci.tecdoc.fwktd.dir3.api.manager.DatosBasicosRelacionUnidOrgOficinaManager;
 import es.ieci.tecdoc.fwktd.dir3.api.manager.DatosBasicosUnidadOrganicaManager;
+import es.ieci.tecdoc.fwktd.dir3.api.manager.EstadoActualizacionDCOManager;
 import es.ieci.tecdoc.fwktd.dir3.api.manager.GenerateScriptSQLManager;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.EstadoActualizacionDcoVO;
 import es.ieci.tecdoc.fwktd.dir3.api.vo.oficina.OficinasVO;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.relacion.RelacionesUnidOrgOficinaVO;
 import es.ieci.tecdoc.fwktd.dir3.api.vo.unidad.OrganismosVO;
 import es.ieci.tecdoc.fwktd.dir3.core.service.ServicioInicializacionDirectorioComun;
 import es.ieci.tecdoc.fwktd.dir3.services.ServicioObtenerInicializacionDCO;
+import java.util.Calendar;
+import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Implementación por defecto del servicio de inicialización del DCO.
- *
- */
-public class ServicioInicializacionDirectorioComunImpl implements ServicioInicializacionDirectorioComun{
+public class ServicioInicializacionDirectorioComunImpl
+implements ServicioInicializacionDirectorioComun {
+    protected ServicioObtenerInicializacionDCO servicioObtenerInicializacionDCO;
+    protected DatosBasicosOficinaManager datosBasicosOficinaManager;
+    protected DatosBasicosUnidadOrganicaManager datosBasicosUnidadOrganicaManager;
+    protected DatosBasicosRelacionUnidOrgOficinaManager datosBasicosRelacionUnidOrgOficinaManager;
+    protected EstadoActualizacionDCOManager estadoActualizacionDCOManager;
+    protected GenerateScriptSQLManager generateScriptSQLOficinaManager;
+    protected GenerateScriptSQLManager generateScriptSQLUnidadOrganicaManager;
+    protected GenerateScriptSQLManager generateScriptSQLRelacionesOficinaUnidOrgManager;
+    private static final Logger logger = LoggerFactory.getLogger((Class)ServicioInicializacionDirectorioComunImpl.class);
 
-	/**
-	 * Servicio para obtener el volcado de datos del DCO
-	 */
-	protected ServicioObtenerInicializacionDCO servicioObtenerInicializacionDCO;
-	protected DatosBasicosOficinaManager datosBasicosOficinaManager;
-	protected DatosBasicosUnidadOrganicaManager datosBasicosUnidadOrganicaManager;
+    public void inicializarDirectorioComun() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Comienza la inicializaci\u00f3n del sistema");
+        }
+        String fileInicializarOficinas = this.getServicioObtenerInicializacionDCO().getFicheroInicializarOficinasDCO();
+        String fileInicializarUnidades = this.getServicioObtenerInicializacionDCO().getFicheroInicializarUnidadesDCO();
+        String fileInicializarRelacionesUnidOrgOficina = this.getServicioObtenerInicializacionDCO().getFicheroInicializarRelacionesRelacionesOficinaUnidOrgDCO();
+        OficinasVO oficinasDCO = XmlDcoToObject.getInstance().getOficinasFromXmlFile(fileInicializarOficinas);
+        this.getDatosBasicosOficinaManager().saveDatosBasicosOficinas(oficinasDCO);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Oficinas inicializadas");
+        }
+        OrganismosVO organismosDCO = XmlDcoToObject.getInstance().getOrganismosFromXmlFile(fileInicializarUnidades);
+        this.getDatosBasicosUnidadOrganicaManager().saveDatosBasicosUnidadesOrganicas(organismosDCO);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Organismos inicializados");
+        }
+        RelacionesUnidOrgOficinaVO relacionesUnidOrgOficinaDCO = XmlDcoToObject.getInstance().getRelacionesUnidOrgOficinaFromXmlFile(fileInicializarRelacionesUnidOrgOficina);
+        this.getDatosBasicosRelacionUnidOrgOficinaManager().saveDatosBasicosRelacionesUnidOrgOficinaVO(relacionesUnidOrgOficinaDCO);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Relaciones entre las oficinas y las unid. org\u00e1nicas inicializados");
+        }
+        EstadoActualizacionDcoVO estadoActualizacion = this.getDataEstadoActualizacionDCO();
+        this.getEstadoActualizacionDCOManager().save((Object)estadoActualizacion);
+        if (logger.isDebugEnabled()) {
+            logger.debug("EstadoActualizacion inicializados");
+            logger.debug("Finalizada la inicializaci\u00f3n del sistema");
+        }
+    }
 
-	protected GenerateScriptSQLManager generateScriptSQLOficinaManager;
-	protected GenerateScriptSQLManager generateScriptSQLUnidadOrganicaManagerImpl;
+    private EstadoActualizacionDcoVO getDataEstadoActualizacionDCO() {
+        EstadoActualizacionDcoVO estadoActualizacion = new EstadoActualizacionDcoVO();
+        estadoActualizacion.setId("0");
+        estadoActualizacion.setFechaActualizacion(Calendar.getInstance().getTime());
+        estadoActualizacion.setEstado("OK");
+        return estadoActualizacion;
+    }
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ServicioInicializacionDirectorioComunImpl.class);
+    public void generateScriptsInicializacionDirectorioComun() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Comienza la generaci\u00f3n de los script de inicializaci\u00f3n del sistema");
+        }
+        String fileInicializarOficinas = this.getServicioObtenerInicializacionDCO().getFicheroInicializarOficinasDCO();
+        String fileInicializarUnidades = this.getServicioObtenerInicializacionDCO().getFicheroInicializarUnidadesDCO();
+        String fileInicializarRelacionesUnidOrgOficina = this.getServicioObtenerInicializacionDCO().getFicheroInicializarRelacionesRelacionesOficinaUnidOrgDCO();
+        this.getGenerateScriptSQLOficinaManager().generateScriptInicializacion(fileInicializarOficinas);
+        this.getGenerateScriptSQLUnidadOrganicaManager().generateScriptInicializacion(fileInicializarUnidades);
+        this.getGenerateScriptSQLRelacionesOficinaUnidOrgManager().generateScriptInicializacion(fileInicializarRelacionesUnidOrgOficina);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Finaliza la generaci\u00f3n de los script de inicializaci\u00f3n del sistema");
+        }
+    }
 
+    private String composeScriptFileName(String scriptsFilesDir2, String init2, String oficinas2) {
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void inicializarDirectorioComun() {
-		if(logger.isDebugEnabled()){
-			logger.debug("Comienza la inicialización del sistema");
-		}
-		String fileInicializarOficinas = getServicioObtenerInicializacionDCO().getFicheroInicializarOficinasDCO();
-		String fileInicializarUnidades = getServicioObtenerInicializacionDCO().getFicheroInicializarUnidadesDCO();
+    public ServicioObtenerInicializacionDCO getServicioObtenerInicializacionDCO() {
+        return this.servicioObtenerInicializacionDCO;
+    }
 
-		OficinasVO oficinasDCO = XmlDcoToObject.getInstance().getOficinasFromXmlFile(fileInicializarOficinas);
-		getDatosBasicosOficinaManager().saveDatosBasicosOficinas(oficinasDCO);
-		if(logger.isDebugEnabled()){
-			logger.debug("Oficinas inicializadas");
-		}
+    public void setServicioObtenerInicializacionDCO(ServicioObtenerInicializacionDCO servicioObtenerInicializacionDCO) {
+        this.servicioObtenerInicializacionDCO = servicioObtenerInicializacionDCO;
+    }
 
-		OrganismosVO organismosDCO = XmlDcoToObject.getInstance().getOrganismosFromXmlFile(fileInicializarUnidades);
-		getDatosBasicosUnidadOrganicaManager().saveDatosBasicosUnidadesOrganicas(organismosDCO);
-		if(logger.isDebugEnabled()){
-			logger.debug("Organismos inicializados");
-			logger.debug("Finalizada la inicialización del sistema");
-		}
-	}
+    public DatosBasicosOficinaManager getDatosBasicosOficinaManager() {
+        return this.datosBasicosOficinaManager;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void generateScriptsInicializacionDirectorioComun() {
-		if(logger.isDebugEnabled()){
-			logger.debug("Comienza la generación de los script de inicialización del sistema");
-		}
-		String fileInicializarOficinas = getServicioObtenerInicializacionDCO().getFicheroInicializarOficinasDCO();
-		String fileInicializarUnidades = getServicioObtenerInicializacionDCO().getFicheroInicializarUnidadesDCO();
+    public void setDatosBasicosOficinaManager(DatosBasicosOficinaManager datosBasicosOficinaManager) {
+        this.datosBasicosOficinaManager = datosBasicosOficinaManager;
+    }
 
-		getGenerateScriptSQLOficinaManager().generateScriptInicializacion(fileInicializarOficinas);
-		getGenerateScriptSQLUnidadOrganicaManagerImpl().generateScriptInicializacion(fileInicializarUnidades);
+    public DatosBasicosUnidadOrganicaManager getDatosBasicosUnidadOrganicaManager() {
+        return this.datosBasicosUnidadOrganicaManager;
+    }
 
-		if(logger.isDebugEnabled()){
-			logger.debug("Finaliza la generación de los script de inicialización del sistema");
-		}
-	}
+    public void setDatosBasicosUnidadOrganicaManager(DatosBasicosUnidadOrganicaManager datosBasicosUnidadOrganicaManager) {
+        this.datosBasicosUnidadOrganicaManager = datosBasicosUnidadOrganicaManager;
+    }
 
+    public GenerateScriptSQLManager getGenerateScriptSQLOficinaManager() {
+        return this.generateScriptSQLOficinaManager;
+    }
 
-	private String composeScriptFileName(String scriptsFilesDir2, String init2,
-			String oficinas2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void setGenerateScriptSQLOficinaManager(GenerateScriptSQLManager generateScriptSQLOficinaManager) {
+        this.generateScriptSQLOficinaManager = generateScriptSQLOficinaManager;
+    }
 
-	public ServicioObtenerInicializacionDCO getServicioObtenerInicializacionDCO() {
-		return servicioObtenerInicializacionDCO;
-	}
+    public GenerateScriptSQLManager getGenerateScriptSQLUnidadOrganicaManager() {
+        return this.generateScriptSQLUnidadOrganicaManager;
+    }
 
-	public void setServicioObtenerInicializacionDCO(
-			ServicioObtenerInicializacionDCO servicioObtenerInicializacionDCO) {
-		this.servicioObtenerInicializacionDCO = servicioObtenerInicializacionDCO;
-	}
+    public void setGenerateScriptSQLUnidadOrganicaManager(GenerateScriptSQLManager generateScriptSQLUnidadOrganicaManager) {
+        this.generateScriptSQLUnidadOrganicaManager = generateScriptSQLUnidadOrganicaManager;
+    }
 
-	public DatosBasicosOficinaManager getDatosBasicosOficinaManager() {
-		return datosBasicosOficinaManager;
-	}
+    public EstadoActualizacionDCOManager getEstadoActualizacionDCOManager() {
+        return this.estadoActualizacionDCOManager;
+    }
 
-	public void setDatosBasicosOficinaManager(
-			DatosBasicosOficinaManager datosBasicosOficinaManager) {
-		this.datosBasicosOficinaManager = datosBasicosOficinaManager;
-	}
+    public void setEstadoActualizacionDCOManager(EstadoActualizacionDCOManager estadoActualizacionDCOManager) {
+        this.estadoActualizacionDCOManager = estadoActualizacionDCOManager;
+    }
 
-	public DatosBasicosUnidadOrganicaManager getDatosBasicosUnidadOrganicaManager() {
-		return datosBasicosUnidadOrganicaManager;
-	}
+    public DatosBasicosRelacionUnidOrgOficinaManager getDatosBasicosRelacionUnidOrgOficinaManager() {
+        return this.datosBasicosRelacionUnidOrgOficinaManager;
+    }
 
-	public void setDatosBasicosUnidadOrganicaManager(
-			DatosBasicosUnidadOrganicaManager datosBasicosUnidadOrganicaManager) {
-		this.datosBasicosUnidadOrganicaManager = datosBasicosUnidadOrganicaManager;
-	}
+    public void setDatosBasicosRelacionUnidOrgOficinaManager(DatosBasicosRelacionUnidOrgOficinaManager datosBasicosRelacionUnidOrgOficinaManager) {
+        this.datosBasicosRelacionUnidOrgOficinaManager = datosBasicosRelacionUnidOrgOficinaManager;
+    }
 
+    public GenerateScriptSQLManager getGenerateScriptSQLRelacionesOficinaUnidOrgManager() {
+        return this.generateScriptSQLRelacionesOficinaUnidOrgManager;
+    }
 
-
-	public GenerateScriptSQLManager getGenerateScriptSQLOficinaManager() {
-		return generateScriptSQLOficinaManager;
-	}
-
-	public void setGenerateScriptSQLOficinaManager(
-			GenerateScriptSQLManager generateScriptSQLOficinaManager) {
-		this.generateScriptSQLOficinaManager = generateScriptSQLOficinaManager;
-	}
-
-	public GenerateScriptSQLManager getGenerateScriptSQLUnidadOrganicaManagerImpl() {
-		return generateScriptSQLUnidadOrganicaManagerImpl;
-	}
-
-	public void setGenerateScriptSQLUnidadOrganicaManagerImpl(
-			GenerateScriptSQLManager generateScriptSQLUnidadOrganicaManagerImpl) {
-		this.generateScriptSQLUnidadOrganicaManagerImpl = generateScriptSQLUnidadOrganicaManagerImpl;
-	}
+    public void setGenerateScriptSQLRelacionesOficinaUnidOrgManager(GenerateScriptSQLManager generateScriptSQLRelacionesOficinaUnidOrgManager) {
+        this.generateScriptSQLRelacionesOficinaUnidOrgManager = generateScriptSQLRelacionesOficinaUnidOrgManager;
+    }
 }
-

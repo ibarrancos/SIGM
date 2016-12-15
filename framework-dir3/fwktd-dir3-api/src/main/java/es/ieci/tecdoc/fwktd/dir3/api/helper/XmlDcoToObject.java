@@ -16,6 +16,8 @@ import es.ieci.tecdoc.fwktd.dir3.api.vo.unidad.OrganismoDatosIdentificativosVO;
 import es.ieci.tecdoc.fwktd.dir3.api.vo.unidad.OrganismoDatosVigenciaVO;
 import es.ieci.tecdoc.fwktd.dir3.api.vo.unidad.OrganismoVO;
 import es.ieci.tecdoc.fwktd.dir3.api.vo.unidad.OrganismosVO;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.relacion.RelacionUnidOrgOficinaVO;
+import es.ieci.tecdoc.fwktd.dir3.api.vo.relacion.RelacionesUnidOrgOficinaVO;
 
 public class XmlDcoToObject {
 
@@ -75,5 +77,13 @@ public class XmlDcoToObject {
 		xstream.processAnnotations(OrganismoDatosVigenciaVO.class);
 		
 		return (OrganismosVO)xstream.fromXML(file);
+	}
+
+	public RelacionesUnidOrgOficinaVO getRelacionesUnidOrgOficinaFromXmlFile(String xmlFilePath) {
+		XStream xstream = new XStream();
+		File file = new File(xmlFilePath);
+		xstream.processAnnotations((Class)RelacionesUnidOrgOficinaVO.class);
+		xstream.processAnnotations((Class)RelacionUnidOrgOficinaVO.class);
+		return (RelacionesUnidOrgOficinaVO)xstream.fromXML(file);
 	}
 }
