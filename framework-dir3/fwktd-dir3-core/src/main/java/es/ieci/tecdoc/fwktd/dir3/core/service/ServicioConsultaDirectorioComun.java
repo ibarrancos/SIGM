@@ -7,6 +7,7 @@ import es.ieci.tecdoc.fwktd.dir3.core.type.CriterioUnidadOrganicaEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosOficina;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosUnidadOrganica;
+import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosRelacionUnidOrgOficina;
 
 /**
  * Interfaz del servicio de consulta del Directorio Común (DIR3).
@@ -76,4 +77,8 @@ public interface ServicioConsultaDirectorioComun {
 	 */
 	public DatosBasicosUnidadOrganica getDatosBasicosUnidadOrganica(String id);
 	
+	public List<DatosBasicosUnidadOrganica> findUnidadesOrganicasByEntidad(String var1, String var2, String var3);
+
+	public DatosBasicosRelacionUnidOrgOficina getDatosBasicosRelacionUnidOrgOficinaByCodes(String var1, String var2);
+
 }
