@@ -185,6 +185,8 @@ public class AsientoRegistralFormVO extends BaseValueObject {
 	 */
 	private String solicita;
 
+	private String descripcionTipoAnotacion;
+
 	/**
 	 * Lista de anexos del asiento registral.
 	 */
@@ -480,5 +482,13 @@ public class AsientoRegistralFormVO extends BaseValueObject {
 
 	public void setCodigoEntidadRegistral(String codigoEntidadRegistral) {
 		this.codigoEntidadRegistral = codigoEntidadRegistral;
+	}
+
+	public String getDescripcionTipoAnotacion() {
+		return this.descripcionTipoAnotacion;
+	}
+ 
+	public void setDescripcionTipoAnotacion(String descripcionTipoAnotacion) {
+		this.descripcionTipoAnotacion = descripcionTipoAnotacion;
 	}
 }

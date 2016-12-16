@@ -42,6 +42,7 @@ public class EstadoAsientoRegistralEnum extends ValuedEnum {
 	private static final int RECHAZADO_Y_ACK_VALUE = 12;
 	private static final int RECHAZADO_Y_ERROR_VALUE = 13;
 	private static final int VALIDADO_VALUE = 14;
+	private static final int REINTENTAR_VALIDACION_VALUE = 15;
 
 	private static final String PENDIENTE_ENVIO_STRING = "Pendiente de envío";
 	private static final String ENVIADO_STRING = "Enviado";
@@ -58,6 +59,7 @@ public class EstadoAsientoRegistralEnum extends ValuedEnum {
 	private static final String RECHAZADO_Y_ACK_STRING = "Rechazado y ACK";
 	private static final String RECHAZADO_Y_ERROR_STRING = "Rechazado y ERROR";
 	private static final String VALIDADO_STRING = "Validado";
+	private static final String REINTENTAR_VALIDACION_STRING = "Reintentar validacion";
 
 
 	/**
@@ -150,7 +152,8 @@ public class EstadoAsientoRegistralEnum extends ValuedEnum {
 	public static final EstadoAsientoRegistralEnum VALIDADO = new EstadoAsientoRegistralEnum(
 			VALIDADO_STRING, VALIDADO_VALUE);
 
-
+	public static final EstadoAsientoRegistralEnum REINTENTAR_VALIDACION = new EstadoAsientoRegistralEnum(
+			REINTENTAR_VALIDACION_STRING, REINTENTAR_VALIDACION_VALUE);
 
 	/**
 	 * Constructor.
