@@ -45,6 +45,7 @@ public class ISicresGenPerms {
     public static final int ISUSER_PERM_CAN_MODIFY_TRANSPORTTYPES = 32768;
     public static final int ISUSER_PERM_CAN_MODIFY_REPORTS = 65536;
     public static final int ISUSER_PERM_CAN_MODIFY_USERS= 131072;
+    public static final int ISUSER_PERM_CAN_DELETE_DOCUMENTS = 262144;
 
 
 
@@ -69,6 +70,8 @@ public class ISicresGenPerms {
     private boolean canChangeDestRegisters = false;
 
     private boolean canChangeDestRejectRegisters = false;
+
+    private boolean canDeleteDocuments = false;
 
 	private boolean canDistRegisters = false;
 
@@ -331,6 +334,12 @@ public class ISicresGenPerms {
 
 	public boolean getCanModifyUsers() {
 		return canModifyUsers;
+	}
+	public boolean isCanDeleteDocuments() {
+	    return this.canDeleteDocuments;
+	}
+	public void setCanDeleteDocuments(boolean canDeleteDocuments) {
+	    this.canDeleteDocuments = canDeleteDocuments;
 	}
 
 }

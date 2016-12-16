@@ -78,6 +78,11 @@ public interface IDocKeys {
     //Información de los caracteres para los nombre de los ficheros
     public static final int MAX_LENGTH_NAME_FILE = 64;
 
+    public static final int FIELD_COMENTARIOS_SIZE_IR_ENABLED = 50;
+    public static final int FIELD_EXPONE_SIZE_IR_ENABLED = 4000;
+    public static final int FIELD_SOLICITA_SIZE_IR_ENABLED = 4000;
+    public static final int DIRECCION_INTERESADOS_IR_MAX_LENGTH = 160;
+
     /*******************************************************************************************************************
      * Constructors
      ******************************************************************************************************************/

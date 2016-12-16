@@ -13,6 +13,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 */
 public class ScrDistregstate implements Serializable {
 
+    private static final long serialVersionUID = 1758996812714734266L;
+
     /** identifier field */
     private Integer id;
 
@@ -28,13 +30,16 @@ public class ScrDistregstate implements Serializable {
     /** persistent field */
     private String username;
 
+    private String message;
+
     /** full constructor */
-    public ScrDistregstate(Integer id, int idDist, int state, Date stateDate, String username) {
+    public ScrDistregstate(Integer id, int idDist, int state, Date stateDate, String username, String msg) {
         this.id = id;
         this.idDist = idDist;
         this.state = state;
         this.stateDate = stateDate;
         this.username = username;
+	this.message = msg;
     }
 
     /** default constructor */
@@ -179,5 +184,12 @@ public int hashCode() {
             .append(getId())
             .toHashCode();
     }
+
+	public String getMessage() {
+	    return this.message;
+	}
+	public void setMessage(String message) {
+	    this.message = message;
+	}
 
 }

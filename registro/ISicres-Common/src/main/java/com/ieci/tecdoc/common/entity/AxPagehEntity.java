@@ -591,5 +591,11 @@ public class AxPagehEntity implements ServerKeys {
      axPageh.setAcccount(getAcccount());
      return axPageh;
  }
+ public String getType() {
+     return this.type;
+ }
+ public void setType(String type) {
+     this.type = type;
+ }
 
 }

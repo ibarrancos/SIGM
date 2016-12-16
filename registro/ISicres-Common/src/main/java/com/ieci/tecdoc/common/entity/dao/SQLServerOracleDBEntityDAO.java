@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import com.ieci.tecdoc.common.utils.BBDDUtils;
 
@@ -644,5 +645,27 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 	/***************************************************************************
 	 * Test brench
 	 **************************************************************************/
+
+	public String getTemporalTableDistributionQuerySentenceOrderBy(String tableName, Integer bookId, String where, String regWhere, boolean isCreateTable, boolean isInBook, String language) {
+	    StringBuffer result = new StringBuffer();
+	    if (isCreateTable) {
+	        result.append("CREATE VIEW ").append(tableName).append(" ");
+	        result.append(this.getFieldsTableTemporalDistributionOrderBy());
+	        result.append(" AS ");
+	    } else {
+	        result.append(" UNION ");
+	    }
+	    result.append(this.createQueryForTableTemporalDistributionOrderBy(bookId, isInBook, language));
+	    if (StringUtils.isNotBlank((String)where)) {
+	        result.append(" AND ").append(where);
+	    }
+	    if (StringUtils.isNotBlank((String)regWhere)) {
+	        if (StringUtils.isNotBlank((String)where)) {
+	            result.append(" AND ");
+	        }
+	        result.append(regWhere);
+	    }
+	    return result.toString();
+	}
 
 }

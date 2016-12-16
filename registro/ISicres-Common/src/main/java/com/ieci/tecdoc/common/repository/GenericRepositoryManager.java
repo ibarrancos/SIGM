@@ -60,6 +60,7 @@ public abstract class GenericRepositoryManager implements IRepositoryManager {
 	protected static String KEY_REGISTER_WORKDATE = "RegisterWorkDate";
 	protected static String KEY_REGISTER_OFIC_ID = "RegisterOficID";
 	protected static String KEY_REGISTER_OFIC_NAME = "RegisterOficName";
+	protected static String KEY_REGISTER_DATE = "RegisterDate";
 
 	public static SimpleDateFormat  LONG_DATE_SDF=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	
@@ -347,6 +348,7 @@ public abstract class GenericRepositoryManager implements IRepositoryManager {
 	 * @return
 	 */
 	protected Map getAxSfValues(AxSf axsf) {
+		String regDate = LONG_DATE_SDF.format(axsf.getAttributeValue("fld2"));
 		String regNumber = axsf.getAttributeValueAsString("fld1");
 		String regUser = axsf.getAttributeValueAsString("fld3");
 		String regWorkDate = LONG_DATE_SDF.format(axsf.getAttributeValue("fld4"));
@@ -359,6 +361,7 @@ public abstract class GenericRepositoryManager implements IRepositoryManager {
 		axsfValues.put(KEY_REGISTER_WORKDATE, regWorkDate);
 		axsfValues.put(KEY_REGISTER_OFIC_ID, regOficId);
 		axsfValues.put(KEY_REGISTER_OFIC_NAME, regOficName);
+		axsfValues.put(KEY_REGISTER_DATE, regDate);
 
 		return axsfValues;
 	}

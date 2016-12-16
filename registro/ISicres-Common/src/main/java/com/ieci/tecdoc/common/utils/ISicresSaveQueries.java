@@ -17,6 +17,8 @@ import com.ieci.tecdoc.common.invesicres.ScrPageInfo;
 import com.ieci.tecdoc.common.invesicres.ScrRegasoc;
 import com.ieci.tecdoc.common.invesicres.ScrRegint;
 import com.ieci.tecdoc.common.invesicres.ScrUserconfig;
+import com.ieci.tecdoc.common.invesicres.ScrDistribucionActual;
+
 
 /**
  * @author 66575267
@@ -60,7 +62,7 @@ public class ISicresSaveQueries {
 
 	public static void saveScrDistreg(Session session, int distributionID,
 			Integer bookID, int fdrid, Date distDate, int typeOrig, int idOrig,
-			int typeDest, int idDest, int state, Date stateDate, String message)
+			int typeDest, int idDest, int state, Date stateDate, String message, int idDistFather)
 			throws HibernateException {
 		ScrDistreg scrDistReg = new ScrDistreg();
 
@@ -75,6 +77,9 @@ public class ISicresSaveQueries {
 		scrDistReg.setState(state);
 		scrDistReg.setStateDate(stateDate);
 		scrDistReg.setMessage(message);
+		if (idDistFather != 0) {
+			scrDistReg.setIddistfather(idDistFather);
+		}
 		session.save(scrDistReg);
 	}
 
@@ -119,5 +124,12 @@ public class ISicresSaveQueries {
 		}
 		scr.setOrd(order);
 		session.save(scr);
+	}
+
+	public static void saveScrDistribucionActual(Session session, Integer iddist, String dist_actual) throws HibernateException {
+		ScrDistribucionActual scrDistribucionActual = new ScrDistribucionActual();
+		scrDistribucionActual.setIddist(iddist);
+		scrDistribucionActual.setDist_actual(dist_actual);
+		session.save(scrDistribucionActual);
 	}
 }

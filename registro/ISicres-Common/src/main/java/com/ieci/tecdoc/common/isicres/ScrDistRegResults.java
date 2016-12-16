@@ -23,6 +23,8 @@ public class ScrDistRegResults implements Serializable {
 	private String targetDescription;
 	private Integer distType;
 
+	private String targetActualDescription;
+
 	public ScrDistRegResults(ScrDistreg scrDistReg, AxSf axsf,
 			Object idocarch, String sourceDescription,
 			String targetDescription, Integer distType) {
@@ -81,6 +83,22 @@ public class ScrDistRegResults implements Serializable {
 
 	public void setDistType(Integer distType) {
 		this.distType = distType;
+	}
+
+	public ScrDistRegResults(ScrDistreg scrDistReg, AxSf axsf, Object idocarch, String sourceDescription, String targetDescription, Integer distType, String targetActualDescription) {
+	    this.scrDistReg = scrDistReg;
+	    this.axsf = axsf;
+	    this.idocarch = idocarch;
+	    this.sourceDescription = sourceDescription;
+	    this.targetDescription = targetDescription;
+	    this.distType = distType;
+	    this.targetActualDescription = targetActualDescription;
+	}
+	public String getTargetActualDescription() {
+	    return this.targetActualDescription;
+	}
+	public void setTargetActualDescription(String targetActualDescription) {
+	    this.targetActualDescription = targetActualDescription;
 	}
 
 }

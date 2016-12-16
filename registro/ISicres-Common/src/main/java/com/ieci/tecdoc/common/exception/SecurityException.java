@@ -33,6 +33,7 @@ public class SecurityException extends TecDocException implements Serializable {
 	public static final String ERROR_CAN_NOT_CONNECT_LDAP = "securityexception.can_not_connect_ldap";
 	public static final String ERROR_CAN_NOT_FIND_USER_ATTRIBUTES_LDAP = "securityexception.can_not_find_user_attributes_ldap";
 	public static final String ERROR_CAN_NOT_OPEN_CLOSE_REG= "securityexception.can_not_open_close_reg";
+	public static final String ERROR_USER_NOT_PERMS_NECESSARY = "securityexception.user_not_perms_necessary";
 	
 
 	/**

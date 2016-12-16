@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import com.ieci.tecdoc.common.isicres.AxSf;
 import com.ieci.tecdoc.common.isicres.AxSfQueryField;
@@ -788,5 +789,27 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 	/***************************************************************************
 	 * Test brench
 	 **************************************************************************/
+
+	public String getTemporalTableDistributionQuerySentenceOrderBy(String tableName, Integer bookId, String where, String regWhere, boolean isCreateTable, boolean isInBook, String language) {
+	    StringBuffer result = new StringBuffer();
+	    if (isCreateTable) {
+	        result.append("CREATE VIEW ").append(tableName).append(" ");
+	        result.append(this.getFieldsTableTemporalDistributionOrderBy());
+	        result.append(" AS ");
+	    } else {
+	        result.append(" UNION ALL ");
+	    }
+	    result.append(this.createQueryForTableTemporalDistributionOrderBy(bookId, isInBook, language));
+	    if (StringUtils.isNotBlank((String)where)) {
+	        result.append(" AND ").append(where);
+	    }
+	    if (StringUtils.isNotBlank((String)regWhere)) {
+	        if (StringUtils.isNotBlank((String)where)) {
+	            result.append(" AND ");
+	        }
+	        result.append(regWhere);
+	    }
+	    return result.toString();
+	}
 
 }

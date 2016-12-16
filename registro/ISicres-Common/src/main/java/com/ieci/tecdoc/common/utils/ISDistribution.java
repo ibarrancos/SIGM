@@ -45,7 +45,7 @@ public class ISDistribution {
 	}
 	
 	public void setDistState(Session session, int distId, int State,
-			Date currentDate, String userName, Integer userId, String entidad,
+			Date currentDate, String userName, Integer userId, String entidad, String remarks,
 			boolean caseSensitive) throws HibernateException, SQLException,
 			Exception {
 	
@@ -73,6 +73,13 @@ public class ISDistribution {
     	scrDistRegState.setState(State);
     	scrDistRegState.setStateDate(currentDate);
     	scrDistRegState.setUsername(userName);
+	if (remarks != null) {
+	    if (caseSensitive) {
+	        scrDistRegState.setMessage(remarks.toUpperCase());
+	    } else {
+	        scrDistRegState.setMessage(remarks);
+	    }
+	}
     	session.save(scrDistRegState);
 	}
 	
@@ -146,7 +153,7 @@ public class ISDistribution {
 
 				ISDist.setDistState(session, distReg.getId().intValue(),
 						ISDistribution.STATE_REDISTRIBUIDO, currentDate,
-						userName, userId, entidad, caseSensitive);
+						userName, userId, entidad, null, caseSensitive);
 			}
 
 		}

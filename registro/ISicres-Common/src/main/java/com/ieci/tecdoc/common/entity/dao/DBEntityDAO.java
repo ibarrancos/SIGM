@@ -1515,4 +1515,8 @@ public interface DBEntityDAO {
 	 * Test brench
 	 **************************************************************************/
 
+	public String getTemporalTableDistributionQuerySentenceOrderBy(String var1, Integer var2, String var3, String var4, boolean var5, boolean var6, String var7);
+	public void deleteHashDocument(Integer var1, int var2, int var3, String var4) throws SQLException;
+	public void deleteScrPageRepository(int var1, int var2, int var3, String var4) throws SQLException;
+	public List getListDistributionOrderBy(int var1, int var2, String var3, String var4, String var5) throws SQLException;
 }

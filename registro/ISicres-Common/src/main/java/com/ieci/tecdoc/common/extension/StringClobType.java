@@ -65,12 +65,18 @@ public class StringClobType implements UserType
     public void nullSafeSet(PreparedStatement st, Object value, int index)
         throws HibernateException, SQLException
     {
+	if (value == null ) {
+		value="";
+	}
         StringReader r = new StringReader( (String)value );
         st.setCharacterStream( index, r, ((String)value).length() );
     }
     
     public void nullSafeSet1(PreparedStatement st, Object value, int index)
 			throws HibernateException, SQLException {
+		if (value == null ) {
+			value="";
+		}
 		StringReader r = new StringReader((String) value);
 		st.setString(index, (String) value);
 	}
