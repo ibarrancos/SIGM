@@ -44,6 +44,7 @@ import com.ieci.tecdoc.isicres.desktopweb.utils.RequestUtils;
 import com.ieci.tecdoc.isicres.desktopweb.utils.ResponseUtils;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.book.BookUseCase;
+import com.ieci.tecdoc.isicres.desktopweb.utils.SQLValidator;
 
 import es.ieci.tecdoc.fwktd.core.config.web.ContextUtil;
 
@@ -108,10 +109,11 @@ public class TblText extends HttpServlet implements Keys {
 		// Número del idioma. Ej: 10
 		Long numIdioma = (Long) session.getAttribute(Keys.J_NUM_IDIOMA);
 		PrintWriter writer = response.getWriter();
-		if (listOrder.equals("")) {
-			listOrder = XML_FLD_UPPER_TEXT + 1;
-		}
 		try {
+			SQLValidator.getInstance().validateOrderQueryRegister(listOrder);
+			if (listOrder.equals("")) {
+				listOrder = XML_FLD_UPPER_TEXT + 1;
+			}
 			Document xmlDocument = null;
 			List badCtrls = null;
 			if (typeSearch.equals(Keys.SEARCH_WITH_FILTER)) {

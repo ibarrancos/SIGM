@@ -36,6 +36,7 @@ import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.book.xml.AsocRegsFields;
 import com.ieci.tecdoc.isicres.usecase.book.xml.AsocRegsResults;
 import com.ieci.tecdoc.isicres.usecase.book.xml.AsocRegsSearchFields;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * @author 66575267
@@ -671,9 +672,8 @@ public class BookUseCaseAsocRegsUtil implements Keys {
 					.getInstance(locale).getProperty(I18N_DATE_SHORTFORMAT));
 			simpleDateFormat.setLenient(false);
 			return simpleDateFormat.parse(param);
-		} else {
-			return param;
 		}
+		return StringEscapeUtils.escapeSql(param);
 	}
 
 	/**

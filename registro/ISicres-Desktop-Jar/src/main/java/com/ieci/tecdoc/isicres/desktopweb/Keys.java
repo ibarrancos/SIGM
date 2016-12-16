@@ -60,6 +60,18 @@ public interface Keys {
 	public static final String MONTH_FORMAT = "MM";
     public static final String YEAR_FORMAT = "YYYY";
 
+	public static final String DATE_FORMAT_VIEW_DISTRIBUTION = "date.view.distribution";
+	public static final String I18N_ISICRESSRV_ERR_DELETE_OBJ = "exception.ISICRESSRV_ERR_DELETE_OBJ";
+	public static final String I18N_BOOKUSECASE_DISTRIBUTIONHISTORY_HEADMINUTA_COL16 = "bookusecase.distributionhistory.headminuta.col16";
+	public static final String I18N_BOOKUSECASE_DISTRIBUTIONHISTORY_BODYMINUTA_COL12 = "bookusecase.distributionhistory.bodyminuta.col12";
+	public static final String I18N_ISICRESIR_ERROR_NO_DATA_SHOW_DETALLE_INTERCAMBIO = "intercambioRegistral.errorNoDataDetalleIntercambioRegistral";
+	public static final String I18N_ISICRESIR_ERROR_SHOW_DETALLE_INTERCAMBIO = "intercambioRegistral.errorObtenerDetalleIntercambioRegistral";
+	public static final String[] STRING_FIELD_NAME = new String[]{"CODE", "ACRON", "NAME", "TRANSPORT", "MATTER"};
+	public static final String[] STRING_FIELD_LABEL = new String[]{"0", "1", "2", "3", "2"};
+
+
+
+
 
 	public static final String ACTIVATE_DTR = "<html><head>"
 			+ "<script language=javascript>"

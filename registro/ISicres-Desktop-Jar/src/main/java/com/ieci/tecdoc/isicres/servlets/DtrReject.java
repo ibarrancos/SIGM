@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +34,7 @@ import com.ieci.tecdoc.isicres.desktopweb.utils.ResponseUtils;
 import com.ieci.tecdoc.isicres.events.exception.EventException;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.distribution.DistributionUseCase;
+import com.ieci.tecdoc.isicres.desktopweb.utils.SQLValidator;
 
 import es.ieci.tecdoc.fwktd.core.config.web.ContextUtil;
 
@@ -87,6 +87,7 @@ public class DtrReject extends HttpServlet implements Keys{
         String distWhere = RequestUtils.parseRequestParameterAsString(request, "distWhere");
         // Clausura WHERE de búsqueda de registros distribuidos.
         String regWhere = RequestUtils.parseRequestParameterAsString(request, "regWhere");
+	String listOrder = RequestUtils.parseRequestParameterAsStringWithEmpty(request, "orderDistribution");
 
         //Distribuciones seleccionadas en pantalla
 		List ids = RequestUtils.parseRequestParametersAsList(request, "Ids");
@@ -115,21 +116,18 @@ public class DtrReject extends HttpServlet implements Keys{
         Integer userType = 0;
         Integer userId = 0;
         String messageForUser = null;
+	SQLValidator.getInstance().validateDistributionDistWhere(distWhere);
+	regWhere = SQLValidator.getInstance().validateDistributionRegWhere(useCaseConf, lnTypeDistr, regWhere);
         try {
             if(StringUtils.isNotBlank(infoDistribution)){
     			if (_logger.isDebugEnabled()){
     				_logger.debug("Redistribucion infoDistribucion [" + infoDistribution +"]");
     			}
     			//tratamos infoDistribution para obtener el userType, el userId y el mensaje de la distribucion
-            	StringTokenizer infoDistributionTokens = new StringTokenizer(infoDistribution, DOSBARRA);
-            	while (infoDistributionTokens.hasMoreTokens()) {
-        	        // Tipo de usuarios (1 departamento; 2 Grupo; 3 Ususario).
-        			userType = new Integer(infoDistributionTokens.nextToken());
-        			// Identificador de usuario.
-        			userId = new Integer(infoDistributionTokens.nextToken());
-        			//Cadena con el id de usuario al que se distribuye y su mensaje asociado.
-        			messageForUser = infoDistributionTokens.nextToken();
-            	}
+		String[] infoDistributionTokens = StringUtils.split((String)infoDistribution, (String)"||");
+		userType = new Integer(infoDistributionTokens[0]);
+		userId = new Integer(infoDistributionTokens[1]);
+		messageForUser = infoDistributionTokens.length > 2 ? infoDistributionTokens[2] : "";
     			if(_logger.isDebugEnabled()){
 					_logger.debug("Info de la redistribución userType ["
 							+ userType + "] userId [" + userId
@@ -147,7 +145,7 @@ public class DtrReject extends HttpServlet implements Keys{
 
 			//obtenemos los datos a mostrar en pantalla
             Document xmlDocument = distributionUseCase.getDistribution(useCaseConf, estado.intValue(),
-                    initValue.intValue(), lnTypeDistr.intValue(), distWhere, regWhere);
+                    initValue.intValue(), lnTypeDistr.intValue(), distWhere, regWhere, listOrder );
 
             //obtenemos la xsl: dtrlist.xsl
             String xslPath = ContextUtil.getRealPath(session.getServletContext(),XSL_DISTRIBUTION_RELATIVE_PATH);

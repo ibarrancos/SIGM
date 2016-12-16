@@ -1,5 +1,6 @@
 package com.ieci.tecdoc.isicres.usecase.book.xml;
 
+import com.ieci.tecdoc.isicres.desktopweb.Keys;
 
 /**
  * @author 79426599
@@ -9,8 +10,8 @@ public class XMLFieldsInfo {
 
 	private String fieldName = null;
 	private String fieldLabel = null;
-	private String stringFieldName[] = {"CODE", "ACRON", "NAME", "TRANSPORT", "MATTER"};
-	private String stringFieldLabel[] = {"0", "1", "2", "3", "2"};
+	private String[] stringFieldName = Keys.STRING_FIELD_NAME;
+	private String[] stringFieldLabel = Keys.STRING_FIELD_LABEL;
 	
 	public XMLFieldsInfo(int type, String fieldName) {
 		this.fieldName = fieldName;

@@ -13,6 +13,11 @@ import com.ieci.tecdoc.idoc.decoder.validation.idocarchdet.FFldDef;
 import com.ieci.tecdoc.idoc.decoder.validation.idocarchdet.FieldFormat;
 import com.ieci.tecdoc.isicres.desktopweb.Keys;
 
+import com.ieci.tecdoc.isicres.desktopweb.utils.RBUtil;
+import java.util.Locale;
+import org.apache.commons.lang.StringUtils;
+
+
 /**
  * @author LMVICENTE
  * @creationDate 31-may-2004 11:22:30
@@ -243,6 +248,12 @@ public class XMLUtils implements Keys {
     /*******************************************************************************************************************
      * Test brench
      ******************************************************************************************************************/
+    public static SimpleDateFormat getDateFormatView(Locale locale) {
+        String dateFormatByDefault = RBUtil.getInstance(locale).getProperty("date.shortFormat");
+        String dateFormatString = RBUtil.getInstance(locale).getProperty("date.view.distribution", dateFormatByDefault);
+        SimpleDateFormat result = StringUtils.isNotBlank((String)dateFormatString) ? new SimpleDateFormat(dateFormatString) : new SimpleDateFormat(dateFormatByDefault);
+        return result;
+    }
 
 }
 

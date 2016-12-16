@@ -106,6 +106,8 @@ public class ChangeOffice extends HttpServlet implements Keys {
         UseCaseConf useCaseConf = (UseCaseConf) session.getAttribute(J_USECASECONF);
         PrintWriter writer = response.getWriter();
         try {
+		session.removeAttribute("JBook");
+		session.removeAttribute("JRegister");
         	bookUseCase.validateOfficeCode(useCaseConf, code);
             // Transformamos el xml mediante la xsl en html.
             // Los errores pueden ser de comunicación, de validación de

@@ -134,7 +134,8 @@ public class FileUploadScan extends HttpServlet implements Keys {
 	    				if (!fileItem.isFormField()) {
 	    					
 	    					//Componer nombre del fichero
-	                        String fileNameFis = getFileNameFis(sessionId, folderId.toString(), fileIndex, fileItem.getName());	                        
+				int indice = this.getCodigoFichero(fileItem, fileIndex);
+	                        String fileNameFis = getFileNameFis(sessionId, folderId.toString(), indice, fileItem.getName());	                        
 	                        fileIndex++;
 
 	                        //Obtener directorio temporal para guardar el fichero
@@ -208,6 +209,19 @@ public class FileUploadScan extends HttpServlet implements Keys {
         	extension = extension.substring(extension.lastIndexOf(PUNTO) + 1, extension.length());
         }
         return extension;
+    }
+
+    private int getCodigoFichero(FileItem fileItem, int fileIndex) {
+        int result;
+        try {
+            String codigoFichero = fileItem.getFieldName().substring("LI".length(), fileItem.getFieldName().length());
+            result = Integer.parseInt(codigoFichero);
+        }
+        catch (Exception e) {
+            _logger.warn("No se ha podido obtener el identificador del documento: " + fileItem.getFieldName());
+            result = fileIndex;
+        }
+        return result;
     }
 
 }

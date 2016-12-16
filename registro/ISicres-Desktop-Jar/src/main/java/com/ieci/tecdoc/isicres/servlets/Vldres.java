@@ -38,6 +38,7 @@ import com.ieci.tecdoc.isicres.desktopweb.utils.RequestUtils;
 import com.ieci.tecdoc.isicres.desktopweb.utils.ResponseUtils;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.validationlist.ValidationListUseCase;
+import com.ieci.tecdoc.isicres.desktopweb.utils.SQLValidator;
 
 import es.ieci.tecdoc.fwktd.core.config.web.ContextUtil;
 
@@ -135,13 +136,14 @@ public class Vldres extends HttpServlet implements Keys {
 		UseCaseConf useCaseConf = (UseCaseConf) session
 				.getAttribute(J_USECASECONF);
 
-		if ((vldQuery != null) && (!"".equals(vldQuery))
-				&& (vldQueryValue != null) && (!"".equals(vldQueryValue))) {
-			vldQuery = vldQuery + " " + vldQueryValue;
-		}
 
 		PrintWriter writer = response.getWriter();
 		try {
+			vldQueryValue = SQLValidator.getInstance().validateQueryCamposValidados(vldQuery, vldQueryValue);
+			if ((vldQuery != null) && (!"".equals(vldQuery))
+					&& (vldQueryValue != null) && (!"".equals(vldQueryValue))) {
+				vldQuery = vldQuery + " " + vldQueryValue;
+			}
 			Document xmlDocument = null;
 
 			switch (tblvalidated) {

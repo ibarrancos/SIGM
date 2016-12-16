@@ -48,6 +48,7 @@ import com.ieci.tecdoc.isicres.desktopweb.utils.RequestUtils;
 import com.ieci.tecdoc.isicres.desktopweb.utils.ResponseUtils;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.book.BookUseCase;
+import com.ieci.tecdoc.isicres.desktopweb.utils.SQLValidator;
 
 import es.ieci.tecdoc.fwktd.core.config.web.ContextUtil;
 
@@ -293,6 +294,7 @@ public class VldSearchOperator extends HttpServlet implements Keys{
 
 		throws ValidationException, SessionException, BookException, AttributesException, SecurityException, ParseException	{
 
+		SQLValidator.getInstance().validateOrderQueryRegister(order);
 		Document xmlDocument = null;
 
     	// Algunos campos no van a formar parte directamente de la query, hay que traducirlos a su identificador

@@ -40,6 +40,7 @@ import com.ieci.tecdoc.isicres.desktopweb.utils.RequestUtils;
 import com.ieci.tecdoc.isicres.desktopweb.utils.ResponseUtils;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.book.BookUseCase;
+import com.ieci.tecdoc.isicres.desktopweb.utils.SQLValidator;
 
 import es.ieci.tecdoc.fwktd.core.config.web.ContextUtil;
 
@@ -96,6 +97,7 @@ public class Tbltext2 extends HttpServlet implements Keys {
         // Número del idioma. Ej: 10
         Long numIdioma = (Long) session.getAttribute(Keys.J_NUM_IDIOMA);
 		PrintWriter writer = response.getWriter ();
+	SQLValidator.getInstance().validateOrderQueryRegister(orderByTable);
         try {
             Document xmlDocument = null;
 

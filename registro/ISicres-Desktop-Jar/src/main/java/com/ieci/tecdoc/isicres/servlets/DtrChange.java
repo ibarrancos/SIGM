@@ -41,6 +41,7 @@ import com.ieci.tecdoc.isicres.desktopweb.utils.ResponseUtils;
 import com.ieci.tecdoc.isicres.events.exception.EventException;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.distribution.DistributionUseCase;
+import com.ieci.tecdoc.isicres.desktopweb.utils.SQLValidator;
 
 import es.ieci.tecdoc.fwktd.core.config.web.ContextUtil;
 
@@ -103,6 +104,7 @@ public class DtrChange extends HttpServlet implements Keys {
         String distWhere = RequestUtils.parseRequestParameterAsString(request, "distWhere");
         // Clausura WHERE de búsqueda de registros distribuidos.
         String regWhere = RequestUtils.parseRequestParameterAsString(request, "regWhere");
+	String listOrder = RequestUtils.parseRequestParameterAsStringWithEmpty(request, "orderDistribution");
          // Obtenemos la sesión asociada al usuario.
         HttpSession session = request.getSession();
         // Texto del idioma. Ej: EU_
@@ -115,6 +117,8 @@ public class DtrChange extends HttpServlet implements Keys {
         // de sesión para este usuario en el servidor de aplicaciones.
         UseCaseConf useCaseConf = (UseCaseConf) session.getAttribute(J_USECASECONF);
         PrintWriter writer = response.getWriter();
+	SQLValidator.getInstance().validateDistributionDistWhere(distWhere);
+        regWhere = SQLValidator.getInstance().validateDistributionRegWhere(useCaseConf, lnTypeDistr, regWhere);
         try {
             // Transformamos el xml mediante la xsl en html.
             // Los errores pueden ser de comunicación, de validación, de
@@ -123,7 +127,7 @@ public class DtrChange extends HttpServlet implements Keys {
             distributionUseCase.changeDistribution(useCaseConf, ids, estado.intValue(), initValue.intValue(),
                     lnTypeDistr.intValue(), idDest);
             Document xmlDocument = distributionUseCase.getDistribution(useCaseConf, estado.intValue(),
-                    initValue.intValue(), lnTypeDistr.intValue(), distWhere, regWhere);
+                    initValue.intValue(), lnTypeDistr.intValue(), distWhere, regWhere, listOrder);
 
             String xslPath = ContextUtil.getRealPath(session.getServletContext(),XSL_DISTRIBUTION_RELATIVE_PATH);
             Transformer transformer = factory.newTransformer(new StreamSource(new InputStreamReader(new BufferedInputStream(
