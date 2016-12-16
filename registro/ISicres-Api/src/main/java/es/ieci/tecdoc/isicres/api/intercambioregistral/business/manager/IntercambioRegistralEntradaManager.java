@@ -6,6 +6,10 @@ import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaEntradaItemVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralEntradaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
+import es.ieci.tecdoc.fwktd.server.pagination.PageInfo;
+import es.ieci.tecdoc.fwktd.server.pagination.PaginatedArrayList;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriteriosBusquedaIREntradaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralEntradaEnumVO;
 
 /**
  * Interfaz relacionada con las operaciones referentes a un intercambio registral de entrada
@@ -82,4 +86,11 @@ public interface IntercambioRegistralEntradaManager {
 	 * @return Listado de objetos {@link IntercambioRegistralEntradaVO}
 	 */
 	public List<IntercambioRegistralEntradaVO> getHistorialIntercambioRegistralEntrada(String idLibro, String idRegistro,  String idOficina);
+
+	public IntercambioRegistralEntradaVO getIntercambioRegistralEntradaByRegistro(Integer var1, Integer var2, Integer var3);
+
+	public List<BandejaEntradaItemVO> findBandejaEntradaByCriterios(EstadoIntercambioRegistralEntradaEnumVO var1, CriteriosBusquedaIREntradaVO var2);
+
+	public PaginatedArrayList<BandejaEntradaItemVO> findBandejaEntradaByCriterios(EstadoIntercambioRegistralEntradaEnumVO var1, CriteriosBusquedaIREntradaVO var2, PageInfo var3);
+
 }

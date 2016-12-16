@@ -35,6 +35,8 @@ public class IsicresManagerProvider {
 	
 	private static final String DOCUMENTO_ELECTRONICO_ANEXO_MANAGER_BEAN = "documentoElectronicoAnexoManager";
 	
+	private static final String CONFIGURACION_INTERCAMBIO_REGISTRAL_MANAGER_BEAN = "configuracionIntercambioRegistralManager";
+
 	protected static IsicresManagerProvider instance=null; 
 	
 	protected IsicresManagerProvider(){
@@ -136,6 +138,11 @@ public class IsicresManagerProvider {
 	
 	public DocumentoTipoDocumentalSicresManager getDocumentoTipoDocumentalSicresManager(){
 		DocumentoTipoDocumentalSicresManager result = (DocumentoTipoDocumentalSicresManager) getGenericBean(DOCUMENTOTIPODOCUMENTAL_MANAGER_BEAN);
+		return result;
+	}
+
+	public ConfiguracionIntercambioRegistralManager getConfiguracionIntercambioRegistralManager() {
+		ConfiguracionIntercambioRegistralManager result = (ConfiguracionIntercambioRegistralManager)this.getGenericBean("configuracionIntercambioRegistralManager");
 		return result;
 	}
 	

@@ -27,6 +27,8 @@ public class IbatisConfiguracionIntercambioRegistralDAOImpl implements
 
 	private static final String GET_UNIDAD_TRAMITACION_BY_ID_OFICINA = "UnidadAdministrativaIntercambioRegistralVO.getUnidadAdministrativaByIdOficina";
 
+	private static final String GET_UNIDAD_ADMINISTRATIVA_BY_CODE_ENTITY = "UnidadAdministrativaIntercambioRegistralVO.getUnidadAdministrativaByCodeEntity";
+
 
 
 	protected SqlMapClientTemplate sqlMapClientTemplate = new SqlMapClientTemplate();
@@ -142,6 +144,16 @@ public class IbatisConfiguracionIntercambioRegistralDAOImpl implements
 		this.sqlMapClientTemplate.setSqlMapClient(aSqlMapClient);
 	}
 
+	
+	public List<UnidadAdministrativaIntercambioRegistralVO> getUnidadAdministrativaByCodidgoER(String codigo) {
+		try {
+			List unidadAdministrativa = this.getSqlMapClientTemplate().queryForList("UnidadAdministrativaIntercambioRegistralVO.getUnidadAdministrativaByCodeEntity", (Object)codigo);
+			return unidadAdministrativa;
+		} catch (DataAccessException exception) {
+			logger.error((Object)"Error en la obtenci\u00f3n de una unidad administrativa a partir de lso codigos comunes de entidad registral", (Throwable)exception);
+			throw new RuntimeException((Throwable)exception);
+		}
+	}
 
 
 }

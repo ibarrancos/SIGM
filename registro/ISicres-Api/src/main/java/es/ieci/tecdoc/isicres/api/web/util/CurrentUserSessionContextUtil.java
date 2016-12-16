@@ -341,6 +341,24 @@ public class CurrentUserSessionContextUtil {
 		boolean operacionesIntercambioRegistral = permsApli.canAccessRegInterchange();
 		result.setOperacionesIntercambioRegistral(operacionesIntercambioRegistral);
 		
+		boolean borrarDocuAnexa = permsApli.isCanDeleteDocuments();
+		result.setBorrarDocuAnexa(borrarDocuAnexa);
+
+		boolean gestionUnidadesAdministrativas = permsApli.getCanModifyAdminUnits();
+		result.setGestionUnidadesAdministrativas(gestionUnidadesAdministrativas);
+
+		boolean gestionInformes = permsApli.getCanModifyReports();
+		result.setGestionInformes(gestionInformes);
+
+		boolean gestionTiposAsunto = permsApli.getCanModifyIssueTypes();
+		result.setGestionTiposAsunto(gestionTiposAsunto);
+
+		boolean gestionUsuarios = permsApli.getCanModifyUsers();
+		result.setGestionUsuarios(gestionUsuarios);
+
+		boolean gestionTiposTransporte = permsApli.getCanModifyTransportTypes();
+		result.setGestionTiposTransporte(gestionTiposTransporte);
+
 		return result;
 		
 	}

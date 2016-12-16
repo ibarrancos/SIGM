@@ -6,6 +6,10 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaSalida
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralSalidaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
+import es.ieci.tecdoc.fwktd.server.pagination.PageInfo;
+import es.ieci.tecdoc.fwktd.server.pagination.PaginatedArrayList;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriteriosBusquedaIRSalidaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaEnumVO;
 
 /**
  * interface con las opereraciones relacionadas con el intercambio registral de salida
@@ -148,4 +152,9 @@ public interface IntercambioRegistralSalidaManager {
 	 * @param idOficina
 	 */
 	public List<IntercambioRegistralSalidaVO> getHistorialIntercambioRegistralSalida(String idLibro, String idRegistro, String idOficina);
+
+	public List<BandejaSalidaItemVO> findBandejaSalidaByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2, Integer var3);
+
+	public PaginatedArrayList<BandejaSalidaItemVO> findBandejaSalidaByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2, Integer var3, PageInfo var4);
+
 }

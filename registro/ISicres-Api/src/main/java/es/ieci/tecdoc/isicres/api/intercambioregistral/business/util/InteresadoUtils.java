@@ -1,392 +1,256 @@
 package es.ieci.tecdoc.isicres.api.intercambioregistral.business.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.ieci.tecdoc.common.isicres.Keys;
-
 import es.ieci.tecdoc.fwktd.sir.core.types.CanalNotificacionEnum;
 import es.ieci.tecdoc.fwktd.sir.core.types.TipoDocumentoIdentificacionEnum;
 import es.ieci.tecdoc.fwktd.sir.core.vo.InteresadoVO;
-/**
- * Clase de utilidades para el uso de los interesados en el intercambio registral
- * @author IECISA
- *
- */
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InteresadoExReg;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import org.apache.commons.lang.StringUtils;
+
 public class InteresadoUtils {
+    private static final String BLANK = " ";
 
-	private static final String BLANK = " ";
+    public static List<String> getDatosInteresadoArray(InteresadoExReg interesado) {
+        ArrayList<String> resultDataInteresado = new ArrayList<String>();
+        StringBuffer nombreInteresado = InteresadoUtils.getNombreApellidosInteresado((InteresadoVO)interesado);
+        if (StringUtils.isNotBlank((String)nombreInteresado.toString())) {
+            resultDataInteresado.add(nombreInteresado.toString());
+        } else if (StringUtils.isNotEmpty((String)interesado.getRazonSocialInteresado())) {
+            resultDataInteresado.add(interesado.getRazonSocialInteresado());
+        }
+        StringBuffer identificacionInteresado = InteresadoUtils.getIdentificacionInteresado((InteresadoVO)interesado);
+        if (StringUtils.isNotEmpty((String)identificacionInteresado.toString())) {
+            resultDataInteresado.add(identificacionInteresado.toString());
+        }
+        StringBuffer direccionInteresado = new StringBuffer();
+        direccionInteresado.append(InteresadoUtils.getDireccionInteresado(interesado));
+        if (StringUtils.isNotEmpty((String)direccionInteresado.toString())) {
+            InteresadoUtils.addDireccionInteresado(resultDataInteresado, direccionInteresado.toString());
+        }
+        return resultDataInteresado;
+    }
 
-	/**
-	 * Método que obtiene la información del interesado en un array
-	 *
-	 * @param interesado
-	 *            - {@link InteresadoVO} Datos del interesado
-	 * @return {@link ArrayList} de {@link String} Con los datos del interesado
-	 *         descompuestos en cadenas: Nombre y Apellidos, Identificación y
-	 *         Dirección
-	 */
-	public static List<String> getDatosInteresadoArray(InteresadoVO interesado) {
-		// Inicializamos el array
-		List<String> resultDataInteresado = new ArrayList<String>();
+    public static List<String> getDatosRepresentanteArray(InteresadoExReg interesado) {
+        StringBuffer direccion;
+        ArrayList<String> listaCamposRepresentante = new ArrayList<String>();
+        StringBuffer nombre = InteresadoUtils.getNombreApellidosRepresentante((InteresadoVO)interesado);
+        if (StringUtils.isNotBlank((String)nombre.toString())) {
+            listaCamposRepresentante.add(nombre.toString());
+        } else if (StringUtils.isNotEmpty((String)interesado.getRazonSocialRepresentante())) {
+            listaCamposRepresentante.add(interesado.getRazonSocialRepresentante());
+        }
+        StringBuffer identificacion = InteresadoUtils.getIdentificacionRepresentante((InteresadoVO)interesado);
+        if (StringUtils.isNotEmpty((String)identificacion.toString())) {
+            listaCamposRepresentante.add(identificacion.toString());
+        }
+        if (StringUtils.isNotEmpty((String)(direccion = new StringBuffer().append(InteresadoUtils.getDireccionRepresentante(interesado))).toString())) {
+            InteresadoUtils.addDireccionInteresado(listaCamposRepresentante, direccion.toString());
+        }
+        return listaCamposRepresentante;
+    }
 
-		// Obtenemos la cadena con el nombre y los apellidos del interesado
-		StringBuffer nombreInteresado = getNombreApellidosInteresado(interesado);
+    private static StringBuffer getIdentificacionInteresado(InteresadoVO interesado) {
+        StringBuffer identificacionInteresado = new StringBuffer("");
+        if (interesado.getTipoDocumentoIdentificacionInteresado() != null) {
+            identificacionInteresado.append(interesado.getTipoDocumentoIdentificacionInteresado().getValue());
+        }
+        if (!StringUtils.isEmpty((String)interesado.getDocumentoIdentificacionInteresado())) {
+            if (StringUtils.isNotEmpty((String)identificacionInteresado.toString())) {
+                identificacionInteresado.append(": ");
+            }
+            identificacionInteresado.append(interesado.getDocumentoIdentificacionInteresado());
+        }
+        return identificacionInteresado;
+    }
 
-		// si la cadena esta rellenada, se añade al array con los datos del
-		// interesado.
-		if (StringUtils.isNotEmpty(nombreInteresado.toString())) {
-			resultDataInteresado.add(nombreInteresado.toString());
-		}
+    private static StringBuffer getIdentificacionRepresentante(InteresadoVO interesado) {
+        StringBuffer identificacion = new StringBuffer("");
+        if (interesado.getTipoDocumentoIdentificacionRepresentante() != null) {
+            identificacion.append(interesado.getTipoDocumentoIdentificacionRepresentante().getValue());
+        }
+        if (!StringUtils.isEmpty((String)interesado.getDocumentoIdentificacionRepresentante())) {
+            if (StringUtils.isNotEmpty((String)identificacion.toString())) {
+                identificacion.append(": ");
+            }
+            identificacion.append(interesado.getDocumentoIdentificacionRepresentante());
+        }
+        return identificacion;
+    }
 
-		// Obtenemos la información de la identificación del interesado
-		StringBuffer identificacionInteresado = getIdentificacionInteresado(interesado);
-		// si la cadena esta rellenada, se añade al array con los datos del
-		// interesado.
-		if (StringUtils.isNotEmpty(identificacionInteresado.toString())) {
-			resultDataInteresado.add(identificacionInteresado.toString());
-		}
+    private static StringBuffer getNombreApellidosInteresado(InteresadoVO interesado) {
+        StringBuffer nombreInteresado = new StringBuffer();
+        if (!StringUtils.isEmpty((String)interesado.getNombreInteresado())) {
+            nombreInteresado.append(interesado.getNombreInteresado()).append(" ");
+        }
+        if (!StringUtils.isEmpty((String)interesado.getPrimerApellidoInteresado())) {
+            nombreInteresado.append(interesado.getPrimerApellidoInteresado()).append(" ");
+        }
+        if (!StringUtils.isEmpty((String)interesado.getSegundoApellidoInteresado())) {
+            nombreInteresado.append(interesado.getSegundoApellidoInteresado());
+        }
+        return nombreInteresado;
+    }
 
-		// Obtenemos la cadena con la dirección del interesado
-		StringBuffer direccionInteresado = getDireccionInteresado(interesado);
+    private static StringBuffer getNombreApellidosRepresentante(InteresadoVO interesado) {
+        StringBuffer nombreInteresado = new StringBuffer();
+        if (!StringUtils.isEmpty((String)interesado.getNombreRepresentante())) {
+            nombreInteresado.append(interesado.getNombreRepresentante()).append(" ");
+        }
+        if (!StringUtils.isEmpty((String)interesado.getPrimerApellidoRepresentante())) {
+            nombreInteresado.append(interesado.getPrimerApellidoRepresentante()).append(" ");
+        }
+        if (!StringUtils.isEmpty((String)interesado.getSegundoApellidoRepresentante())) {
+            nombreInteresado.append(interesado.getSegundoApellidoRepresentante());
+        }
+        return nombreInteresado;
+    }
 
-		// Validamos si la cadena con la dirección esta rellenada
-		if (StringUtils.isNotEmpty(direccionInteresado.toString())) {
-			// añadimos los datos de la dirección al array que compone los datos
-			// del interesado
-			addDireccionInteresado(resultDataInteresado,
-					direccionInteresado.toString());
-		}
+    private static void addDireccionInteresado(List<String> resultDataInteresado, String direccionInteresado) {
+        if (direccionInteresado.length() > 95) {
+            List<String> partesDireccion = InteresadoUtils.recortarCadenaDireccion(direccionInteresado);
+            Iterator<String> it = partesDireccion.iterator();
+            while (it.hasNext()) {
+                resultDataInteresado.add(it.next());
+            }
+        } else {
+            resultDataInteresado.add(direccionInteresado.toString());
+        }
+    }
 
-		// retornamos listado con los datos del interesado
-		return resultDataInteresado;
-	}
+    private static List<String> recortarCadenaDireccion(String direccionInteresado) {
+        List partesDireccion = new ArrayList();
+        partesDireccion = direccionInteresado.split(" ").length - 1 > 0 ? InteresadoUtils.recortarCadenaConEspacios(direccionInteresado) : InteresadoUtils.obtenerSubCadenasDireccionInteresado(direccionInteresado.toString());
+        return partesDireccion;
+    }
 
-	/**
-	 * Método que obtiene la cadena con la información referente a la identificación del interesado
-	 * @param interesado {@link InteresadoVO} Datos del interesado
-	 * @return StringBuffer - cadena con la información referente a la identificación del interesado
-	 */
-	private static StringBuffer getIdentificacionInteresado(InteresadoVO interesado) {
-		StringBuffer identificacionInteresado = new StringBuffer("");
-		//Comprobamos si recibimos el tipo de identificación
-		if (interesado.getTipoDocumentoIdentificacionInteresado() != null) {
-			//si es asi, añadimos el tipo de identificacion a la cadena resultante
-			identificacionInteresado.append(
-					interesado.getTipoDocumentoIdentificacionInteresado()
-							.getValue());
-		}
+    private static List<String> recortarCadenaConEspacios(String direccionInteresado) {
+        ArrayList<String> result = new ArrayList<String>();
+        StringTokenizer tokens = new StringTokenizer(direccionInteresado.toString());
+        String partesDeDireccionSinEspacio = null;
+        String cadenaCompuestaDePartesDireccion = new String();
+        while (tokens.hasMoreTokens()) {
+            partesDeDireccionSinEspacio = tokens.nextToken();
+            if (partesDeDireccionSinEspacio.length() < 95) {
+                cadenaCompuestaDePartesDireccion = InteresadoUtils.tratarTokenDireccionMenorALengthSaveInBBDD(result, partesDeDireccionSinEspacio, cadenaCompuestaDePartesDireccion);
+                continue;
+            }
+            cadenaCompuestaDePartesDireccion = InteresadoUtils.tratarTokenDireccionMayorALengthSaveInBBDD(result, partesDeDireccionSinEspacio, cadenaCompuestaDePartesDireccion);
+        }
+        if (StringUtils.isNotEmpty((String)cadenaCompuestaDePartesDireccion)) {
+            result.add(cadenaCompuestaDePartesDireccion);
+        }
+        return result;
+    }
 
-		//validamos si esta rellenado el documento identificativo del interesado
-		if (!StringUtils.isEmpty(interesado
-				.getDocumentoIdentificacionInteresado())) {
-			//comprobamos si la cadena de identificacion contiene datos para añadir el separador
-			if(StringUtils.isNotEmpty(identificacionInteresado.toString())){
-				identificacionInteresado.append(": ");
+    private static String tratarTokenDireccionMayorALengthSaveInBBDD(List<String> partesDireccion, String partesDeDireccionSinEspacio, String cadenaCompuestaDePartesDireccion) {
+        if (StringUtils.isNotBlank((String)cadenaCompuestaDePartesDireccion)) {
+            partesDireccion.add(cadenaCompuestaDePartesDireccion);
+            cadenaCompuestaDePartesDireccion = new String();
+        }
+        List<String> auxDireccion = InteresadoUtils.obtenerSubCadenasDireccionInteresado(partesDeDireccionSinEspacio);
+        partesDireccion.addAll(auxDireccion);
+        return cadenaCompuestaDePartesDireccion;
+    }
 
-			}
-			//añadimos el documento identificativo del interesado a la cadena resultante
-			identificacionInteresado.append(
-					interesado.getDocumentoIdentificacionInteresado());
-		}
-		return identificacionInteresado;
-	}
+    private static List<String> obtenerSubCadenasDireccionInteresado(String direccionInteresado) {
+        ArrayList<String> subCadenasDireccion = new ArrayList<String>();
+        int init = 0;
+        int end = 95 > direccionInteresado.length() ? direccionInteresado.length() : 95;
+        do {
+            subCadenasDireccion.add(StringUtils.substring((String)direccionInteresado, (int)init, (int)end));
+            init = end;
+            if (end + 95 > direccionInteresado.length()) {
+                end = direccionInteresado.length();
+                continue;
+            }
+            end+=95;
+        } while (direccionInteresado.length() - end > 95);
+        if (StringUtils.isNotEmpty((String)StringUtils.substring((String)direccionInteresado, (int)init, (int)end))) {
+            subCadenasDireccion.add(StringUtils.substring((String)direccionInteresado, (int)init, (int)end));
+        }
+        return subCadenasDireccion;
+    }
 
-	/**
-	 * Método que obtiene la cadena con el nombre y los apellidos (o en su caso la razón social) del interesado pasado como parámetro
-	 * @param interesado - {@link InteresadoVO} Datos del interesado
-	 * @return StringBuffer - cadena con el nombre y los apellidos (o en su caso la razón social) del interesado
-	 */
-	private static StringBuffer getNombreApellidosInteresado(InteresadoVO interesado) {
-		StringBuffer nombreInteresado = new StringBuffer("");
+    private static String tratarTokenDireccionMenorALengthSaveInBBDD(List<String> partesDireccion, String partesDeDireccionSinEspacio, String cadenaCompuestaDePartesDireccion) {
+        if (cadenaCompuestaDePartesDireccion.length() + " ".length() + partesDeDireccionSinEspacio.length() > 95) {
+            partesDireccion.add(cadenaCompuestaDePartesDireccion);
+            cadenaCompuestaDePartesDireccion = partesDeDireccionSinEspacio;
+        } else {
+            cadenaCompuestaDePartesDireccion = InteresadoUtils.obtenerCadenaCompuestaDireccion(partesDeDireccionSinEspacio, cadenaCompuestaDePartesDireccion);
+        }
+        return cadenaCompuestaDePartesDireccion;
+    }
 
-		if (interesado.getTipoDocumentoIdentificacionInteresado() != TipoDocumentoIdentificacionEnum.CIF) {
-			if (!StringUtils.isEmpty(interesado.getNombreInteresado())) {
-				nombreInteresado.append(interesado.getNombreInteresado()).append(BLANK);
-			}
+    private static String obtenerCadenaCompuestaDireccion(String partesDeDireccionSinEspacio, String cadenaCompuestaDePartesDireccion) {
+        cadenaCompuestaDePartesDireccion = StringUtils.isNotBlank((String)cadenaCompuestaDePartesDireccion) ? cadenaCompuestaDePartesDireccion + " " + partesDeDireccionSinEspacio : partesDeDireccionSinEspacio;
+        return cadenaCompuestaDePartesDireccion;
+    }
 
-			if (!StringUtils.isEmpty(interesado.getPrimerApellidoInteresado())) {
-				nombreInteresado.append(interesado.getPrimerApellidoInteresado()).append(BLANK);
-			}
+    public static String getDireccionInteresado(InteresadoExReg interesado) {
+        StringBuffer direccionInteresado = new StringBuffer("");
+        if (interesado.getCanalPreferenteComunicacionInteresado() == CanalNotificacionEnum.DIRECCION_POSTAL) {
+            if (StringUtils.isNotBlank((String)interesado.getNombrePaisInteresado())) {
+                direccionInteresado.append(interesado.getNombrePaisInteresado());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getCodigoProvinciaInteresado())) {
+                direccionInteresado.append(" - ").append(interesado.getNombreProvinciaInteresado());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getNombreMunicipioInteresado())) {
+                direccionInteresado.append(" - ").append(interesado.getNombreMunicipioInteresado());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getCodigoPostalInteresado())) {
+                direccionInteresado.append(" - ").append(interesado.getCodigoPostalInteresado());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getDireccionInteresado())) {
+                direccionInteresado.append(" - ").append(interesado.getDireccionInteresado());
+            }
+        } else {
+            if (StringUtils.isNotBlank((String)interesado.getDireccionElectronicaHabilitadaInteresado())) {
+                direccionInteresado.append(" ").append(interesado.getDireccionElectronicaHabilitadaInteresado());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getCorreoElectronicoInteresado())) {
+                direccionInteresado.append(" ").append(interesado.getCorreoElectronicoInteresado());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getTelefonoInteresado())) {
+                direccionInteresado.append(" ").append(interesado.getTelefonoInteresado());
+            }
+        }
+        return direccionInteresado.toString();
+    }
 
-			if (!StringUtils.isEmpty(interesado.getSegundoApellidoInteresado())) {
-				nombreInteresado.append(interesado.getSegundoApellidoInteresado());
-			}
-
-		} else {
-			if (!StringUtils.isEmpty(interesado.getRazonSocialInteresado())) {
-				nombreInteresado.append(interesado.getRazonSocialInteresado());
-			}
-		}
-		return nombreInteresado;
-	}
-
-
-	/**
-	 * Método que añade la información de la direccion al listado pasado como
-	 * parámetro con los datos del interesado, se valida si la cadena de la
-	 * direccion excede el tamaño maximo posible de almacenamiento en BBDD, si
-	 * es asi, se descompone la dirección en diferentes subcadenas
-	 *
-	 * @param resultDataInteresado
-	 *            - Listado donde se añaden la cadena/subcadenas con la
-	 *            información de la direccion
-	 * @param direccionInteresado
-	 *            - StringBuffer con la direccion del interesado
-	 *
-	 */
-	private static void addDireccionInteresado(List<String> resultDataInteresado,
-			String direccionInteresado) {
-		// comprobamos la longitud de la direccion
-		if (direccionInteresado.length() > Keys.MAX_LENGTH_STRING_DATA_INTERESADO) {
-			List<String> partesDireccion = recortarCadenaDireccion(direccionInteresado);
-			// recorremos el array con las partes de la direccion, en el
-			// array con todos los datos del interesado
-			for (Iterator<String> it = partesDireccion.iterator(); it.hasNext();) {
-				resultDataInteresado.add((String) it.next());
-			}
-		} else {
-			// añadimos al array de datos del interesado la cadena con los
-			// datos del interesado
-			resultDataInteresado.add(direccionInteresado.toString());
-		}
-	}
-
-	/**
-	 * Método que recorta la dieccion en diversas partes
-	 *
-	 * @param direccionInteresado
-	 *            - StringBuffer con la direccion del interesado
-	 */
-	private static List<String> recortarCadenaDireccion(String direccionInteresado) {
-		List<String> partesDireccion = new ArrayList<String>();
-		// comprobamos si contiene algun espacio en blanco
-		if ((direccionInteresado.split(BLANK).length-1)>0) {
-			// Tratamiento de la cadena con espacios en blanco
-			partesDireccion = recortarCadenaConEspacios(direccionInteresado);
-		} else {
-			// descomponemos la cadena en diferentes partes ya que no contiene
-			// espacios, por tanto la cadena con la direccion se recorta sin
-			// mas, en diferentes partes
-			partesDireccion = obtenerSubCadenasDireccionInteresado(direccionInteresado
-					.toString());
-		}
-
-		return partesDireccion;
-	}
-
-	/**
-	 * Método que realiza el tratamiento de la cadena con la direccion del
-	 * interesado y esta contiene espacios
-	 *
-	 * @param direccionInteresado
-	 *            - StringBuffer con la direccion del interesado
-	 */
-	private static List<String> recortarCadenaConEspacios(String direccionInteresado) {
-		//inicializamos el array que contendra las diferentes partes de la dirección
-		List<String> result = new ArrayList<String>();
-
-		// obtenemos la direccion del interesado, divida con
-		// espacios y la dividimos en diferentes partes
-		StringTokenizer tokens = new StringTokenizer(
-				direccionInteresado.toString());
-
-		//Cadena que contiene cada uno de los token, de la direccion del interesado
-		String partesDeDireccionSinEspacio = null;
-
-		// cadena auxiliar que contiene cada una de las partes de la dirección
-		// hasta sumar el tamaño maximo posible que se puede almacenar en BBDD
-		String cadenaCompuestaDePartesDireccion = new String();
-		// recorremos la cadena separadas por espacios
-		while (tokens.hasMoreTokens()) {
-			// obtenemos cada parte y realizamos las siguientes
-			// validaciones
-			partesDeDireccionSinEspacio = tokens.nextToken();
-			// si el token que estas tratando es menor al tamaño al maximo que se puede almacenar en BBDD
-			if (partesDeDireccionSinEspacio.length() < Keys.MAX_LENGTH_STRING_DATA_INTERESADO) {
-				// realizamos el sigiuiente tratamiento: añadimos el token a una
-				// cadena hasta llegar al tamaño deseado
-				cadenaCompuestaDePartesDireccion = tratarTokenDireccionMenorALengthSaveInBBDD(
-						result, partesDeDireccionSinEspacio,
-						cadenaCompuestaDePartesDireccion);
-			} else {
-				// si el token supera el tamaño descomponemos dicho token en
-				// diferentes partes, sin que excedan el tamaño deseado
-				cadenaCompuestaDePartesDireccion = tratarTokenDireccionMayorALengthSaveInBBDD(
-						result, partesDeDireccionSinEspacio,
-						cadenaCompuestaDePartesDireccion);
-			}
-		}
-
-		//añadimos al listado el ultimo elemento tratado
-		if(StringUtils.isNotEmpty(cadenaCompuestaDePartesDireccion)){
-			result.add(cadenaCompuestaDePartesDireccion);
-		}
-
-		return result;
-	}
-
-	/**
-	 * Método que realiza el tratamiento necesario sobre la cadena pasada como
-	 * parametro cuando excede el tamaño de los datos del interesados
-	 *
-	 * @param partesDireccion
-	 * @param partesDeDireccionSinEspacio - Listado con las partes de la direccion
-	 * @param cadenaCompuestaDePartesDireccion - String con la cadena a tratar
-	 * @return
-	 */
-	private static String tratarTokenDireccionMayorALengthSaveInBBDD(
-			List<String> partesDireccion, String partesDeDireccionSinEspacio,
-			String cadenaCompuestaDePartesDireccion) {
-		//validamos si la cadena no es vacia cadenaCompuestaDePartesDireccion
-		if (StringUtils.isNotBlank(cadenaCompuestaDePartesDireccion)) {
-			//añadimos ya los datos tratados hasta el mometo al array con las partes de la direccion
-			partesDireccion.add(cadenaCompuestaDePartesDireccion);
-			//inicializamos de nuevo la cadena
-			cadenaCompuestaDePartesDireccion = new String();
-		}
-
-		// si la cadena es mayor al tamaño de la celda,
-		// descomponemos en varias partes el token
-		List<String> auxDireccion = obtenerSubCadenasDireccionInteresado(partesDeDireccionSinEspacio);
-
-//		// Obtenemos el ultimo elemento de la lista para comprobar si la cadena
-//		// es menor al tamaño desea, sino lo devolvemos como cadena a seguir
-//		// concatenando los datos
-//		if ((auxDireccion.get(auxDireccion.size() - 1).length()) < Keys.MAX_LENGTH_STRING_DATA_INTERESADO) {
-//			//añadimos el ultimo elemento de la lista como cadenCompuesta para seguir concatenando datos
-//			cadenaCompuestaDePartesDireccion = auxDireccion.get(auxDireccion.size()-1);
-//			//eliminamos el último elemento de la lista
-//			auxDireccion.remove(auxDireccion.size()-1);
-//		}else{
-//			//inicializamos de nuevo la cadena
-//			cadenaCompuestaDePartesDireccion = new String();
-//		}
-
-		// añadimos las diferentes partes de la cadena al
-		// array de las partes de la direccion
-		partesDireccion.addAll(auxDireccion);
-
-		//retornamos la cadena
-		return cadenaCompuestaDePartesDireccion;
-	}
-
-	private static List<String> obtenerSubCadenasDireccionInteresado(
-			String direccionInteresado) {
-		List<String> subCadenasDireccion = new ArrayList<String>();
-
-		int init = 0;
-		int end;
-
-		if (Keys.MAX_LENGTH_STRING_DATA_INTERESADO > direccionInteresado.length()) {
-			end = direccionInteresado.length();
-		} else {
-			end = Keys.MAX_LENGTH_STRING_DATA_INTERESADO;
-		}
-
-		do{
-			//añadimos al listado de partes, la parte obtenida de la dirección
-			subCadenasDireccion.add(StringUtils.substring(direccionInteresado, init, end));
-			init = end;
-
-			//calculamos el fin de la siguiente parte de la cadena
-			//si la posicion final de la cadena anterior mas el tamaño posible excenden el tamaño de la Dirección
-			if((end + Keys.MAX_LENGTH_STRING_DATA_INTERESADO) > direccionInteresado.length()){
-				//asignamos como final de la cadena, la maxima longitud de la Dirección recibida como paramétro
-				end = direccionInteresado.length();
-			}else{
-				//sino sumamaos a la cadena otro bloque más
-				end = end + Keys.MAX_LENGTH_STRING_DATA_INTERESADO;
-			}
-			// el proceso se repite mientras la cadena obtenida tenga un tamaño
-			// mayor al valor posible para almacenar
-		}while((direccionInteresado.length() - end)>Keys.MAX_LENGTH_STRING_DATA_INTERESADO);
-
-		//añadimos el último token al listado de partes
-		if(StringUtils.isNotEmpty(StringUtils.substring(direccionInteresado, init, end))){
-			subCadenasDireccion.add(StringUtils.substring(direccionInteresado, init, end));
-		}
-
-		return subCadenasDireccion;
-	}
-
-	private static String tratarTokenDireccionMenorALengthSaveInBBDD(
-			List<String> partesDireccion, String partesDeDireccionSinEspacio,
-			String cadenaCompuestaDePartesDireccion) {
-		// validamos si el token a tratar, mas la cadena ya tratada
-		// hasta el momento mas un caractes de espacio, suman mas del
-		// tamaño de la celda
-		if (cadenaCompuestaDePartesDireccion.length() + BLANK.length()
-				+ partesDeDireccionSinEspacio.length() > Keys.MAX_LENGTH_STRING_DATA_INTERESADO) {
-			// añadimos la cadena con los token tratados hasta el momento, al
-			// array que contiene las diferentes partes que componen la
-			// dirección
-			partesDireccion.add(cadenaCompuestaDePartesDireccion);
-			// inicializamos la cadena de nuevo con el token tratado
-			cadenaCompuestaDePartesDireccion = partesDeDireccionSinEspacio;
-		} else {
-			// añadimos el token a la cadena auxiliar hasta
-			// sumar el tamaño de la celda
-			cadenaCompuestaDePartesDireccion = obtenerCadenaCompuestaDireccion(
-					partesDeDireccionSinEspacio,
-					cadenaCompuestaDePartesDireccion);
-		}
-
-		return cadenaCompuestaDePartesDireccion;
-	}
-
-	/**
-	 * Método que obtiene la cadena compuesta de la dirección, si la cadena
-	 * cadenaCompuestaDePartesDireccion es vacia/nula lo igualamos a la cadena
-	 * pasada como parametro, sino concatenmos con las dos cadenas con un
-	 * espacio
-	 *
-	 * @param partesDeDireccionSinEspacio - Parte con la información de la cadena
-	 * @param cadenaCompuestaDePartesDireccion - String con la información de la dirección
-	 * @return String - Cadena con la información de la direccion
-	 */
-	private static String obtenerCadenaCompuestaDireccion(
-			String partesDeDireccionSinEspacio,
-			String cadenaCompuestaDePartesDireccion) {
-		// Si el String cadenaCompuestaDePartes es distinto de nulo/vacio
-		// añadimos el espacio en blanco para separar cadenas
-		if (StringUtils.isNotBlank(cadenaCompuestaDePartesDireccion)) {
-			cadenaCompuestaDePartesDireccion = cadenaCompuestaDePartesDireccion
-					+ BLANK + partesDeDireccionSinEspacio;
-		} else {
-			// el String cadenaCompuestaDePartes como es vacio lo igualamos a la
-			// cadena pasada como parametro partesDeDireccionSinEspacio
-			cadenaCompuestaDePartesDireccion = partesDeDireccionSinEspacio;
-		}
-		return cadenaCompuestaDePartesDireccion;
-	}
-
-	/**
-	 * Método que obtiene la dirección del interesado
-	 * @param interesado - {@link InteresadoVO} Datos del interesado
-	 * @return StringBuffer - Dirección del interesado
-	 */
-	private static StringBuffer getDireccionInteresado(InteresadoVO interesado) {
-		StringBuffer direccionInteresado = new StringBuffer("");
-		//valida el tipo de direccion, si es postal obtiene la dirección
-		if (interesado.getCanalPreferenteComunicacionInteresado() == CanalNotificacionEnum.DIRECCION_POSTAL) {
-			if (!StringUtils.isEmpty(interesado.getDireccionInteresado())) {
-				direccionInteresado.append(
-						interesado.getDireccionInteresado());
-			}
-		} else if (interesado.getDireccionElectronicaHabilitadaInteresado() != null) {
-			//sino obtiene el valor de la direccion electrónica habilitada
-			if (!StringUtils.isEmpty(interesado
-					.getDireccionElectronicaHabilitadaInteresado())) {
-				direccionInteresado.append(
-						interesado
-								.getDireccionElectronicaHabilitadaInteresado());
-			}
-		}
-		return direccionInteresado;
-	}
+    public static String getDireccionRepresentante(InteresadoExReg interesado) {
+        StringBuffer direccionRepresentante = new StringBuffer("");
+        if (interesado.getCanalPreferenteComunicacionRepresentante() == CanalNotificacionEnum.DIRECCION_POSTAL) {
+            if (StringUtils.isNotBlank((String)interesado.getNombrePaisRepresentante())) {
+                direccionRepresentante.append(interesado.getNombrePaisRepresentante());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getNombreProvinciaRepresentante())) {
+                direccionRepresentante.append(" - ").append(interesado.getNombreProvinciaRepresentante());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getNombreMunicipioRepresentante())) {
+                direccionRepresentante.append(" - ").append(interesado.getNombreMunicipioRepresentante());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getCodigoPostalRepresentante())) {
+                direccionRepresentante.append(" - ").append(interesado.getCodigoPostalRepresentante());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getDireccionRepresentante())) {
+                direccionRepresentante.append(" - ").append(interesado.getDireccionRepresentante());
+            }
+        } else {
+            if (StringUtils.isNotBlank((String)interesado.getDireccionElectronicaHabilitadaRepresentante())) {
+                direccionRepresentante.append(" ").append(interesado.getDireccionElectronicaHabilitadaRepresentante());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getCorreoElectronicoRepresentante())) {
+                direccionRepresentante.append(" ").append(interesado.getCorreoElectronicoRepresentante());
+            }
+            if (StringUtils.isNotBlank((String)interesado.getTelefonoRepresentante())) {
+                direccionRepresentante.append(" ").append(interesado.getTelefonoRepresentante());
+            }
+        }
+        return direccionRepresentante.toString();
+    }
 }

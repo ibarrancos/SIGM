@@ -20,7 +20,7 @@ public interface OficinaDAO {
 	 * @param usuario
 	 * @return
 	 */
-	public List findOficinaByUsuario(Locale locale, UsuarioVO usuario);
+	public List<OficinaVO> getOficinasByUsuario(Locale var1, UsuarioVO var2);
 	
 	/**
 	 * obtiene la oficina mediante el identificador de oficina
@@ -36,4 +36,5 @@ public interface OficinaDAO {
 	 */
 	public OficinaVO getOficinaByIdDepartamento(Locale locale,String idDepartamento);
 	
+	public List<OficinaVO> getOficinas(Locale var1);
 }

@@ -3,6 +3,10 @@ package es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralFormVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralSalidaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
+import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralVO;
+import es.ieci.tecdoc.fwktd.sir.core.vo.InteresadoVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InfoAsientoRegistralVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InteresadoExReg;
 
 /**
  * Manager para construir objetos necesitados por el SIR
@@ -29,4 +33,7 @@ public interface IntercambioRegistralGeneradorObjetosManager {
 	public AsientoRegistralFormVO getAsientoRegistralIntercambioRegistralVO(
 			IntercambioRegistralSalidaVO intercambioSalidaVO, UnidadTramitacionIntercambioRegistralVO unidadTramitacionDestino);
 
+	public InteresadoExReg getInteresadoExReg(InteresadoVO var1);
+
+	public InfoAsientoRegistralVO getInfoAsientoRegistralVO(AsientoRegistralVO var1);
 }

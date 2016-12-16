@@ -100,5 +100,12 @@ public class IntercambioRegistralConfiguration {
 		List<String> extensionsList = Arrays.asList(extensions.split(","));
 		return extensionsList;
 	}
+	public Long getFilesSetMaxSize() {
+		return Long.valueOf(this.configurationProperties.getProperty("ficheros.tamano.maximo.total"));
+	}
+
+	public boolean getActiveValidationRelationEntidadUnidad() {
+		return Boolean.parseBoolean(this.configurationProperties.getProperty("activa.validacion.relacion.entidad.unidad", "false"));
+	}
 
 }

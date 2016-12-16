@@ -526,6 +526,10 @@ public class RegistroHelper {
 		axSfNew.addAttributeValue(ConstantKeys.FLD_KEY_EREG_RESUMEN
 				.toLowerCase(), registro.getResumen());
 
+		axSfNew.addAttributeName(ConstantKeys.FLD_KEY_EREG_REF_EXPEDIENTE.toLowerCase());
+		axSfNew.addAttributeValue(ConstantKeys.FLD_KEY_EREG_REF_EXPEDIENTE.toLowerCase(), registro.getReferenciaExpediente());
+	
+
 		return axSfNew;
 	}
 

@@ -3,6 +3,7 @@ package es.ieci.tecdoc.isicres.api.intercambioregistral.business.dao;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EntidadRegistralVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadAdministrativaIntercambioRegistralVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
+import java.util.List;
 
 /**
  * DAO para leer configuraciones de intercambio registral (mapeos de unidades administrativas
@@ -58,4 +59,6 @@ public interface ConfiguracionIntercambioRegistralDAO {
 	 */
 	public UnidadTramitacionIntercambioRegistralVO getUnidadTramitacionIntercambioRegistralVOByCodeScrOrgs(
 			String codeScrOrgs);
+
+	public List<UnidadAdministrativaIntercambioRegistralVO> getUnidadAdministrativaByCodidgoER(String var1);
 }

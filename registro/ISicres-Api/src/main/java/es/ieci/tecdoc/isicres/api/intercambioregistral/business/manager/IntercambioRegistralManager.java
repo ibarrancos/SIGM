@@ -13,6 +13,14 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRe
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadAdministrativaIntercambioRegistralVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionDCO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
+import es.ieci.tecdoc.fwktd.server.pagination.PageInfo;
+import es.ieci.tecdoc.fwktd.server.pagination.PaginatedArrayList;
+import es.ieci.tecdoc.fwktd.sir.core.vo.CriteriosVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriteriosBusquedaIREntradaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriteriosBusquedaIRSalidaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralEntradaEnumVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaEnumVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InfoAsientoRegistralVO;
 
 /**
  * Interfaz fachada de las operaciones relacionadas con el intercambio registral
@@ -333,4 +341,25 @@ public interface IntercambioRegistralManager {
 	 * @return
 	 */
 	public List<TrazabilidadVO> getHistoricoCompletoAsientoRegistral(String id);
+
+	public InfoAsientoRegistralVO getInfoIntercambioRegistralByIdIntercambio(String var1);
+
+	public IntercambioRegistralEntradaVO getIntercambioRegistralEntradaByRegistro(Integer var1, Integer var2, Integer var3);
+
+	public List<BandejaEntradaItemVO> findBandejaEntradaByCriterios(EstadoIntercambioRegistralEntradaEnumVO var1, CriteriosBusquedaIREntradaVO var2);
+
+	public PaginatedArrayList<BandejaEntradaItemVO> findBandejaEntradaByCriterios(EstadoIntercambioRegistralEntradaEnumVO var1, CriteriosBusquedaIREntradaVO var2, PageInfo var3);
+
+	public List<BandejaSalidaItemVO> findBandejaSalidaByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2, Integer var3);
+
+	public PaginatedArrayList<BandejaSalidaItemVO> findBandejaSalidaByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2, Integer var3, PageInfo var4);
+
+	public List<BandejaEntradaItemVO> findAsientosRegistrales(CriteriosVO var1);
+
+	public List<IntercambioRegistralSalidaVO> getHistorialIntercambioRegistralSalida(String var1, String var2, String var3, boolean var4);
+
+	public List<IntercambioRegistralEntradaVO> getHistorialIntercambioRegistralEntrada(String var1, String var2, String var3, boolean var4);
+
+	public List<UnidadTramitacionDCO> buscarUnidadesTramitacionDCOByEntidad(String var1, String var2, String var3);
+
 }

@@ -1,6 +1,9 @@
 package es.ieci.tecdoc.isicres.api.business.vo;
 
 import java.util.List;
+import es.ieci.tecdoc.isicres.api.business.vo.DepartamentoUsuarioVO;
+import es.ieci.tecdoc.isicres.api.business.vo.GrupoUsuarioVO;
+import es.ieci.tecdoc.isicres.api.business.vo.OficinaVO;
 
 /**
  * @author Iecisa
@@ -16,16 +19,17 @@ public class UsuarioVO extends BaseUsuarioVO {
 	 * 
 	 */
 	protected ConfiguracionUsuarioVO configuracionUsuario;
+	protected DepartamentoUsuarioVO departamentoUsuario;
 
 	/**
 	 * listado de grupos a los que pertenece el usuario
 	 */
-	protected List gruposUsuario;
+	protected List<GrupoUsuarioVO> gruposUsuario;
 
 	/**
 	 * Listado de oficinas a las que pertenece el usuario {@link OficinaVO}
 	 */
-	protected List oficinas;
+	protected List<OficinaVO> oficinas;
 
 	/**
 	 * Información sobre los permisos efectivos que tiene el usuario
@@ -50,6 +54,31 @@ public class UsuarioVO extends BaseUsuarioVO {
 
 	public void setPermisos(PermisosUsuarioVO permisos) {
 		this.permisos = permisos;
+	}
+
+
+	public List<GrupoUsuarioVO> getGruposUsuario() {
+		return this.gruposUsuario;
+	}
+
+	public void setGruposUsuario(List<GrupoUsuarioVO> gruposUsuario) {
+		this.gruposUsuario = gruposUsuario;
+	}
+
+	public List<OficinaVO> getOficinas() {
+		return this.oficinas;
+	}
+
+	public void setOficinas(List<OficinaVO> oficinas) {
+		this.oficinas = oficinas;
+	}
+
+	public DepartamentoUsuarioVO getDepartamentoUsuario() {
+		return this.departamentoUsuario;
+	}
+
+	public void setDepartamentoUsuario(DepartamentoUsuarioVO departamentoUsuario) {
+		this.departamentoUsuario = departamentoUsuario;
 	}
 
 }

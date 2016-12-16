@@ -11,7 +11,6 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 import es.ieci.tecdoc.isicres.api.compulsa.justificante.business.manager.impl.helper.CompulsaJustificanteHelper;
-import es.ieci.tecdoc.isicres.api.compulsa.justificante.business.manager.impl.helper.CompulsaJustificanteLocatorHelper;
 import es.ieci.tecdoc.isicres.api.compulsa.justificante.business.vo.ISicresCompulsaJustificanteDatosEspecificosVO;
 import es.ieci.tecdoc.isicres.api.compulsa.justificante.business.vo.ISicresCompulsaJustificanteVO;
 import es.ieci.tecdoc.isicres.api.compulsa.justificante.exception.ISicresCompulsaJustificanteException;
@@ -42,8 +41,6 @@ public class CompulsaJustificanteManager {
 			pdfCompulsaDocument = new Document();
 			pdfCompulsaWriter = PdfWriter.getInstance(pdfCompulsaDocument, compulsaJustificanteVO.getPdfCompulsaStream());
 			pdfCompulsaDocument.open();
-			//Asignar el localizador
-			CompulsaJustificanteLocatorHelper.getInstance().setLocator(compulsaJustificanteVO);
 			//Compulsar documento
 			generateJustificante(pdfOriginalReader, pdfCompulsaWriter, pdfCompulsaDocument, compulsaJustificanteVO);						
 		} catch (IOException e) {

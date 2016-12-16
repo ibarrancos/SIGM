@@ -1,107 +1,48 @@
 package es.ieci.tecdoc.isicres.api.intercambioregistral.business.dao;
 
-import java.util.List;
-
+import es.ieci.tecdoc.fwktd.server.pagination.PageInfo;
+import es.ieci.tecdoc.fwktd.server.pagination.PaginatedArrayList;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaSalidaItemVO;
-import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriterioBusquedaBandejaSalidaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriteriosBusquedaIRSalidaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaEnumVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralSalidaVO;
+import java.util.List;
 
 public interface BandejaSalidaIntercambioRegistralDAO {
+    public void save(IntercambioRegistralSalidaVO var1);
 
-	/**
-	 * Metodo que almacena un intercambio registral
-	 * @param intecambioRegistralSalida
-	 */
-	public void save(IntercambioRegistralSalidaVO intecambioRegistralSalida);
+    public IntercambioRegistralSalidaVO get(Long var1);
 
-	/**
-	 * Metodo que obtiene un intercambio registral mediante su id
-	 * @param id
-	 * @return
-	 */
-	public IntercambioRegistralSalidaVO get(Long id);
+    public List<IntercambioRegistralSalidaVO> findByIdIntercambioRegistralSirYOficina(String var1, Integer var2);
 
-	/**
-	 * Metodo que actualiza un estado del intercambio registral
-	 * @param intecambioRegistralSalida
-	 * @param estado
-	 */
-	public void updateEstado(IntercambioRegistralSalidaVO intecambioRegistralSalida,EstadoIntercambioRegistralSalidaVO estado);
+    public void updateEstado(IntercambioRegistralSalidaVO var1, EstadoIntercambioRegistralSalidaVO var2);
 
-	/**
-	 * Metodo que obtiene un listado  con los intercambios registrales de salida que cumplen el criterio pasado como parametro
-	 * @param criterios
-	 *
-	 * @return Listado de objetos {@link BandejaSalidaItemVO}
-	 */
-	public List<BandejaSalidaItemVO> findByCriterios(List<CriterioBusquedaBandejaSalidaVO> criterios);
+    public List<BandejaSalidaItemVO> findByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2);
 
-	/**
-	 * Metodo que completa la información del registro
-	 *
-	 * @param bandejaSalidaItemVO
-	 * @return {@link BandejaSalidaItemVO}
-	 */
-	public BandejaSalidaItemVO completarBandejaSalidaItem(BandejaSalidaItemVO bandejaSalidaItemVO);
+    public List<BandejaSalidaItemVO> findByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2, Integer var3);
 
-	/**
-	 * Metodo que obtiene la Bandeja de Salida mediante el estado y el id de oficina
-	 * @param estado
-	 * @param idOficina
-	 * @return Listado de objetos {@link BandejaSalidaItemVO}
-	 */
-	public List<BandejaSalidaItemVO> getBandejaSalidaByEstadoYOficina(Integer estado, Integer idOficina);
+    public PaginatedArrayList<BandejaSalidaItemVO> findByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2, PageInfo var3);
 
-	/**
-	 * Metodo que obtiene la Bandeja de Salida mediante el estado, el id de oficina y el id del libro
-	 * @param estado
-	 * @param idOficina
-	 * @param idLibro
-	 * @return Listado de objetos {@link BandejaSalidaItemVO}
-	 */
-	public List<BandejaSalidaItemVO> getBandejaSalidaByEstadoOficinaYLibro(Integer estado,Integer idOficina, Integer idLibro);
+    public PaginatedArrayList<BandejaSalidaItemVO> findByCriterios(EstadoIntercambioRegistralSalidaEnumVO var1, CriteriosBusquedaIRSalidaVO var2, Integer var3, PageInfo var4);
 
-	/**
-	 * Metodo que obtiene un listado con los intercambios registrales mediante su estado
-	 * @param estado
-	 * @return Listado de objetos {@link IntercambioRegistralSalidaVO}
-	 */
-	public List<IntercambioRegistralSalidaVO> getIntercambiosRegistralesSalida(Integer estado);
+    public BandejaSalidaItemVO completarBandejaSalidaItem(BandejaSalidaItemVO var1);
 
-	/**
-	 * Busca los intercambios registrales de salida para el registro con <code>idRegistro</code> e <code>idLibro</code>
-	 *
-	 * @param idRegistro
-	 * @param idLibro
-	 * @return Los intercambios realizados con este registro
-	 */
-	public List<IntercambioRegistralSalidaVO> getIntercambiosRegistralesSalida(Integer idRegistro, Integer idLibro, Integer idOficina);
+    public List<BandejaSalidaItemVO> getBandejaSalidaByEstadoYOficina(Integer var1, Integer var2);
 
-	/**
-	 * Metodo que borra un intercambio registral mediante el id del libro y el id del registro
-	 * @param idLibro
-	 * @param idRegistro
-	 */
-	public void deleteByIdArchIdFdr(Integer idLibro,Integer idRegistro, Integer idOficina);
+    public List<BandejaSalidaItemVO> getBandejaSalidaByIdIntercambioRegistralSirYOficina(String var1, Integer var2);
 
-	/**
-	 * Metodo que actualiza un intercambio registral
-	 *
-	 * @param intercambioRegistralSalida
-	 */
-	public void updateIntercambioRegistralSalidaVO(IntercambioRegistralSalidaVO intercambioRegistralSalida);
+    public List<BandejaSalidaItemVO> getBandejaSalidaByEstadoOficinaYLibro(Integer var1, Integer var2, Integer var3);
 
-	/**
-	 * Metodo que almacena un cambio de estado
-	 * @param estado - Objeto {@link EstadoIntercambioRegistralSalidaVO}
-	 */
-	public void saveDetalleEstado(EstadoIntercambioRegistralSalidaVO estado);
+    public List<IntercambioRegistralSalidaVO> getIntercambiosRegistralesSalida(Integer var1);
 
-	/**
-	 * Metodo que obtiene los diferentes estados de un intercambio registral
-	 * @param idExReg
-	 * @return
-	 */
-	public List<EstadoIntercambioRegistralSalidaVO> getDetalleEstadosIntercambioRegistralSalida(Long idExReg);
+    public List<IntercambioRegistralSalidaVO> getIntercambiosRegistralesSalida(Integer var1, Integer var2, Integer var3);
+
+    public void deleteByIdArchIdFdr(Integer var1, Integer var2, Integer var3);
+
+    public void updateIntercambioRegistralSalidaVO(IntercambioRegistralSalidaVO var1);
+
+    public void saveDetalleEstado(EstadoIntercambioRegistralSalidaVO var1);
+
+    public List<EstadoIntercambioRegistralSalidaVO> getDetalleEstadosIntercambioRegistralSalida(Long var1);
 }

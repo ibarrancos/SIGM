@@ -56,4 +56,9 @@ public interface ConfiguracionIntercambioRegistralManager {
 	 * @return Lista de <code>UnidadTramitacionDCO</code> del DCO que concuerden con el code y nombre pasado
 	 */
 	public List<UnidadTramitacionDCO> buscarUnidadesTramitacionDCO(String code, String nombre);
+
+	public UnidadAdministrativaIntercambioRegistralVO getUnidadAdmimistrativaByCodigoEntidadRegistralYUnidadTramitacion(String var1, String var2);
+	public List<UnidadAdministrativaIntercambioRegistralVO> getUnidadAdmimistrativaByCodigoEntidadRegistral(String var1);
+	public List<UnidadTramitacionDCO> buscarUnidadesTramitacionDCOByEntidad(String var1, String var2, String var3);
+	public boolean existRelacionUnidOrgaOficina(String var1, String var2);
 }

@@ -22,6 +22,18 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadAdminis
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionDCO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
 
+import es.ieci.tecdoc.fwktd.server.pagination.PageInfo;
+import es.ieci.tecdoc.fwktd.server.pagination.PaginatedArrayList;
+import es.ieci.tecdoc.fwktd.sir.core.vo.CriteriosVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralGeneradorObjetosManager;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.mapper.AsientoRegistralMapper;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriteriosBusquedaIREntradaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.CriteriosBusquedaIRSalidaVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralEntradaEnumVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaEnumVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InfoAsientoRegistralVO;
+
+
 public class IntercambioRegistralManagerImpl implements IntercambioRegistralManager {
 
 	protected IntercambioRegistralSalidaManager intercambioRegistralSalidaManager;
@@ -31,6 +43,9 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 	protected IntercambioRegistralSIRManager intercambioRegistralSIRManager;
 
 	protected ConfiguracionIntercambioRegistralManager configuracionIntercambioRegistralManager;
+
+	protected IntercambioRegistralGeneradorObjetosManager intercambioRegistralGeneradorObjetosManager;
+
 
 	public IntercambioRegistralSalidaManager getIntercambioRegistralSalidaManager() {
 		return intercambioRegistralSalidaManager;
@@ -339,6 +354,82 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 	public List<TrazabilidadVO> getTrazasIntercambioRegistral(String id) {
 
 		return getIntercambioRegistralSIRManager().getHistoricoAsientoRegistral(id);
+	}
+
+	public InfoAsientoRegistralVO getInfoIntercambioRegistralByIdIntercambio(String idIntercambio) {
+	    AsientoRegistralVO asientoRegistralVO = this.getIntercambioRegistralSIRManager().getAsientoRegistral(idIntercambio);
+	    InfoAsientoRegistralVO infoAsientoRegistralVO = null;
+	    if (asientoRegistralVO != null) {
+	        infoAsientoRegistralVO = this.intercambioRegistralGeneradorObjetosManager.getInfoAsientoRegistralVO(asientoRegistralVO);
+	    }
+	    return infoAsientoRegistralVO;
+	}
+
+	public List<IntercambioRegistralEntradaVO> getHistorialIntercambioRegistralEntrada(String idLibro, String idRegistro, String idOficina, boolean incluyeTrazas) {
+	    List<IntercambioRegistralEntradaVO> intercambios = this.getIntercambioRegistralEntradaManager().getHistorialIntercambioRegistralEntrada(idLibro, idRegistro, idOficina);
+	    if (incluyeTrazas) {
+	        for (IntercambioRegistralEntradaVO intercambio : intercambios) {
+	            if (intercambio.getIdIntercambioInterno() == null) continue;
+	            List<TrazabilidadVO> trazas = this.getTrazasIntercambioRegistral(String.valueOf(intercambio.getIdIntercambioInterno()));
+	            intercambio.setTrazas(trazas);
+	        }
+	    }
+	    return intercambios;
+	}
+
+	public List<IntercambioRegistralSalidaVO> getHistorialIntercambioRegistralSalida(String idLibro, String idRegistro, String idOficina, boolean incluyeTrazas) {
+	    List<IntercambioRegistralSalidaVO> intercambios = this.getIntercambioRegistralSalidaManager().getHistorialIntercambioRegistralSalida(idLibro, idRegistro, idOficina);
+	    if (incluyeTrazas) {
+	        for (IntercambioRegistralSalidaVO intercambio : intercambios) {
+	            if (intercambio.getIdIntercambioInterno() == null) continue;
+	            List<TrazabilidadVO> trazas = this.getTrazasIntercambioRegistral(String.valueOf(intercambio.getIdIntercambioInterno()));
+	            intercambio.setTrazas(trazas);
+	        }
+	    }
+	    return intercambios;
+	}
+
+	public IntercambioRegistralEntradaVO getIntercambioRegistralEntradaByRegistro(Integer idLibro, Integer idRegistro, Integer estado) {
+	    return this.getIntercambioRegistralEntradaManager().getIntercambioRegistralEntradaByRegistro(idLibro, idRegistro, estado);
+	}
+
+	public List<BandejaEntradaItemVO> findBandejaEntradaByCriterios(EstadoIntercambioRegistralEntradaEnumVO estado, CriteriosBusquedaIREntradaVO criterios) {
+	    return this.getIntercambioRegistralEntradaManager().findBandejaEntradaByCriterios(estado, criterios);
+	}
+
+	public PaginatedArrayList<BandejaEntradaItemVO> findBandejaEntradaByCriterios(EstadoIntercambioRegistralEntradaEnumVO estado, CriteriosBusquedaIREntradaVO criterios, PageInfo pageInfo) {
+	    return this.getIntercambioRegistralEntradaManager().findBandejaEntradaByCriterios(estado, criterios, pageInfo);
+	}
+
+	public List<BandejaSalidaItemVO> findBandejaSalidaByCriterios(EstadoIntercambioRegistralSalidaEnumVO estado, CriteriosBusquedaIRSalidaVO criterios, Integer idLibro) {
+	    return this.getIntercambioRegistralSalidaManager().findBandejaSalidaByCriterios(estado, criterios, idLibro);
+	}
+
+	public PaginatedArrayList<BandejaSalidaItemVO> findBandejaSalidaByCriterios(EstadoIntercambioRegistralSalidaEnumVO estado, CriteriosBusquedaIRSalidaVO criterios, Integer idLibro, PageInfo pageInfo) {
+	    return this.getIntercambioRegistralSalidaManager().findBandejaSalidaByCriterios(estado, criterios, idLibro, pageInfo);
+	}
+
+	public List<BandejaEntradaItemVO> findAsientosRegistrales(CriteriosVO criterios) {
+	    List<AsientoRegistralVO> bandejaEntrada = this.getIntercambioRegistralSIRManager().findAsientosRegistrales(criterios);
+	    ArrayList<BandejaEntradaItemVO> bandejaEntradaItems = new ArrayList<BandejaEntradaItemVO>();
+	    AsientoRegistralMapper mapper = new AsientoRegistralMapper();
+	    for (AsientoRegistralVO asientoRegistralVO : bandejaEntrada) {
+	        BandejaEntradaItemVO bandejaItem = mapper.toBandejaEntradaItemVO(asientoRegistralVO);
+	        bandejaEntradaItems.add(bandejaItem);
+	    }
+	    return bandejaEntradaItems;
+	}
+
+	public List<UnidadTramitacionDCO> buscarUnidadesTramitacionDCOByEntidad(String codeEntity, String code, String nombre) {
+	    return this.getConfiguracionIntercambioRegistralManager().buscarUnidadesTramitacionDCOByEntidad(codeEntity, code, nombre);
+	}
+
+	public IntercambioRegistralGeneradorObjetosManager getIntercambioRegistralGeneradorObjetosManager() {
+	    return this.intercambioRegistralGeneradorObjetosManager;
+	}
+
+	public void setIntercambioRegistralGeneradorObjetosManager(IntercambioRegistralGeneradorObjetosManager intercambioRegistralGeneradorObjetosManager) {
+	    this.intercambioRegistralGeneradorObjetosManager = intercambioRegistralGeneradorObjetosManager;
 	}
 
 }

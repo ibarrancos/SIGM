@@ -63,7 +63,9 @@ public class IntercambioRegistralActualizadorEstadosManagerImpl implements
 						//actuamos en caso de que el estado sea distinto de enviado a enviado y ack
 						if (estadoEnum != null
 								&& estadoEnum != EstadoAsientoRegistralEnum.ENVIADO
-								&& estadoEnum != EstadoAsientoRegistralEnum.ENVIADO_Y_ACK) {
+								&& estadoEnum != EstadoAsientoRegistralEnum.ENVIADO_Y_ACK
+								&& estadoEnum != EstadoAsientoRegistralEnum.DEVUELTO
+								&& estadoEnum != EstadoAsientoRegistralEnum.ENVIADO_Y_ERROR) {
 
 							EstadoIntercambioRegistralSalidaVO nuevoEstadoSalida = null ; 
 							if (estado != null) {

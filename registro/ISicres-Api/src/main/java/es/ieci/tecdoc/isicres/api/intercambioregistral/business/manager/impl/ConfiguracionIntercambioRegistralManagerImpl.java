@@ -23,6 +23,8 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EntidadRegist
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadAdministrativaIntercambioRegistralVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionDCO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
+import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosRelacionUnidOrgOficina;
+
 
 public class ConfiguracionIntercambioRegistralManagerImpl implements
 		ConfiguracionIntercambioRegistralManager {
@@ -155,6 +157,28 @@ public class ConfiguracionIntercambioRegistralManagerImpl implements
 	public void setServicioConsultaDirectorioComun(
 			ServicioConsultaDirectorioComun servicioConsultaDirectorioComun) {
 		this.servicioConsultaDirectorioComun = servicioConsultaDirectorioComun;
+	}
+
+	public UnidadAdministrativaIntercambioRegistralVO getUnidadAdmimistrativaByCodigoEntidadRegistralYUnidadTramitacion(String codigoUnidadTramitacion, String codigoEntidadRegistral) {
+		return this.getConfiguracionIntercambioRegistralDAO().getUnidadAdmimistrativaByCodigoEntidadRegistralYUnidadTramitacion(codigoUnidadTramitacion, codigoEntidadRegistral);
+	}
+
+	public List<UnidadAdministrativaIntercambioRegistralVO> getUnidadAdmimistrativaByCodigoEntidadRegistral(String codigo) {
+		return this.getConfiguracionIntercambioRegistralDAO().getUnidadAdministrativaByCodidgoER(codigo);
+	}
+
+	public List<UnidadTramitacionDCO> buscarUnidadesTramitacionDCOByEntidad(String codeEntity, String code, String nombre) {
+		List listaUnidadesTramitacionDCO = this.getServicioConsultaDirectorioComun().findUnidadesOrganicasByEntidad(codeEntity, code, nombre);
+		return this.getListaUnidadesTramitacionVO(listaUnidadesTramitacionDCO);
+	}
+
+	public boolean existRelacionUnidOrgaOficina(String codeEntidadRegistral, String codeUnidadTramitacion) {
+		boolean result = false;
+		DatosBasicosRelacionUnidOrgOficina relacion = this.getServicioConsultaDirectorioComun().getDatosBasicosRelacionUnidOrgOficinaByCodes(codeEntidadRegistral, codeUnidadTramitacion);
+		if (relacion != null) {
+			result = true;
+		}
+		return result;
 	}
 
 

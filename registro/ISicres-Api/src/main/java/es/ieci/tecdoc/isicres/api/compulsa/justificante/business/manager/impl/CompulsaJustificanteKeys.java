@@ -130,4 +130,8 @@ public class CompulsaJustificanteKeys {
 	 */
 	public static String TAG_LOCATOR = "localizador";
 
+	public static String TAG_COD_OFICINA_REGISTRO = "codigo_oficina_registro";
+
+	public static String TAG_CERTIFICADO_SOLO_NOMBRE = "firmante";
+
 }

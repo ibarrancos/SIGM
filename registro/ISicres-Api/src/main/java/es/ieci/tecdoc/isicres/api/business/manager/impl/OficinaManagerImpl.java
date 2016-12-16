@@ -1,58 +1,55 @@
 package es.ieci.tecdoc.isicres.api.business.manager.impl;
 
+import es.ieci.tecdoc.isicres.api.business.dao.OficinaDAO;
+import es.ieci.tecdoc.isicres.api.business.keys.ConstantKeys;
+import es.ieci.tecdoc.isicres.api.business.manager.OficinaManager;
+import es.ieci.tecdoc.isicres.api.business.vo.ConfiguracionUsuarioVO;
+import es.ieci.tecdoc.isicres.api.business.vo.OficinaVO;
+import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
 import java.util.List;
 import java.util.Locale;
 
-import es.ieci.tecdoc.isicres.api.business.dao.OficinaDAO;
-import es.ieci.tecdoc.isicres.api.business.manager.OficinaManager;
-import es.ieci.tecdoc.isicres.api.business.vo.OficinaVO;
-import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
+public class OficinaManagerImpl
+extends OficinaManager {
+    protected OficinaDAO oficinaDAO;
 
-/**
- * @author Iecisa
- * @version $Revision$
- * 
- */
+    @Override
+    public OficinaVO getOficinaByCodigo(UsuarioVO usuario, String codigoOficina) {
+        throw new UnsupportedOperationException();
+    }
 
-public class OficinaManagerImpl extends OficinaManager {
+    @Override
+    public List<OficinaVO> findOficinasByUsuario(UsuarioVO usuario) {
+        Locale locale = usuario.getConfiguracionUsuario().getLocale();
+        return this.getOficinaDAO().getOficinasByUsuario(locale, usuario);
+    }
 
-	public OficinaVO getOficinaByCodigo(UsuarioVO usuario, String codigoOficina) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public List<OficinaVO> findOficinasAdministradasByUsuario(UsuarioVO usuario) {
+        throw new UnsupportedOperationException();
+    }
 
-	public List findOficinasByUsuario(UsuarioVO usuario) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public OficinaVO getOficinaById(Locale locale, String idOficina) {
+        OficinaVO result = null;
+        result = this.getOficinaDAO().getOficinaById(locale, idOficina);
+        return result;
+    }
 
-	public List findOficinasAdministradasByUsuario(UsuarioVO usuario) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public List<OficinaVO> getOficinas(Locale locale) {
+        if (locale == null) {
+            Locale defaultLocale = new Locale(ConstantKeys.LOCALE_LENGUAGE_DEFAULT, ConstantKeys.LOCALE_COUNTRY_DEFAULT);
+            return this.getOficinaDAO().getOficinas(defaultLocale);
+        }
+        return this.getOficinaDAO().getOficinas(locale);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.ieci.tecdoc.isicres.api.business.manager.OficinaManager#getOficinaById
-	 * (java.util.Locale, java.lang.String)
-	 */
-	public OficinaVO getOficinaById(Locale locale, String idOficina) {
-		OficinaVO result = null;
+    public OficinaDAO getOficinaDAO() {
+        return this.oficinaDAO;
+    }
 
-		// obtenemos la oficina segun el id
-		result = getOficinaDAO().getOficinaById(locale, idOficina);
-
-		return result;
-	}
-
-	public OficinaDAO getOficinaDAO() {
-		return oficinaDAO;
-	}
-
-	public void setOficinaDAO(OficinaDAO oficinaDAO) {
-		this.oficinaDAO = oficinaDAO;
-	}
-
-	// Members
-	protected OficinaDAO oficinaDAO;
-
+    public void setOficinaDAO(OficinaDAO oficinaDAO) {
+        this.oficinaDAO = oficinaDAO;
+    }
 }

@@ -43,6 +43,14 @@ public class PermisosAplicacionVO extends BasePermisosVO {
 
 	protected boolean operacionesIntercambioRegistral;
 
+	protected boolean borrarDocuAnexa;
+	protected boolean gestionUnidadesAdministrativas;
+	protected boolean gestionInformes;
+	protected boolean gestionTiposAsunto;
+	protected boolean gestionUsuarios;
+	protected boolean gestionTiposTransporte;
+
+
 	public boolean isSuperUsuario() {
 		return superUsuario;
 	}
@@ -155,6 +163,54 @@ public class PermisosAplicacionVO extends BasePermisosVO {
 	public void setOperacionesIntercambioRegistral(
 			boolean operacionesIntercambioRegistral) {
 		this.operacionesIntercambioRegistral = operacionesIntercambioRegistral;
+	}
+
+	public boolean isBorrarDocuAnexa() {
+		return this.borrarDocuAnexa;
+	}
+
+	public void setBorrarDocuAnexa(boolean borrarDocuAnexa) {
+		this.borrarDocuAnexa = borrarDocuAnexa;
+	}
+
+	public boolean isGestionUnidadesAdministrativas() {
+		return this.gestionUnidadesAdministrativas;
+	}
+
+	public void setGestionUnidadesAdministrativas(boolean gestionUnidadesAdministrativas) {
+		this.gestionUnidadesAdministrativas = gestionUnidadesAdministrativas;
+	}
+
+	public boolean isGestionInformes() {
+		return this.gestionInformes;
+	}
+
+	public void setGestionInformes(boolean gestionInformes) {
+		this.gestionInformes = gestionInformes;
+	}
+
+	public boolean isGestionTiposAsunto() {
+		return this.gestionTiposAsunto;
+	}
+
+	public void setGestionTiposAsunto(boolean gestionTiposAsunto) {
+		this.gestionTiposAsunto = gestionTiposAsunto;
+	}
+
+	public boolean isGestionUsuarios() {
+		return this.gestionUsuarios;
+	}
+
+	public void setGestionUsuarios(boolean gestionUsuarios) {
+		this.gestionUsuarios = gestionUsuarios;
+	}
+
+	public boolean isGestionTiposTransporte() {
+		return this.gestionTiposTransporte;
+	}
+
+	public void setGestionTiposTransporte(boolean gestionTiposTransporte) {
+		this.gestionTiposTransporte = gestionTiposTransporte;
 	}
 
 }

@@ -11,6 +11,10 @@ import es.ieci.tecdoc.isicres.api.business.vo.DistribucionVO;
 import es.ieci.tecdoc.isicres.api.business.vo.ImplicadoDistribucionVO;
 import es.ieci.tecdoc.isicres.api.business.vo.ResultadoBusquedaDistribucionVO;
 import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
+import es.ieci.tecdoc.isicres.api.business.vo.BaseDepartamentoVO;
+import es.ieci.tecdoc.isicres.api.business.vo.BaseUsuarioVO;
+import es.ieci.tecdoc.isicres.api.business.vo.GrupoUsuarioVO;
+import java.util.List;
 
 /**
  * @author Iecisa
@@ -253,4 +257,16 @@ public abstract class DistribucionManager {
 	 */
 	public abstract DistribucionVO getDistributionById(UsuarioVO usuario,
 			Integer distributionId);
+
+	public abstract List<BaseUsuarioVO> getUsuariosLdapExceptoActual(BaseUsuarioVO var1);
+
+	public abstract List<GrupoUsuarioVO> getGruposPertenecientesUsuario(Integer var1);
+
+	public abstract List<GrupoUsuarioVO> getGruposNoPertenecientesUsuario(Integer var1);
+
+	public abstract List<BaseDepartamentoVO> getDepartamentosExceptoActual(Integer var1);
+
+	public abstract List<BaseDepartamentoVO> getDepartamentos();
+
+	public abstract List<BaseDepartamentoVO> getDepartamentosGrupoLdap(Integer var1);
 }

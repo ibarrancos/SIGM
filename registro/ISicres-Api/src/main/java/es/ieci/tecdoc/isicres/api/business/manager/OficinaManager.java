@@ -22,9 +22,11 @@ public abstract class OficinaManager {
 	 */
 	public abstract OficinaVO getOficinaByCodigo(UsuarioVO usuario,String codigoOficina);
 	
-	public abstract List findOficinasByUsuario(UsuarioVO usuario);
+	public abstract List<OficinaVO> findOficinasByUsuario(UsuarioVO usuario);
 	
-	public abstract List findOficinasAdministradasByUsuario(UsuarioVO usuario);
+	public abstract List<OficinaVO> findOficinasAdministradasByUsuario(UsuarioVO usuario);
+
+	public abstract List<OficinaVO> getOficinas(Locale var1);
 	
 	/**
 	 * Metodo que obtiene una oficina por su id

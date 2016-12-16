@@ -1,5 +1,7 @@
 package es.ieci.tecdoc.isicres.api.business.vo;
 
+import es.ieci.tecdoc.isicres.api.business.vo.enums.EstadoUsuarioEnum;
+
 /**
  * @author Iecisa
  * @version $Revision$
@@ -20,6 +22,10 @@ public class BaseUsuarioVO extends BaseIsicresApiVO {
 	protected String fullName;
 
 	protected String password;
+
+	protected String ldapGUID;
+	protected boolean isLdapUser;
+	protected EstadoUsuarioEnum estado;
 
 	public String getLoginName() {
 		return loginName;
@@ -51,5 +57,43 @@ public class BaseUsuarioVO extends BaseIsicresApiVO {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+
+	public String getLdapGUID() {
+		return this.ldapGUID;
+	}
+
+	public void setLdapGUID(String ldapGUID) {
+		this.ldapGUID = ldapGUID;
+	}
+
+	public Integer getIdInt() {
+		if (this.id != null) {
+			return Integer.valueOf(this.id);
+		}
+		return null;
+	}
+
+	public void setId(Integer id) {
+		if (id != null) {
+			this.id = String.valueOf(id);
+		}
+	}
+
+	public boolean isLdapUser() {
+		return this.isLdapUser;
+	}
+
+	public void setLdapUser(boolean isLdapUser) {
+		this.isLdapUser = isLdapUser;
+	}
+
+	public EstadoUsuarioEnum getEstado() {
+		return this.estado;
+	}
+
+	public void setEstado(EstadoUsuarioEnum estado) {
+		this.estado = estado;
 	}
 }

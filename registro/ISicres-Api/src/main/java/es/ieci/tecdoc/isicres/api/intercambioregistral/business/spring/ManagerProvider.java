@@ -4,6 +4,7 @@ import es.ieci.tecdoc.isicres.api.documento.electronico.business.manager.Documen
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralActualizadorEstadosManager;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralGeneradorObjetosManager;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralManager;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.TipoTransporteIntercambioRegistralManager;
 
 
 public class ManagerProvider{
@@ -12,6 +13,8 @@ public class ManagerProvider{
 	private static final String INTERCAMBIO_REGISTRAL_ACTUALIZADOR_ESTADOS_MANAGER_BEAN = "intercambioRegistralActualizadorEstadosManager";
 	
 	private static final String DOCUMENTO_ELECTRONICO_ANEXO_MANAGER_BEAN = "documentoElectronicoAnexoManager";
+
+	private static final String TIPO_TRANSPORTE_INTERCAMBIO_REGISTRAL_MANAGER_BEAN = "tipoTransporteIntercambioRegistralManager";
 	
 	protected static ManagerProvider instance=null; 
 	
@@ -53,6 +56,10 @@ public class ManagerProvider{
 		return result;
 	}
 
+	public TipoTransporteIntercambioRegistralManager getTipoTransporteIntercambioRegistralManager() {
+	    TipoTransporteIntercambioRegistralManager result = (TipoTransporteIntercambioRegistralManager)this.getGenericBean("tipoTransporteIntercambioRegistralManager");
+	    return result;
+	}
 
 
 }

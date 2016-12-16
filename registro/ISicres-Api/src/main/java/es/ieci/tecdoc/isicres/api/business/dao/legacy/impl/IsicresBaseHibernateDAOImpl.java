@@ -25,14 +25,14 @@ public abstract class IsicresBaseHibernateDAOImpl {
 		return  ContextoAplicacionManagerFactory.getInstance();
 	}
 
-	public  Session getSession() throws HibernateException{
+	protected  Session getSession() throws HibernateException{
 		Session result=null;
 	    String entity=MultiEntityContextHolder.getEntity();
 		result=HibernateUtil.currentSession(entity);
 		return result;
 	  }
 	
-	 public  void closeSession(Session session)
+	 protected  void closeSession(Session session)
 	    {
 	        if(session != null)
 	        {
