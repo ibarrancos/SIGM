@@ -14,6 +14,6 @@ public interface ServicioObtenerInicializacionDCO {
 	 */
 	public String getFicheroInicializarUnidadesDCO();
 
-
+	public String getFicheroInicializarRelacionesRelacionesOficinaUnidOrgDCO();
 
 }

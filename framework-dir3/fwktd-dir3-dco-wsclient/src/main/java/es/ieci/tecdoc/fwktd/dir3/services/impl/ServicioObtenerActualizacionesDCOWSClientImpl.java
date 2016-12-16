@@ -1,17 +1,5 @@
 package es.ieci.tecdoc.fwktd.dir3.services.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.zip.ZipException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import es.ieci.tecdoc.fwktd.dir3.exception.ObtencionFicheroActualizacionDCOException;
 import es.ieci.tecdoc.fwktd.dir3.services.ServicioObtenerActualizacionesDCO;
 import es.ieci.tecdoc.fwktd.dir3.util.Base64Utils;
@@ -19,237 +7,250 @@ import es.ieci.tecdoc.fwktd.dir3.util.ZipUtils;
 import es.map.directorio.manager.impl.SC02UNIncrementalDatosBasicos;
 import es.map.directorio.manager.impl.SC12OFIncrementalDatosBasicos;
 import es.map.directorio.manager.impl.wsexport.RespuestaWS;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.zip.ZipException;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Implementación del servicio de obtención del fichero de actualización mediante los WS del DCO.
- *
- */
-public class ServicioObtenerActualizacionesDCOWSClientImpl implements ServicioObtenerActualizacionesDCO{
+public class ServicioObtenerActualizacionesDCOWSClientImpl
+implements ServicioObtenerActualizacionesDCO {
+    protected SC02UNIncrementalDatosBasicos servicioIncrementalUnidades;
+    protected SC12OFIncrementalDatosBasicos servicioIncrementalOficinas;
+    protected String tempFilesDir;
+    protected String login;
+    protected String pass;
+    protected String fileFormat;
+    protected String oficinasQueryType;
+    protected String unidadesQueryType;
+    protected String relacionOficinasUnidOrgQueryType;
+    protected String indicadorSIR;
+    private final String INCREMENTAL_OFICINAS_FILE_NAME = "datosBasicosOficinaIncremental.xml";
+    private final String INCREMENTAL_UORGANICAS_FILE_NAME = "datosBasicosUOrganicaIncremental.xml";
+    private final String RELACIONES_UORGANICAS_OFICINAS_FILE_NAME = "relacionesUO-OFIIncremental.xml";
+    private static final Logger logger = LoggerFactory.getLogger((Class)ServicioObtenerActualizacionesDCOWSClientImpl.class);
 
-	/**
-	 * Servicio para llamar al WS SC02UNIncrementalDatosBasicos - Actualización de Unidades Organicas
-	 */
-	protected SC02UNIncrementalDatosBasicos servicioIncrementalUnidades;
-	/**
-	 * Servicio para llamar al WS SC12OFIncrementalDatosBasicos - Actualización de Oficinas
-	 */
-	protected SC12OFIncrementalDatosBasicos servicioIncrementalOficinas;
+    public String getFicheroActualizarOficinasDCO(Date fechaUltimaActualizacion) {
+        String finalFileName = null;
+        RespuestaWS respuesta = null;
+        if (null == fechaUltimaActualizacion) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarOficinasDCO - Error la fecha de \u00faltima actualizaci\u00f3n es nula");
+            throw new ObtencionFicheroActualizacionDCOException("No hay fecha de \u00faltima actualizaci\u00f3n");
+        }
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            File tempZipFile = File.createTempFile("dec", "zip", new File(this.getTempFilesDir()));
+            respuesta = this.getServicioIncrementalOficinas().exportar(this.getLogin(), this.getPass(), this.getFileFormat(), this.getOficinasQueryType(), dateFormat.format(fechaUltimaActualizacion), dateFormat.format(Calendar.getInstance().getTime()), "", "", "", "", "", this.getIndicadorSIR(), "", "", "", "", "", "", "", "", "", "");
+            if (respuesta != null && StringUtils.equalsIgnoreCase((String)respuesta.getCodigo(), (String)"01")) {
+                Base64Utils.getInstance().decodeToFile(respuesta.getFichero(), tempZipFile.getAbsolutePath());
+                List<String> filesUnzipped = ZipUtils.getInstance().unzipFile(tempZipFile.getAbsolutePath(), this.getTempFilesDir());
+                ListIterator<String> itr = filesUnzipped.listIterator();
+                while (itr.hasNext()) {
+                    String fileName = itr.next();
+                    if (!fileName.endsWith("datosBasicosOficinaIncremental.xml")) continue;
+                    finalFileName = fileName;
+                }
+            }
+        }
+        catch (ZipException zipEx) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarOficinasDCO - Error al descomprimir el fichero retornado por el DCO.", (Throwable)zipEx);
+        }
+        catch (IOException ioEx) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarOficinasDCO - Error al crear los ficheros temporales.", (Throwable)ioEx);
+        }
+        catch (Exception e) {
+            logger.error("Error inesperado", (Throwable)e);
+        }
+        if (finalFileName == null) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("No se encuentra el fichero esperado con nombre: ").append("datosBasicosOficinaIncremental.xml");
+            logger.warn(sb.toString());
+            StringBuffer sbMsgError = new StringBuffer();
+            if (!(respuesta == null || StringUtils.equalsIgnoreCase((String)respuesta.getCodigo(), (String)"01"))) {
+                sbMsgError.append("El proceso ha finalizado con errores, cod. error: ").append(respuesta.getCodigo()).append(" - ").append(respuesta.getDescripcion());
+            } else {
+                sbMsgError.append("El proceso ha finalizado sin errores pero no se encuentra el fichero esperado con nombre: ").append("datosBasicosOficinaIncremental.xml");
+            }
+            throw new ObtencionFicheroActualizacionDCOException(sbMsgError.toString());
+        }
+        return finalFileName;
+    }
 
-	/**
-	 * Directorio para dejar los ficheros
-	 */
-	protected String tempFilesDir;
-	/**
-	 * Login del servicio del DCO proporcionado por el ministerio
-	 */
-	protected String login;
-	/**
-	 * Password del servicio del DCO proporcionada por el ministerio
-	 */
-	protected String pass;
-	/**
-	 * Formato en el que obtener las actualizaciones
-	 */
-	protected String fileFormat;
-	/**
-	 * Tipo de consulta para las oficinas
-	 */
-	protected String oficinasQueryType;
-	/**
-	 * Tipo de consulta para las unidades organicas
-	 */
-	protected String unidadesQueryType;
+    public String getFicheroActualizarUnidadesDCO(Date fechaUltimaActualizacion) {
+        String finalFileName = null;
+        RespuestaWS respuesta = null;
+        if (null == fechaUltimaActualizacion) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarUnidadesDCO - Error la fecha de \u00faltima actualizaci\u00f3n es nula");
+            throw new ObtencionFicheroActualizacionDCOException("No hay fecha de \u00faltima actualizaci\u00f3n");
+        }
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            File tempZipFile = File.createTempFile("dec", "zip", new File(this.getTempFilesDir()));
+            respuesta = this.getServicioIncrementalUnidades().exportar(this.getLogin(), this.getPass(), this.getFileFormat(), this.getUnidadesQueryType(), dateFormat.format(fechaUltimaActualizacion), dateFormat.format(Calendar.getInstance().getTime()), "", "", "", "", "", "", "", "", "");
+            if (respuesta != null && StringUtils.equalsIgnoreCase((String)respuesta.getCodigo(), (String)"01")) {
+                Base64Utils.getInstance().decodeToFile(respuesta.getFichero(), tempZipFile.getAbsolutePath());
+                List<String> filesUnzipped = ZipUtils.getInstance().unzipFile(tempZipFile.getAbsolutePath(), this.getTempFilesDir());
+                ListIterator<String> itr = filesUnzipped.listIterator();
+                while (itr.hasNext()) {
+                    String fileName = itr.next();
+                    if (!fileName.endsWith("datosBasicosUOrganicaIncremental.xml")) continue;
+                    finalFileName = fileName;
+                }
+            }
+        }
+        catch (ZipException zipEx) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarUnidadesDCO - Error al descomprimir el fichero retornado por el DCO.", (Throwable)zipEx);
+        }
+        catch (IOException ioEx) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarUnidadesDCO - Error al crear los ficheros temporales.", (Throwable)ioEx);
+        }
+        catch (Exception e) {
+            logger.error("Error inesperado", (Throwable)e);
+        }
+        if (finalFileName == null) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("No se encuentra el fichero esperado con nombre: ").append("datosBasicosUOrganicaIncremental.xml");
+            logger.warn(sb.toString());
+            StringBuffer sbMsgError = new StringBuffer();
+            if (!(respuesta == null || StringUtils.equalsIgnoreCase((String)respuesta.getCodigo(), (String)"01"))) {
+                sbMsgError.append("El proceso ha finalizado con errores, cod. error: ").append(respuesta.getCodigo()).append(" - ").append(respuesta.getDescripcion());
+            } else {
+                sbMsgError.append("El proceso ha finalizado sin errores pero no se encuentra el fichero esperado con nombre: ").append("datosBasicosUOrganicaIncremental.xml");
+            }
+            throw new ObtencionFicheroActualizacionDCOException(sbMsgError.toString());
+        }
+        return finalFileName;
+    }
 
-	private final String INCREMENTAL_OFICINAS_FILE_NAME = "datosBasicosOficinaIncremental.xml";
-	private final String INCREMENTAL_UORGANICAS_FILE_NAME = "datosBasicosUOrganicaIncremental.xml";
+    public String getFicheroActualizarRelacionOficinasUnidadesDCO(Date fechaUltimaActualizacion) {
+        String finalFileName = null;
+        RespuestaWS respuesta = null;
+        if (null == fechaUltimaActualizacion) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarRelacionOficinasUnidadesDCO - Error la fecha de \u00faltima actualizaci\u00f3n es nula");
+            throw new ObtencionFicheroActualizacionDCOException("No hay fecha de \u00faltima actualizaci\u00f3n");
+        }
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            File tempZipFile = File.createTempFile("dec", "zip", new File(this.getTempFilesDir()));
+            respuesta = this.getServicioIncrementalOficinas().exportar(this.getLogin(), this.getPass(), this.getFileFormat(), this.getRelacionOficinasUnidOrgQueryType(), dateFormat.format(fechaUltimaActualizacion), dateFormat.format(Calendar.getInstance().getTime()), "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+            if (respuesta != null && StringUtils.equalsIgnoreCase((String)respuesta.getCodigo(), (String)"01")) {
+                Base64Utils.getInstance().decodeToFile(respuesta.getFichero(), tempZipFile.getAbsolutePath());
+                List<String> filesUnzipped = ZipUtils.getInstance().unzipFile(tempZipFile.getAbsolutePath(), this.getTempFilesDir());
+                ListIterator<String> itr = filesUnzipped.listIterator();
+                while (itr.hasNext()) {
+                    String fileName = itr.next();
+                    if (!fileName.endsWith("relacionesUO-OFIIncremental.xml")) continue;
+                    finalFileName = fileName;
+                }
+            }
+        }
+        catch (ZipException zipEx) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarRelacionOficinasUnidadesDCO - Error al descomprimir el fichero retornado por el DCO.", (Throwable)zipEx);
+        }
+        catch (IOException ioEx) {
+            logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarRelacionOficinasUnidadesDCO - Error al crear los ficheros temporales.", (Throwable)ioEx);
+        }
+        catch (Exception e) {
+            logger.error("Error inesperado", (Throwable)e);
+        }
+        if (finalFileName == null) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("No se encuentra el fichero esperado con nombre: ").append("relacionesUO-OFIIncremental.xml");
+            logger.warn(sb.toString());
+            StringBuffer sbMsgError = new StringBuffer();
+            if (!(respuesta == null || StringUtils.equalsIgnoreCase((String)respuesta.getCodigo(), (String)"01"))) {
+                sbMsgError.append("El proceso ha finalizado con errores, cod. error: ").append(respuesta.getCodigo()).append(" - ").append(respuesta.getDescripcion());
+            } else {
+                sbMsgError.append("El proceso ha finalizado sin errores pero no se encuentra el fichero esperado con nombre: ").append("relacionesUO-OFIIncremental.xml");
+            }
+            throw new ObtencionFicheroActualizacionDCOException(sbMsgError.toString());
+        }
+        return finalFileName;
+    }
 
-	private static final Logger logger = LoggerFactory.getLogger(ServicioObtenerActualizacionesDCOWSClientImpl.class);
+    public SC02UNIncrementalDatosBasicos getServicioIncrementalUnidades() {
+        return this.servicioIncrementalUnidades;
+    }
 
+    public void setServicioIncrementalUnidades(SC02UNIncrementalDatosBasicos servicioIncrementalUnidades) {
+        this.servicioIncrementalUnidades = servicioIncrementalUnidades;
+    }
 
-	/**
-	 * Obtiene el fichero para actualizar las oficinas.
-	 * Retorna el path al fichero xml
-	 *
-	 * @param fechaUltimaActualizacion - Fecha de última actualización
-	 * @return nombre del fichero de actualización de Oficinas
-	 *
-	 */
-	public String getFicheroActualizarOficinasDCO(Date fechaUltimaActualizacion) {
-	String finalFileName = null;
+    public SC12OFIncrementalDatosBasicos getServicioIncrementalOficinas() {
+        return this.servicioIncrementalOficinas;
+    }
 
-		try{
-			if (null == fechaUltimaActualizacion) {
-				logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarOficinasDCO - Error la fecha de última actualización es nula");
-				throw new Exception("No hay fecha de última actualización");
-			}
+    public void setServicioIncrementalOficinas(SC12OFIncrementalDatosBasicos servicioIncrementalOficinas) {
+        this.servicioIncrementalOficinas = servicioIncrementalOficinas;
+    }
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-			File tempZipFile = File.createTempFile("dec", "zip", new File(getTempFilesDir()));
+    public String getTempFilesDir() {
+        return this.tempFilesDir;
+    }
 
-			RespuestaWS respuesta = getServicioIncrementalOficinas().exportar(
-					getLogin(), getPass(), getFileFormat(),
-					getOficinasQueryType(),
-					dateFormat.format(fechaUltimaActualizacion),
-					dateFormat.format(Calendar.getInstance().getTime()), "",
-					"", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+    public void setTempFilesDir(String tempFilesDir) {
+        this.tempFilesDir = tempFilesDir;
+    }
 
-			Base64Utils.getInstance().decodeToFile(respuesta.getFichero(), tempZipFile.getAbsolutePath());
-			List<String> filesUnzipped = ZipUtils.getInstance().unzipFile(tempZipFile.getAbsolutePath(), getTempFilesDir());
+    public String getLogin() {
+        return this.login;
+    }
 
-			Iterator<String> itr = filesUnzipped.listIterator();
-			String fileName;
-			while(itr.hasNext())
-			{
-				fileName = itr.next();
-				if(fileName.endsWith(INCREMENTAL_OFICINAS_FILE_NAME)){
-					finalFileName = fileName;
-				}
-			}
-		}catch (ZipException zipEx) {
-			logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarOficinasDCO - Error al descomprimir el fichero retornado por el DCO.", zipEx);
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
+    public String getPass() {
+        return this.pass;
+    }
 
-		}catch (IOException ioEx) {
-			logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarOficinasDCO - Error al crear los ficheros temporales.", ioEx);
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
 
-		}catch (Exception e) {
-			logger.error("Error inesperado", e);
-		}
+    public String getFileFormat() {
+        return this.fileFormat;
+    }
 
-		if(finalFileName==null)
-		{
-			StringBuffer sb = new StringBuffer();
-			sb.append(
-					"El proceso ha finalizado sin errores pero no se encuentra el fichero esperado con nombre: ")
-					.append(INCREMENTAL_OFICINAS_FILE_NAME);
+    public void setFileFormat(String fileFormat) {
+        this.fileFormat = fileFormat;
+    }
 
-			throw new ObtencionFicheroActualizacionDCOException(sb.toString());
-		}
-		return finalFileName;
-	}
+    public String getOficinasQueryType() {
+        return this.oficinasQueryType;
+    }
 
-	/**
-	 * Retorna el path al fichero xml
-	 * @param fechaUltimaActualizacion - Fecha de última actualización
-	 * @return nombre del fichero de actualización de Unidades
-	 */
-	public String getFicheroActualizarUnidadesDCO(Date fechaUltimaActualizacion) {
-	String finalFileName = null;
+    public void setOficinasQueryType(String oficinasQueryType) {
+        this.oficinasQueryType = oficinasQueryType;
+    }
 
-		try{
-			if (null == fechaUltimaActualizacion) {
-				logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarUnidadesDCO - Error la fecha de última actualización es nula");
-				throw new Exception("No hay fecha de última actualización");
-			}
+    public String getUnidadesQueryType() {
+        return this.unidadesQueryType;
+    }
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-			File tempZipFile = File.createTempFile("dec", "zip", new File(getTempFilesDir()));
+    public void setUnidadesQueryType(String unidadesQueryType) {
+        this.unidadesQueryType = unidadesQueryType;
+    }
 
-			RespuestaWS respuesta = getServicioIncrementalUnidades().exportar(
-					getLogin(), getPass(), getFileFormat(),
-					getUnidadesQueryType(),
-					dateFormat.format(fechaUltimaActualizacion),
-					dateFormat.format(Calendar.getInstance().getTime()), "",
-					"", "", "", "", "", "", "", "");
+    public String getIndicadorSIR() {
+        return this.indicadorSIR;
+    }
 
-			Base64Utils.getInstance().decodeToFile(respuesta.getFichero(), tempZipFile.getAbsolutePath());
-			List<String> filesUnzipped = ZipUtils.getInstance().unzipFile(tempZipFile.getAbsolutePath(), getTempFilesDir());
+    public void setIndicadorSIR(String indicadorSIR) {
+        this.indicadorSIR = indicadorSIR;
+    }
 
-			Iterator<String> itr = filesUnzipped.listIterator();
-			String fileName;
-			while(itr.hasNext())
-			{
-				fileName = itr.next();
-				if(fileName.endsWith(INCREMENTAL_UORGANICAS_FILE_NAME)){
-					finalFileName = fileName;
-				}
-			}
-		}catch (ZipException zipEx) {
-			logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarUnidadesDCO - Error al descomprimir el fichero retornado por el DCO.", zipEx);
+    public String getRelacionOficinasUnidOrgQueryType() {
+        return this.relacionOficinasUnidOrgQueryType;
+    }
 
-		}catch (IOException ioEx) {
-			logger.error("ServicioActualizacionDCOWSClientImpl::getFicheroActualizarUnidadesDCO - Error al crear los ficheros temporales.", ioEx);
-
-		}catch (Exception e) {
-			logger.error("Error inesperado", e);
-		}
-
-		if(finalFileName==null)
-		{
-			StringBuffer sb = new StringBuffer();
-			sb.append(
-					"El proceso ha finalizado sin errores pero no se encuentra el fichero esperado con nombre: ")
-					.append(INCREMENTAL_UORGANICAS_FILE_NAME);
-
-			throw new ObtencionFicheroActualizacionDCOException(sb.toString());
-		}
-		return finalFileName;
-	}
-
-	public SC02UNIncrementalDatosBasicos getServicioIncrementalUnidades() {
-		return servicioIncrementalUnidades;
-	}
-
-	public void setServicioIncrementalUnidades(
-			SC02UNIncrementalDatosBasicos servicioIncrementalUnidades) {
-		this.servicioIncrementalUnidades = servicioIncrementalUnidades;
-	}
-
-	public SC12OFIncrementalDatosBasicos getServicioIncrementalOficinas() {
-		return servicioIncrementalOficinas;
-	}
-
-	public void setServicioIncrementalOficinas(
-			SC12OFIncrementalDatosBasicos servicioIncrementalOficinas) {
-		this.servicioIncrementalOficinas = servicioIncrementalOficinas;
-	}
-
-	public String getTempFilesDir() {
-		return tempFilesDir;
-	}
-
-	public void setTempFilesDir(String tempFilesDir) {
-		this.tempFilesDir = tempFilesDir;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	public String getPass() {
-		return pass;
-	}
-
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
-
-	public String getFileFormat() {
-		return fileFormat;
-	}
-
-	public void setFileFormat(String fileFormat) {
-		this.fileFormat = fileFormat;
-	}
-
-	public String getOficinasQueryType() {
-		return oficinasQueryType;
-	}
-
-	public void setOficinasQueryType(String oficinasQueryType) {
-		this.oficinasQueryType = oficinasQueryType;
-	}
-
-	public String getUnidadesQueryType() {
-		return unidadesQueryType;
-	}
-
-	public void setUnidadesQueryType(String unidadesQueryType) {
-		this.unidadesQueryType = unidadesQueryType;
-	}
-
+    public void setRelacionOficinasUnidOrgQueryType(String relacionOficinasUnidOrgQueryType) {
+        this.relacionOficinasUnidOrgQueryType = relacionOficinasUnidOrgQueryType;
+    }
 }

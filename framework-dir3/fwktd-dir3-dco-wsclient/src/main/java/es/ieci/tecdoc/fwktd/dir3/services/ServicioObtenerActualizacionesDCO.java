@@ -21,4 +21,6 @@ public interface ServicioObtenerActualizacionesDCO {
 	 * @return Fichero XMLO
 	 */
 	public String getFicheroActualizarUnidadesDCO(Date fechaUltimaActualizacion);
+
+	public String getFicheroActualizarRelacionOficinasUnidadesDCO(Date var1);
 }
