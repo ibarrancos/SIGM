@@ -48,8 +48,6 @@ public class DescargaDocumentoIntercambioRegistral extends HttpServlet {
 		}
 
 		response.setDateHeader("Expires", 0);
-		response.setHeader("Cache-Control", "no-cache");
-		response.setHeader("Pragma", "no-cache");
 
 		String idAnexo = request.getParameter("idAnexo");
 		String idIntercambio = request.getParameter("idIntercambio");

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import com.ieci.tecdoc.common.invesicres.ScrOfic;
 import com.ieci.tecdoc.common.keys.HibernateKeys;
@@ -31,6 +32,8 @@ public class ReenviarIntercambiosRegistrales extends HttpServlet{
 
 	private static Logger _logger = Logger.getLogger(ReenviarIntercambiosRegistrales.class);
 	private static final long serialVersionUID = 1L;
+	private static final String BANDEJA_ENTRADA_INTERCAMBIO_REGISTRAL_SERVLET = "/BandejaEntradaIntercambioRegistral.do";
+
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -54,6 +57,11 @@ public class ReenviarIntercambiosRegistrales extends HttpServlet{
 		UseCaseConf useCaseConf = (UseCaseConf) mySession.getAttribute(com.ieci.tecdoc.isicres.desktopweb.Keys.J_USECASECONF);
 		String entidad = useCaseConf.getEntidadId();
 		ContextoAplicacionVO contextoAplicacion=null;
+		String paramUrlRequestDispatcher = req.getParameter("requestDispatcherUrl");
+		String urlRequestDispatcher = "/BandejaEntradaIntercambioRegistral.do";
+		if (StringUtils.isNotBlank((String)paramUrlRequestDispatcher)) {
+		    urlRequestDispatcher = paramUrlRequestDispatcher;
+		}
 		try{
 			contextoAplicacion=ContextoAplicacionUtil.getContextoAplicacion(req);
 			
@@ -81,7 +89,7 @@ public class ReenviarIntercambiosRegistrales extends HttpServlet{
 			String mensaje = RBUtil.getInstance(useCaseConf.getLocale()).getProperty(Keys.I18N_ISICRESIR_SEND_OK);
 			req.setAttribute(Keys.REQUEST_MSG, mensaje);
 
-			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher("/BandejaEntradaIntercambioRegistral.do");
+			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher(urlRequestDispatcher);
 			rd.forward(req, resp);
 
 		}catch (IntercambioRegistralException irEx) {
@@ -96,7 +104,7 @@ public class ReenviarIntercambiosRegistrales extends HttpServlet{
 			String error = RBUtil.getInstance(useCaseConf.getLocale()).getProperty(Keys.I18N_ISICRESIR_SEND_ERROR);
 			req.setAttribute(Keys.REQUEST_ERROR, error);
 
-			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher("/BandejaEntradaIntercambioRegistral.do");
+			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher(urlRequestDispatcher);
 			rd.forward(req, resp);
 		}
 	}

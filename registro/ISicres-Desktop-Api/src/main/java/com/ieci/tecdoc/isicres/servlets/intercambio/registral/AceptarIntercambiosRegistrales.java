@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import com.ieci.tecdoc.isicres.desktopweb.Keys;
 import com.ieci.tecdoc.isicres.desktopweb.utils.RBUtil;
@@ -26,6 +27,7 @@ public class AceptarIntercambiosRegistrales extends HttpServlet{
 
 	private static Logger _logger = Logger.getLogger(AceptarIntercambiosRegistrales.class);
 	private static final long serialVersionUID = 1L;
+	private static final String BANDEJA_ENTRADA_INTERCAMBIO_REGISTRAL_SERVLET = "/BandejaEntradaIntercambioRegistral.do";
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -50,7 +52,11 @@ public class AceptarIntercambiosRegistrales extends HttpServlet{
 		ContextoAplicacionVO contextoAplicacion=null;
 		
 		IntercambioRegistralManager intercambioManager =  IsicresManagerProvider.getInstance().getIntercambioRegistralManager();
-		
+		String paramUrlRequestDispatcher = req.getParameter("requestDispatcherUrl");
+		String urlRequestDispatcher = "/BandejaEntradaIntercambioRegistral.do";
+		if (StringUtils.isNotBlank((String)paramUrlRequestDispatcher)) {
+		    urlRequestDispatcher = paramUrlRequestDispatcher;
+		}		
 		try{
 			
 			//seteamos el contxto de aplicacion
@@ -75,7 +81,7 @@ public class AceptarIntercambiosRegistrales extends HttpServlet{
 			String mensaje = RBUtil.getInstance(contextoAplicacion.getUsuarioActual().getConfiguracionUsuario().getLocale()).getProperty(Keys.I18N_ISICRESIR_ACCEPT_OK);
 			req.setAttribute(Keys.REQUEST_MSG, mensaje);
 
-			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher("/BandejaEntradaIntercambioRegistral.do");
+			RequestDispatcher rd = this.getServletConfig().getServletContext().getRequestDispatcher(urlRequestDispatcher);
 			rd.forward(req, resp);
 
 		}catch (IntercambioRegistralException irEx) {
@@ -90,7 +96,7 @@ public class AceptarIntercambiosRegistrales extends HttpServlet{
 			String error = RBUtil.getInstance(contextoAplicacion.getUsuarioActual().getConfiguracionUsuario().getLocale()).getProperty(Keys.I18N_ISICRESIR_ACCEPT_ERROR);
 			req.setAttribute(Keys.REQUEST_ERROR, error);
 
-			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher("/BandejaEntradaIntercambioRegistral.do");
+			RequestDispatcher rd = this.getServletConfig().getServletContext().getRequestDispatcher(urlRequestDispatcher);
 			rd.forward(req, resp);
 		}
 	}

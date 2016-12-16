@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import com.ieci.tecdoc.isicres.desktopweb.Keys;
 import com.ieci.tecdoc.isicres.desktopweb.utils.RBUtil;
@@ -28,6 +29,7 @@ public class RechazarIntercambiosRegistrales extends HttpServlet{
 
 	private static Logger _logger = Logger.getLogger(RechazarIntercambiosRegistrales.class);
 	private static final long serialVersionUID = 1L;
+	private static final String BANDEJA_ENTRADA_INTERCAMBIO_REGISTRAL_SERVLET = "/BandejaEntradaIntercambioRegistral.do";
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -52,6 +54,11 @@ public class RechazarIntercambiosRegistrales extends HttpServlet{
 		ContextoAplicacionVO contextoAplicacion=null;
 		
 
+		String paramUrlRequestDispatcher = req.getParameter("requestDispatcherUrl");
+		String urlRequestDispatcher = "/BandejaEntradaIntercambioRegistral.do";
+		if (StringUtils.isNotBlank((String)paramUrlRequestDispatcher)) {
+		    urlRequestDispatcher = paramUrlRequestDispatcher;
+		}
 
 		try{
 			
@@ -69,7 +76,7 @@ public class RechazarIntercambiosRegistrales extends HttpServlet{
 			req.setAttribute(Keys.REQUEST_MSG, mensaje);
 
 
-			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher("/BandejaEntradaIntercambioRegistral.do");
+			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher(urlRequestDispatcher);
 			rd.forward(req, resp);
 		}catch (IntercambioRegistralException irEx) {
 			_logger.error("Ha ocurrido un error al rechazar un Intercambio Regisral.", irEx);
@@ -83,7 +90,7 @@ public class RechazarIntercambiosRegistrales extends HttpServlet{
 			String error = RBUtil.getInstance(useCaseConf.getLocale()).getProperty(com.ieci.tecdoc.isicres.desktopweb.Keys.I18N_ISICRESIR_REJECT_ERROR);
 			req.setAttribute(com.ieci.tecdoc.isicres.desktopweb.Keys.REQUEST_ERROR, error);
 
-			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher("/BandejaEntradaIntercambioRegistral.do");
+			RequestDispatcher rd = getServletConfig().getServletContext().getRequestDispatcher(urlRequestDispatcher);
 			rd.forward(req, resp);
 		}
 	}

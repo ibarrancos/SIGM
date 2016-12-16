@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralVO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InfoAsientoRegistralVO;
 import es.ieci.tecdoc.isicres.api.business.manager.IsicresManagerProvider;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralManager;
 
@@ -52,12 +52,12 @@ public class MostrarIntercambioRegistral extends HttpServlet {
 	      
 		
 		String idIntercambio = request.getParameter("idIntercambio");
-		AsientoRegistralVO asientoRegistralVO = null;
+		InfoAsientoRegistralVO asientoRegistralVO = null;
 		try {
-			asientoRegistralVO = intercambioManager.getIntercambioRegistralByIdIntercambio(idIntercambio);
+			asientoRegistralVO = intercambioManager.getInfoIntercambioRegistralByIdIntercambio(idIntercambio);
 		} catch (Exception e) {
 			// TODO Bloque catch auto-generado
-			logger.error("ERROR obtener el asiento registral con el identificador" + idIntercambio,e);
+			logger.error("ERROR al obtener el asiento registral con el identificador" + idIntercambio,e);
 		}
 		
 					

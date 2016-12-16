@@ -76,12 +76,12 @@ public class MostrarHistorialIntercambioRegistral extends HttpServlet {
 			//obtenemos la informacion del intercambio registral de entrada
 			List<IntercambioRegistralEntradaVO> historialIntercambioRegistralEntrada = intercambioManager
 					.getHistorialIntercambioRegistralEntrada(idLibro,
-							idRegistro,idOficina);
+							idRegistro,null,false);
 
 			//obtenemos la informacion del intercambio registral de salida
 			List<IntercambioRegistralSalidaVO> historialIntercambioRegistralSalida = intercambioManager
 					.getHistorialIntercambioRegistralSalida(
-							idLibro, idRegistro,idOficina);
+							idLibro, idRegistro,null,false);
 
 			//comprobamos si los historial tanto el de entrada como el de salida son vacios
 			if((historialIntercambioRegistralEntrada.size()>0) || (historialIntercambioRegistralSalida.size() >0)){

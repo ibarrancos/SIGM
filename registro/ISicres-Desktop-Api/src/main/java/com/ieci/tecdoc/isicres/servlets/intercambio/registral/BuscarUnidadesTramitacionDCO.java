@@ -45,16 +45,21 @@ public class BuscarUnidadesTramitacionDCO extends HttpServlet{
 
 		HttpSession mySession = req.getSession();
 		UseCaseConf useCaseConf = (UseCaseConf) mySession.getAttribute(com.ieci.tecdoc.isicres.desktopweb.Keys.J_USECASECONF);
+		List listaUnidadesTramitacionDCO;
 
 		try{
+			String codeEntityToFind = req.getParameter("codeEntityToFind");
 			IntercambioRegistralManager intercambioManager =  IsicresManagerProvider.getInstance().getIntercambioRegistralManager();
 
 			String tramunitCodeToFind = req.getParameter("tramunitCodeToFind");
 			String tramunitNameToFind = req.getParameter("tramunitNameToFind");
-			if(StringUtils.isNotEmpty(tramunitCodeToFind) || StringUtils.isNotEmpty(tramunitNameToFind))
-			{
-				List<UnidadTramitacionDCO> listaUnidadesTramitacionDCO =intercambioManager.buscarUnidadesTramitacionDCO(tramunitCodeToFind, tramunitNameToFind);
-
+			if (StringUtils.isNotEmpty((String)codeEntityToFind)) {
+			    listaUnidadesTramitacionDCO = intercambioManager.buscarUnidadesTramitacionDCOByEntidad(codeEntityToFind, tramunitCodeToFind, tramunitNameToFind);
+			    req.setAttribute("listaUnidadesTramitacionDCO", (Object)listaUnidadesTramitacionDCO);
+			    req.setAttribute("tramunitCodeToFind", (Object)tramunitCodeToFind);
+			    req.setAttribute("tramunitNameToFind", (Object)tramunitNameToFind);
+			} else if (StringUtils.isNotEmpty((String)tramunitCodeToFind) || StringUtils.isNotEmpty((String)tramunitNameToFind)) {
+			    listaUnidadesTramitacionDCO = intercambioManager.buscarUnidadesTramitacionDCO(tramunitCodeToFind, tramunitNameToFind);
 				req.setAttribute("listaUnidadesTramitacionDCO", listaUnidadesTramitacionDCO);
 				req.setAttribute("tramunitCodeToFind", tramunitCodeToFind);
 				req.setAttribute("tramunitNameToFind", tramunitNameToFind);
