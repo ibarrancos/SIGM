@@ -17,10 +17,18 @@ import es.ieci.tecdoc.isicres.api.audit.business.manager.IsicresAuditoriaManager
 public class IsicresAuditoriaManagerImpl extends AuditoriaAplicationManagerImpl
 		implements IsicresAuditoriaManager {
 
+	private static AuditoriaService auditoriaService = null;
+
 	public IsicresAuditoriaManagerImpl() {
-		setAuditoriaService(AuditoriaServiceFactory
-				.getInstance(AuditoriaServiceFactory.NON_SPRING_INTEGRATION));
+		setAuditoriaService(IsicresAuditoriaManagerImpl.getAuditoriaServiceInstance());
 		setTrazaAuditoriaBuilder(new IsicresTrazaAuditoriaBuilderImpl());
+	}
+
+	public static AuditoriaService getAuditoriaServiceInstance() {
+	    if (auditoriaService == null) {
+	        auditoriaService = AuditoriaServiceFactory.getInstance(AuditoriaServiceFactory.NON_SPRING_INTEGRATION);
+	    }
+	    return auditoriaService;
 	}
 
 }
