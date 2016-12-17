@@ -15,14 +15,10 @@
 	<name>ispac-audit</name>
 	<packaging>jar</packaging>
 
-  <properties>
-    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-    <jdk.source.version>1.5</jdk.source.version>
-    <jdk.target.version>1.5</jdk.target.version>
-
-  	<spring.version>3.0.2.RELEASE</spring.version>
-  	<dom4j.version>1.6.1</dom4j.version>
-  	<trove.version>1.0.2</trove.version>
+	<properties>
+	<spring.version>3.0.2.RELEASE</spring.version>
+	<dom4j.version>1.6.1</dom4j.version>
+	<trove.version>1.0.2</trove.version>
 	</properties>
 
 	<dependencies>
@@ -39,16 +35,16 @@
 		</dependency>
 
 		<dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>${dom4j.version}</version>
-    </dependency>
+                 <groupId>dom4j</groupId>
+                 <artifactId>dom4j</artifactId>
+                 <version>${dom4j.version}</version>
+         </dependency>
 
-    <dependency>
-      <groupId>trove</groupId>
-      <artifactId>trove</artifactId>
-      <version>${trove.version}</version>
-    </dependency>
+         <dependency>
+                 <groupId>trove</groupId>
+                 <artifactId>trove</artifactId>
+                 <version>${trove.version}</version>
+         </dependency>
 
 
 		<dependency>
@@ -104,18 +100,10 @@
 			<version>${commons.logging.version}</version>
 			<scope>test</scope>
 		</dependency>
-  </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${jdk.source.version}</source>
-          <target>${jdk.target.version}</target>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+	</dependencies>
+
+	<build>
+
+	</build>
 </project>
