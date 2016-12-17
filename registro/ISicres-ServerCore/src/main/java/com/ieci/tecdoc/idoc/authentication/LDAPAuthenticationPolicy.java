@@ -29,6 +29,7 @@ import com.ieci.tecdoc.common.invesdoc.Iuserdepthdr;
 import com.ieci.tecdoc.common.invesdoc.Iuserldapgrphdr;
 import com.ieci.tecdoc.common.invesdoc.Iuserldapuserhdr;
 import com.ieci.tecdoc.common.invesdoc.Iuserusertype;
+import com.ieci.tecdoc.common.invesdoc.Iusergenperm;
 import com.ieci.tecdoc.common.invesicres.ScrOfic;
 import com.ieci.tecdoc.common.keys.IDocKeys;
 import com.ieci.tecdoc.common.keys.ISicresKeys;
@@ -636,6 +637,7 @@ public class LDAPAuthenticationPolicy implements AuthenticationPolicy,
 					session.save(userType);
 					session.flush();
 				}
+				this.asignarPermisosUsuario(userId, session);
 			} else {//el usuario ya existe en el sistema de sicres
 				Iuserldapuserhdr ldapUser = (Iuserldapuserhdr) list.get(0);
 				if (log.isDebugEnabled()) {
@@ -685,6 +687,32 @@ public class LDAPAuthenticationPolicy implements AuthenticationPolicy,
 			 */
 		return userId;
 
+	}
+
+	private void asignarPermisosUsuario(Integer userId, Session session) throws HibernateException {
+	    List listadoPermisosUsuario = ISicresQueries.getUserGenPerms((Session)session, (int)1, (int)userId);
+	    Iusergenperm iuserGenPerm = null;
+	    if (listadoPermisosUsuario == null || listadoPermisosUsuario.isEmpty()) {
+	        iuserGenPerm = new Iusergenperm();
+	        iuserGenPerm.setDsttype(1);
+	        iuserGenPerm.setDstid(userId.intValue());
+	        iuserGenPerm.setPerms(1);
+	        iuserGenPerm.setProdid(3);
+	        session.save((Object)iuserGenPerm);
+	        iuserGenPerm = new Iusergenperm();
+	        iuserGenPerm.setDsttype(1);
+	        iuserGenPerm.setDstid(userId.intValue());
+	        iuserGenPerm.setPerms(0);
+	        iuserGenPerm.setProdid(4);
+	        session.save((Object)iuserGenPerm);
+	        iuserGenPerm = new Iusergenperm();
+	        iuserGenPerm.setDsttype(1);
+	        iuserGenPerm.setDstid(userId.intValue());
+	        iuserGenPerm.setPerms(0);
+	        iuserGenPerm.setProdid(5);
+	        session.save((Object)iuserGenPerm);
+	        session.flush();
+	    }
 	}
 
 	public List connectionVerification(LdapConnection conn,
