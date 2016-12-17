@@ -42,6 +42,7 @@ public class UsuarioRegistradorBean {
 	private String email;
 	private String ldapguid;
 	private String ldapfullname;
+	protected boolean deleteDocumentos;
 
 	/**
 	 * @return
@@ -477,6 +478,12 @@ public class UsuarioRegistradorBean {
 		this.gestionTiposTransporte = gestionTiposTransporte;
 	}
 
+	public boolean isDeleteDocumentos() {
+	    return this.deleteDocumentos;
+	}
+	public void setDeleteDocumentos(boolean deleteDocumentos) {
+	    this.deleteDocumentos = deleteDocumentos;
+	}
 
 
 }
