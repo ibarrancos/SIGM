@@ -101,7 +101,7 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 				AxSf axsf = axSfEntity.getAxSf(entidad);
 
 				Idocarchdet det = (Idocarchdet) ISicresQueries.getIdocarchdet(
-						session, new Integer(scr.getIdArchprim())).get(0);
+						session, new Integer(scr.getIdArchprim()), 1);
 				loadAxSf(session, pk, axsf, new HashMap(), det, locale
 						.getLanguage(), entidad);
 				axsfPrim.put(pk, axsf);
@@ -414,7 +414,7 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 			AxSf axsf = axSfEntity.getAxSf(entidad);
 
 			Idocarchdet det = (Idocarchdet) ISicresQueries.getIdocarchdet(
-					session, new Integer(scr.getIdArchsec())).get(0);
+					session, new Integer(scr.getIdArchsec()),1);
 			loadAxSf(session, pk, axsf, new HashMap(), det, language, entidad);
 			axsfs.put(pk, axsf);
 		}

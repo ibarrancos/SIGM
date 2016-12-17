@@ -93,6 +93,18 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 					entidad);
 
 			Session session = HibernateUtil.currentSession(entidad);
+			ScrOfic scrofic = null;
+			if (StringUtils.isEmpty((String)codigoOficina)) {
+			    scrofic = SecuritySession.checkScrOficPref((Session)session, (AuthenticationUser)user, (String)locale.getLanguage(), (String)entidad);
+			} else {
+			    scrofic = SecuritySession.getOfficeByCodeOfUser(codigoOficina, locale, user, session);
+			    if (scrofic == null) {
+			        StringBuffer sb = new StringBuffer("El usuario [").append(login).append("] no ha podido hacer login en la oficina con codigo [").append(codigoOficina).append("]");
+			        log.error((Object)sb.toString());
+			        throw new SecurityException("securityexception.scrofic_not_found");
+			    }
+			    user.setDeptid(Integer.valueOf(scrofic.getDeptid()));
+			}
 			tran = session.beginTransaction();
 
 			String sessionID = completarDatosLogin(locale, entidad, user,
@@ -415,6 +427,30 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 			log.debug(sb.toString());
 		}
 		return sessionID;
+	}
+
+	private static ScrOfic getOfficeByCodeOfUser(String codigoOficina, Locale locale, AuthenticationUser user, Session session) {
+	    ScrOfic scrOfic = SecuritySession.getScrOficByCode((Session)session, (String)locale.getLanguage(), (String)codigoOficina);
+	    if (null != scrOfic) {
+	        if (user.getDeptList() != null) {
+	            for (Integer idDept : user.getDeptList()) {
+	                if (idDept.intValue() != scrOfic.getDeptid()) continue;
+	                return scrOfic;
+	            }
+	        } else {
+	            log.warn((Object)("El usuario [" + user.getName() + "] tiene la lista de departamentos vac\u00eda"));
+	            try {
+	                ScrOfic scroficDept = ISicresQueries.getScrOficByDeptId((Session)session, (Integer)user.getDeptid());
+	                if (scroficDept != null && scrOfic.getId() == scroficDept.getId()) {
+	                    return scrOfic;
+	                }
+	            }
+	            catch (HibernateException e) {
+	                log.error((Object)("No se ha podido obtener la oficina del departamento [" + user.getDeptid() + "]"), (Throwable)e);
+	            }
+	        }
+	    }
+	    return null;
 	}
 
 	/**

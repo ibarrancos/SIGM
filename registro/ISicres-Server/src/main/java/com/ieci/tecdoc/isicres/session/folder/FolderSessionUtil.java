@@ -484,7 +484,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 						newRegisterID, data.getLaunchDistributionType(), data
 								.getNewAttributeValueAsInteger("fld8"), data
 								.getUserId(), data.getDeptId(), data
-								.getUserName(), entidad, data.getLocale());
+								.getUserName(), entidad, data.getLocale(), 0);
 			}
 
 			createGenericInformationDocumentsTipoAsunto(bookID, data
@@ -524,7 +524,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 
 	protected static FolderDataSession updateRegister(String sessionID,
 			Integer bookID, int fdrid, List inter, Integer newAssociatedBookID,
-			int newAssociatedRegisterID, String entidad, FolderDataSession data)
+			int newAssociatedRegisterID, String entidad, FolderDataSession data, Integer idDistFather)
 			throws BookException {
 		Transaction tran = null;
 		try {
@@ -557,7 +557,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 						data.getLaunchDistributionType(), new Integer(data
 								.getOldAttributeValueAsString("fld8")), data
 								.getUserId(), data.getDeptId(), data
-								.getUserName(), entidad, data.getLocale());
+								.getUserName(), entidad, data.getLocale(), idDistFather);
 			} else if (data.changedContainsKey(new Integer(8))) {
 				DBEntityDAOFactory.getCurrentDBEntityDAO()
 						.deleteDistributeForUpdate(bookID.intValue(), fdrid,
@@ -1293,23 +1293,21 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			ScrOrg scrorg = null;
 			if ((data.getAxsfOld() != null)
 					//Identificador de la Unidad Administrativa destino del asiento. ID existente en SCR_ORGS.
-					&& (data.getOldAttributeValue("fld8") != null))
-			{
-				scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data
-						.getOldAttributeValueAsString("fld8")));
-			} else
-			{
-				if (!data.isCreate() && data.getAxsfOld() != null)
-				{
-					scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data
-						.getOldAttributeValueAsString("fld8")));
-				} else
-				{
-					if (data.getNewAttributeValue("fld8") != null)
-					{
-						scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data
-							.getNewAttributeValueAsString("fld8")));
+					&& (data.getOldAttributeValue("fld8") != null)) {
+
+				String destinoOldAttributeValue = data.getOldAttributeValueAsString("fld8");
+				scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoOldAttributeValue));
+			} else {
+				String destinoNewAttributeValue = data.getNewAttributeValueAsString("fld8");
+				if (!data.isCreate() && data.getAxsfOld() != null) {
+					String destinoOldAttributeValue = data.getOldAttributeValueAsString("fld8");
+					if (StringUtils.isNotEmpty( destinoOldAttributeValue )) {
+						scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoOldAttributeValue));
+					} else if (StringUtils.isNotEmpty((String)destinoNewAttributeValue)) {
+						scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoNewAttributeValue));
 					}
+				} else if (StringUtils.isNotEmpty((String)destinoNewAttributeValue)) {
+					scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoNewAttributeValue));
 				}
 			}
 
@@ -1955,11 +1953,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			}
 			boolean finalChangeState = false;
 			if (changeState) {
-				int old = 0;
-				if (data.getOldAttributeValue("fld6") instanceof Integer) {
-					old = ((Integer) data.getOldAttributeValue("fld6"))
-							.intValue();
-				}
+				int old = FolderSessionUtil.parseFLDToInt(oldFld6);
 				if (Repository.getInstance(entidad).isInBook(bookID)
 						.booleanValue()) {
 					if ((data.getOldAttributeValue("fld7") != null || fullInter)
@@ -2003,6 +1997,21 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 
 		data.setCompletedState(completedState);
 		return data;
+	}
+
+	private static int parseFLDToInt(Object fld) {
+	    int result = 0;
+	    if (fld != null) {
+	        try {
+	            result = Integer.parseInt(fld.toString());
+	        }
+	        catch (NumberFormatException rFE) {
+	            StringBuffer sb = new StringBuffer();
+	            sb.append("Se ha producido error al intentar parsear FLD [").append(fld).append("] a un valor n\u00famerico");
+	            log.warn((Object)sb.toString());
+	        }
+	    }
+	    return result;
 	}
 
 	private static FolderDataSession isAutomaticRegisterCreationType(

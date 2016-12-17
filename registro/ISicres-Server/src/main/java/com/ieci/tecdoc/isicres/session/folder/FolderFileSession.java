@@ -553,6 +553,39 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		return documents;
 	}
 
+	public static void deleteFileOfRegister(String entidad, Integer folderId, Integer docId, Integer pageId, Integer bookId) throws BookException {
+	    try {
+	        if (log.isDebugEnabled()) {
+	            StringBuffer sb = new StringBuffer();
+	            sb.append("Entra a borrar los datos del fichero con ID[").append(pageId).append("] del registro [").append(folderId).append("] que pertenece al documento ID[").append(docId).append("]");
+	            log.debug((Object)sb.toString());
+	        }
+	        DBEntityDAOFactory.getCurrentDBEntityDAO().deleteHashDocument(Integer.valueOf(bookId), folderId.intValue(), pageId.intValue(), entidad);
+	        if (log.isDebugEnabled()) {
+	            log.debug((Object)"Borrados los datos de la tabla SCR_PAGEINFO");
+	        }
+	        DBEntityDAOFactory.getCurrentDBEntityDAO().deleteScrPageRepository(bookId.intValue(), folderId.intValue(), pageId.intValue(), entidad);
+	        if (log.isDebugEnabled()) {
+	            log.debug((Object)"Borrados los datos de la tabla SCR_PAGEREPOSITORY");
+	        }
+	        AxPagehEntity axPagehEntity = new AxPagehEntity();
+	        axPagehEntity.setFdrId(folderId.intValue());
+	        axPagehEntity.setType(bookId.toString());
+	        axPagehEntity.setDocId(docId.intValue());
+	        axPagehEntity.setId(pageId.intValue());
+	        axPagehEntity.remove(entidad);
+	        if (log.isDebugEnabled()) {
+	            log.debug((Object)"Borrados los datos de la tabla SCR_AXPAGEH");
+	        }
+	    }
+	    catch (Exception e) {
+	        StringBuffer sb = new StringBuffer();
+	        sb.append("Imposible borrar el fichero ID[").append(pageId).append("] del documento ID[").append(docId).append("] para el registro ID[").append(folderId).append("] en el libro ID[").append(bookId).append("]");
+	        log.error((Object)sb.toString(), (Throwable)e);
+	        throw new BookException("bookexception.update_folder");
+	    }
+	}
+
 	/**
 	 * Este método sustituye al que se usaba anteriormente
 	 * 

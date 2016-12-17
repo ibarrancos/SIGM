@@ -213,6 +213,7 @@ public class SecuritySessionUtil implements HibernateKeys, ServerKeys {
 			genPerms.setCanModifyReports(true);
 			genPerms.setCanModifyTransportTypes(true);
 			genPerms.setCanModifyUsers(true);
+			genPerms.setCanDeleteDocuments(true);
 		} else {
 			ScrUsrperm scrUsrperm = null;
 
@@ -238,6 +239,7 @@ public class SecuritySessionUtil implements HibernateKeys, ServerKeys {
 				genPerms.setCanModifyReports(false);
 				genPerms.setCanModifyTransportTypes(false);
 				genPerms.setCanModifyUsers(false);
+				genPerms.setCanDeleteDocuments(false);
 			}
 
 			if (scrUsrperm != null) {
@@ -279,6 +281,9 @@ public class SecuritySessionUtil implements HibernateKeys, ServerKeys {
 
 				genPerms
 				.setCanModifyTransportTypes((scrUsrperm.getPerms() & ISicresGenPerms.ISUSER_PERM_CAN_MODIFY_TRANSPORTTYPES) == ISicresGenPerms.ISUSER_PERM_CAN_MODIFY_TRANSPORTTYPES);
+
+				genPerms
+				.setCanDeleteDocuments((scrUsrperm.getPerms() & ISicresGenPerms.ISUSER_PERM_CAN_DELETE_DOCUMENTS) == ISicresGenPerms.ISUSER_PERM_CAN_DELETE_DOCUMENTS);
 
 				genPerms
 				.setCanModifyUsers((scrUsrperm.getPerms() & ISicresGenPerms.ISUSER_PERM_CAN_MODIFY_USERS) == ISicresGenPerms.ISUSER_PERM_CAN_MODIFY_USERS);

@@ -17,6 +17,7 @@ import net.sf.hibernate.Transaction;
 import net.sf.hibernate.expression.Expression;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import com.ieci.tecdoc.common.AuthenticationUser;
 import com.ieci.tecdoc.common.entity.dao.DBEntityDAOFactory;
@@ -30,6 +31,7 @@ import com.ieci.tecdoc.common.invesicres.ScrDistlist;
 import com.ieci.tecdoc.common.invesicres.ScrDistreg;
 import com.ieci.tecdoc.common.invesicres.ScrOfic;
 import com.ieci.tecdoc.common.invesicres.ScrOrg;
+import com.ieci.tecdoc.common.invesicres.ScrDistribucionActual;
 import com.ieci.tecdoc.common.isicres.DistributionResults;
 import com.ieci.tecdoc.common.isicres.DtrFdrResults;
 import com.ieci.tecdoc.common.isicres.Keys;
@@ -123,7 +125,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 		return getDistribution(sessionID, state, firstRow, maxResults,
 				typeDist, distWhere, regWhere, oficAsoc, locale, entidad,
-				LDAPAuthenticationPolicy.isLdap(entidad));
+				LDAPAuthenticationPolicy.isLdap(entidad), null);
 	}
 
 	public static DistributionResults getDistribution(String sessionID,
@@ -134,18 +136,18 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 		return getDistribution(sessionID, state, firstRow, maxResults,
 				typeDist, distWhere, regWhere, oficAsoc, locale, entidad,
-				LDAPAuthenticationPolicy.isLdap(entidad), bookList);
+				LDAPAuthenticationPolicy.isLdap(entidad), bookListi, null);
 	}
 
 	public static DistributionResults getDistribution(String sessionID,
 			int state, int firstRow, int maxResults, int typeDist,
 			String distWhere, String regWhere, boolean oficAsoc, Locale locale,
-			String entidad, boolean isLdap) throws DistributionException,
+			String entidad, boolean isLdap,String orderBy) throws DistributionException,
 			SessionException, ValidationException {
 
 		return getDistribution(sessionID, state, firstRow, maxResults,
 				typeDist, distWhere, regWhere, oficAsoc, locale, entidad,
-				isLdap, null);
+				isLdap, null,orderBy);
 	}
 
 	/**
@@ -171,7 +173,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 	public static DistributionResults getDistribution(String sessionID,
 			int state, int firstRow, int maxResults, int typeDist,
 			String distWhere, String regWhere, boolean oficAsoc, Locale locale,
-			String entidad, boolean isLdap, List bookList)
+			String entidad, boolean isLdap, List bookList, String orderBy)
 			throws DistributionException, SessionException, ValidationException {
 
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
@@ -201,32 +203,23 @@ public class DistributionSession extends DistributionSessionUtil implements
 			StringBuffer finalWhere = new StringBuffer();
 			String tableName = null;
 
-			if (!regWhere.equals("")) {
-				String selectCriteria = "select distinct id_arch from scr_distreg where ";
-				List idArchs = DBEntityDAOFactory.getCurrentDBEntityDAO()
-						.getIdArchDistribution(
-								selectCriteria + querySize.toString(), entidad);
+			String selectCriteria = "select distinct id_arch from scr_distreg where ";
+			List idArchs = DBEntityDAOFactory.getCurrentDBEntityDAO().getIdArchDistribution(selectCriteria + querySize.toString(), entidad);
+			if (!"".equals(regWhere) && StringUtils.isBlank((String)orderBy)) {
+				if (log.isDebugEnabled()) {
+					StringBuffer sb = new StringBuffer();
+					sb.append("Se crea la tabla temporal para la distribucion: ").append(tableName);
+					log.debug((Object)sb.toString());
+				}
 				tableName = getTableName(user, idArchs);
 
 				finalWhere.append(getDistributionFinalWhere(idArchs, regWhere,
 						querySize.toString(), tableName, entidad));
 			} else {
 				finalWhere.append(querySize.toString());
-				finalWhere.append(" order by id");
 			}
 
-			int distributionCount = getDistributionCount(finalWhere.toString(),
-					entidad);
-
-			Criteria criteriaResults = session.createCriteria(ScrDistreg.class);
-			criteriaResults.setFirstResult(firstRow);
-			criteriaResults.setMaxResults(maxResults);
-			criteriaResults.add(Expression.sql(finalWhere.toString()));
-			List list = criteriaResults.list();
-
-			DistributionResults distributionResults = getDistributionResults(
-					session, list, distributionCount, currentDate, typeDist,
-					locale, entidad, isLdap);
+			DistributionResults distributionResults = DistributionSession.getDistributionResults(sessionID, user, firstRow, maxResults, typeDist, locale, entidad, isLdap, orderBy, session, currentDate, regWhere, finalWhere, idArchs);
 
 			if (tableName != null) {
 				DBEntityDAOFactory.getCurrentDBEntityDAO().dropTableOrView(
@@ -251,6 +244,76 @@ public class DistributionSession extends DistributionSessionUtil implements
 		} finally {
 			HibernateUtil.closeSession(entidad);
 		}
+	}
+
+	private static DistributionResults getDistributionResults(String sessionID, AuthenticationUser user, int firstRow, int maxResults, int typeDist, Locale locale, String entidad, boolean isLdap, String orderBy, Session session, Date currentDate, String regWhere, StringBuffer finalWhere, List idArchs) throws Exception, SQLException, HibernateException {
+	    DistributionResults result;
+	    if (StringUtils.isNotBlank((String)orderBy)) {
+	        if (log.isDebugEnabled()) {
+	            StringBuffer sb = new StringBuffer();
+	            sb.append("Recupera distribuci\u00f3n con ordenaci\u00f3n: ").append(orderBy);
+	            log.debug((Object)sb.toString());
+	        }
+	        result = DistributionSession.getDistributionByOrderBy(sessionID, user, regWhere, finalWhere.toString(), firstRow, maxResults, typeDist, locale, entidad, isLdap, orderBy, session, currentDate, idArchs);
+	    } else {
+	        if (log.isDebugEnabled()) {
+	            log.debug((Object)"Recupera distribuci\u00f3n sin ordenaci\u00f3n");
+	        }
+	        int distributionCount = DistributionSession.getDistributionCount((String)finalWhere.toString(), (String)entidad);
+	        result = DistributionSession.getDistributionWithOutOrder(firstRow, maxResults, typeDist, locale, entidad, isLdap, session, currentDate, finalWhere, distributionCount);
+	    }
+	    return result;
+	}
+
+	private static DistributionResults getDistributionByOrderBy(String sessionID, AuthenticationUser user, String regWhere, String finalWhere, int firstRow, int maxResults, int typeDist, Locale locale, String entidad, boolean isLdap, String orderBy, Session session, Date currentDate, List idArchs) throws Exception, SQLException, HibernateException {
+	    DistributionResults distributionResults = new DistributionResults();
+	    if (!(idArchs == null || idArchs.isEmpty())) {
+	        String tableName = DistributionSession.createTableTempOrderQuery(entidad, locale, user, regWhere, finalWhere, idArchs);
+	        int distributionCount = DBEntityDAOFactory.getCurrentDBEntityDAO().getTableOrViewSize(tableName, entidad);
+	        if (log.isDebugEnabled()) {
+	            StringBuffer sb = new StringBuffer();
+	            sb.append("getDistributionByOrderBy distributionCount: ").append(distributionCount);
+	            log.debug((Object)sb.toString());
+	        }
+	        List listadoDistributionView = DBEntityDAOFactory.getCurrentDBEntityDAO().getListDistributionOrderBy(firstRow, maxResults, entidad, orderBy, tableName);
+	        distributionResults = DistributionSession.getDistributionResultsOrderBy((Session)session, (List)listadoDistributionView, (int)distributionCount, (Date)currentDate, (int)typeDist, (Locale)locale, (String)entidad, (boolean)isLdap);
+	        DBEntityDAOFactory.getCurrentDBEntityDAO().dropTableOrView(tableName, entidad);
+	    }
+	    return distributionResults;
+	}
+
+	private static DistributionResults getDistributionWithOutOrder(int firstRow, int maxResults, int typeDist, Locale locale, String entidad, boolean isLdap, Session session, Date currentDate, StringBuffer finalWhere, int distributionCount) throws HibernateException {
+	    Criteria criteriaResults = session.createCriteria((Class)ScrDistreg.class);
+	    criteriaResults.setFirstResult(firstRow);
+	    criteriaResults.setMaxResults(maxResults);
+	    criteriaResults.add(Expression.sql((String)finalWhere.toString()));
+	    List listadoDistributionView = criteriaResults.list();
+	    DistributionResults distributionResults = DistributionSession.getDistributionResults((Session)session, (List)listadoDistributionView, (int)distributionCount, (Date)currentDate, (int)typeDist, (Locale)locale, (String)entidad, (boolean)isLdap);
+	    return distributionResults;
+	}
+
+
+	private static String createTableTempOrderQuery(String entidad, Locale locale, AuthenticationUser user, String regWhere, String finalWhere, List idArchs) throws Exception, SQLException {
+	    StringBuffer createSentence = new StringBuffer();
+	    String tableName = DistributionSession.getTableName((AuthenticationUser)user, (List)idArchs);
+	    if (log.isDebugEnabled()) {
+	        StringBuffer sb = new StringBuffer();
+	        sb.append("Nombre de la tabla temporal para la distribuci\u00f3n: ").append(tableName);
+	        log.debug((Object)sb.toString());
+	    }
+	    boolean isCreateTable = true;
+	    for (Integer auxBookId : idArchs) {
+	        boolean isInBook = Repository.getInstance((String)entidad).isInBook(auxBookId);
+	        createSentence.append(DBEntityDAOFactory.getCurrentDBEntityDAO().getTemporalTableDistributionQuerySentenceOrderBy(tableName, auxBookId, finalWhere, DistributionSession.getRegWhere((String)regWhere, (boolean)isInBook), isCreateTable, isInBook, locale.getLanguage()));
+	        isCreateTable = false;
+	    }
+	    if (log.isDebugEnabled()) {
+	        StringBuffer sb = new StringBuffer();
+	        sb.append("Consulta para generar tabla temporal distribuci\u00f3n: ").append(createSentence.toString());
+	        log.debug((Object)sb.toString());
+	    }
+	    DBEntityDAOFactory.getCurrentDBEntityDAO().createTableOrView(createSentence.toString(), entidad);
+	    return tableName;
 	}
 
 	/**
@@ -313,7 +376,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 			criteriaResults.add(Expression.sql(sql));
 			List list = criteriaResults.list();
 
-			int distributionCount = list.size();
+			int distributionCount = DistributionSession.getDistributionCount(sql,entidad);
 
 			DistributionResults distributionResults = getDistributionResults(
 					session, list, distributionCount, currentDate, typeDist,
@@ -573,7 +636,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 		return countDistribution(sessionID, state, typeDist, distWhere,
 				regWhere, oficAsoc, entidad,
-				LDAPAuthenticationPolicy.isLdap(entidad), bookList);
+				LDAPAuthenticationPolicy.isLdap(entidad), bookList,null);
 	}
 
 	public static int countDistribution(String sessionID, int state,
@@ -582,12 +645,12 @@ public class DistributionSession extends DistributionSessionUtil implements
 			SessionException, ValidationException {
 
 		return countDistribution(sessionID, state, typeDist, distWhere,
-				regWhere, oficAsoc, entidad, isLdap, null);
+				regWhere, oficAsoc, entidad, isLdap, null,null);
 	}
 
 	public static int countDistribution(String sessionID, int state,
 			int typeDist, String distWhere, String regWhere, boolean oficAsoc,
-			String entidad, boolean isLdap, List bookList)
+			String entidad, boolean isLdap, List bookList, String orderBy)
 			throws DistributionException, SessionException, ValidationException {
 
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
@@ -613,7 +676,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 			StringBuffer finalWhere = new StringBuffer();
 			String tableName = null;
 
-			if (!regWhere.equals("")) {
+			if (!regWhere.equals("") || StringUtils.isNotBlank((String)orderBy)) {
 				String selectCriteria = "select distinct id_arch from scr_distreg where ";
 				List idArchs = DBEntityDAOFactory.getCurrentDBEntityDAO()
 						.getIdArchDistribution(
@@ -717,7 +780,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 				result.append(createDistribution(session, sessionID, bookId, 2,
 						scrOfic.getDeptid(), userId, userType, messageForUser,
-						listIdsRegister, user, scrOfic, locale, entidad));
+						listIdsRegister, user, scrOfic, locale, entidad, 0));
 
 				HibernateUtil.commitTransaction(tran);
 			}
@@ -809,7 +872,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 				result.append(createDistribution(session, sessionID, bookId,
 						senderType, senderId, userId, userType, messageForUser,
-						listIdsRegister, user, scrOfic, locale, entidad));
+						listIdsRegister, user, scrOfic, locale, entidad,0));
 
 				HibernateUtil.commitTransaction(tran);
 			}
@@ -912,13 +975,13 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 		return rejectDistribution(sessionID, ids, remarks, state, firstRow,
 				maxResults, typeDist, distWhere, regWhere, locale, entidad,
-				LDAPAuthenticationPolicy.isLdap(entidad));
+				LDAPAuthenticationPolicy.isLdap(entidad),null);
 	}
 
 	public static List rejectDistribution(String sessionID, List ids,
 			String remarks, int state, int firstRow, int maxResults,
 			int typeDist, String distWhere, String regWhere, Locale locale,
-			String entidad, boolean isLdap) throws DistributionException,
+			String entidad, boolean isLdap, String orderBy) throws DistributionException,
 			SessionException, ValidationException {
 
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
@@ -928,7 +991,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 		try {
 			DistributionResults distributionResults = getDistribution(
 					sessionID, state, firstRow, maxResults, typeDist,
-					distWhere, regWhere, true, locale, entidad, isLdap);
+					distWhere, regWhere, true, locale, entidad, isLdap, orderBy);
 
 			Session session = HibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
@@ -1053,12 +1116,22 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 		return saveDistribution(sessionID, ids, state, firstRow, maxResults,
 				typeDist, distWhere, regWhere, locale, entidad,
-				LDAPAuthenticationPolicy.isLdap(entidad));
+				LDAPAuthenticationPolicy.isLdap(entidad),null);
 	}
 
 	public static List saveDistribution(String sessionID, List ids, int state,
 			int firstRow, int maxResults, int typeDist, String distWhere,
-			String regWhere, Locale locale, String entidad, boolean isLdap)
+			String regWhere, Locale locale, String entidad, String orderBy)
+			throws DistributionException, SessionException, ValidationException {
+
+		return saveDistribution(sessionID, ids, state, firstRow, maxResults,
+				typeDist, distWhere, regWhere, locale, entidad,
+				LDAPAuthenticationPolicy.isLdap(entidad),orderBy, null);
+	}
+
+	public static List saveDistribution(String sessionID, List ids, int state,
+			int firstRow, int maxResults, int typeDist, String distWhere,
+			String regWhere, Locale locale, String entidad, boolean isLdap, String orderBy, String remarks)
 			throws DistributionException, SessionException, ValidationException {
 
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
@@ -1068,7 +1141,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 		try {
 			DistributionResults distributionResults = getDistribution(
 					sessionID, state, firstRow, maxResults, typeDist,
-					distWhere, regWhere, true, locale, entidad, isLdap);
+					distWhere, regWhere, true, locale, entidad, isLdap, orderBy);
 
 			Session session = HibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
@@ -1094,7 +1167,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 				} else {
 					scrDistReg = updateDistReg(session, user, sessionID,
 							DISTRIBUTION_ARCHIVE_EVENT, scrDistReg,
-							ISDistribution.STATE_ARCHIVADO, ids1, null, entidad);
+							ISDistribution.STATE_ARCHIVADO, ids1, remarks, entidad);
 				}
 			}
 
@@ -1191,6 +1264,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 			HibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
 			error = 1;
+			log.warn(e);
 			HibernateUtil.rollbackTransaction(tran);
 			throw new DistributionException(
 					DistributionException.ERROR_CANNOT_ACCEPT_DISTRIBUTION);
@@ -1215,7 +1289,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 	public static void changeDistribution(String sessionID, List dis,
 			String code, int typeDist, Integer launchDistOutRegister,
-			Integer canDestWithoutList, Locale locale, String entidad)
+			Integer canDestWithoutList, Locale locale, String entidad, boolean isLdap)
 			throws BookException, SessionException, ValidationException,
 			DistributionException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
@@ -1293,6 +1367,8 @@ public class DistributionSession extends DistributionSessionUtil implements
 		updateChangeDistribution(sessionID, scrs, distList, typeDist, id,
 				canDestWithoutList, entidad);
 
+		insertDestinoActualChangeDistribution(sessionID, entidad, isLdap, scrs);
+
 		updateFolderChangeDistribution(sessionID, scrs, scrOrg,
 				launchDistOutRegister, locale, entidad);
 
@@ -1325,7 +1401,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 	public static void distribute(boolean isUpdate, Session session,
 			Integer bookID, int fdrid, int distributionType, Integer fld8,
 			Integer userID, Integer deptId, String userName, String entidad,
-			Locale locale) throws HibernateException, BookException,
+			Locale locale,Integer idDistFather) throws HibernateException, BookException,
 			SQLException, Exception {
 
 		if (isUpdate) {
@@ -1367,7 +1443,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 					insertDistribute(session, bookID, fdrid,
 							dirList.getTypeDest(), dirList.getIdDest(),
 							currentDate, 2, deptId.intValue(), userName,
-							userID, distributionType, message, entidad);
+							userID, distributionType, message, entidad,idDistFather);
 				}
 			}
 			break;
@@ -1375,7 +1451,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 		case 2: { // Distribución externa
 			insertDistribute(session, bookID, fdrid, 4, fld8.intValue(),
 					currentDate, 2, deptId.intValue(), userName, userID,
-					distributionType, message, entidad);
+					distributionType, message, entidad,idDistFather);
 			break;
 		}
 		default: {
@@ -1383,6 +1459,31 @@ public class DistributionSession extends DistributionSessionUtil implements
 					BookException.ERROR_DISTRIBUTION_TYPE_NOT_SUPPORTED);
 		}
 		}
+	}
+
+	public static String getDestinoActualDistribucion(String sessionID, Integer idDist, String entidad) throws ValidationException, DistributionException {
+	    Validator.validate_String_NotNull_LengthMayorZero((String)sessionID, (String)"session");
+	    Transaction tran = null;
+	    String result = "";
+	    try {
+	        Session session = HibernateUtil.currentSession((String)entidad);
+	        tran = session.beginTransaction();
+	        ScrDistribucionActual scrDistribucionActual = ISicresQueries.getScrDistribucionActual((Session)session, (Integer)idDist);
+	        if (scrDistribucionActual != null) {
+	            result = scrDistribucionActual.getDist_actual();
+	        }
+	        HibernateUtil.commitTransaction((Transaction)tran);
+	        String string = result;
+	        return string;
+	    }
+	    catch (Exception e) {
+	        log.error((Object)e);
+	        HibernateUtil.rollbackTransaction((Transaction)tran);
+	        throw new DistributionException("distributionException.canNotObtainDistribution");
+	    }
+	    finally {
+	        HibernateUtil.closeSession((String)entidad);
+	    }
 	}
 
 	public static String getOrigDestDescription(String sessionID,
@@ -1517,7 +1618,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 	public static void redistributionDistribution(String sessionID,
 			Locale locale, String entidad, List dis, Integer userId,
 			int typeDist, Integer canDestWithoutList, String messageForUser,
-			Integer userType) throws ValidationException,
+			Integer userType, boolean isLdap) throws ValidationException,
 			DistributionException, SessionException, BookException {
 
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
@@ -1575,7 +1676,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 					redistributionDistribution(session, sessionID, locale,
 							scrDistReg, user, canDestWithoutList, typeDist,
 							scrOfic, currentDate, userType, distList,
-							messageForUser, entidad);
+							messageForUser, entidad,isLdap);
 
 				} finally {
 					// desbloqueamos los registros bloqueados
