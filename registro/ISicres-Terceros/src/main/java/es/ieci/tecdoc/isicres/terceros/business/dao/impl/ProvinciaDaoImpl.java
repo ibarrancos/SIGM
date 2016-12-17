@@ -1,5 +1,7 @@
 package es.ieci.tecdoc.isicres.terceros.business.dao.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ClassUtils;
 
@@ -34,6 +36,12 @@ public class ProvinciaDaoImpl extends
 						new String[] {
 								ClassUtils.getShortName(getPersistentClass()),
 								"findByNombre" }, "."), nombre);
+	}
+	public List<ProvinciaVO> getProvincias(int from, int to) {
+	    return this.getSqlMapClientTemplate().queryForList(StringUtils.join((Object[])new String[]{ClassUtils.getShortName((Class)this.getPersistentClass()), "getProvinciaVOs"}, (String)"."), from, to);
+	}
+	public Integer getProvinciasCount() {
+	    return (Integer)this.getSqlMapClientTemplate().queryForObject(StringUtils.join((Object[])new String[]{ClassUtils.getShortName((Class)this.getPersistentClass()), "getProvinciasCount"}, (String)"."));
 	}
 
 }

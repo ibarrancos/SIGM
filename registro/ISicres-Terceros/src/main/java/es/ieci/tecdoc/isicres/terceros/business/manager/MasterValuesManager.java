@@ -103,4 +103,11 @@ public interface MasterValuesManager {
 	 * @return
 	 */
 	public PaisVO getPais(String codigo);
+
+	public List<CiudadVO> getCiudades(int var1, int var2);
+	public Integer getCiudadesCount();
+	public Integer getCiudadesCount(ProvinciaVO var1);
+	public List<CiudadVO> getCiudades(ProvinciaVO var1, int var2, int var3);
+	public List<ProvinciaVO> getProvincias(int var1, int var2);
+	public Integer getProvinciasCount();
 }

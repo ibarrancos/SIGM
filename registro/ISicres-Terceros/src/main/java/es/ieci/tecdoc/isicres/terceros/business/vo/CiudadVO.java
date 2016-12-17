@@ -1,12 +1,14 @@
 package es.ieci.tecdoc.isicres.terceros.business.vo;
 
 import es.ieci.tecdoc.fwktd.core.model.Entity;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author IECISA
  *
  */
+@Size(max=40)
 public class CiudadVO extends Entity {
 
 	public String getNombre() {

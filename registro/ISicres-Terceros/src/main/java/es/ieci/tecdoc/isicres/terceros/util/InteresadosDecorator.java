@@ -9,6 +9,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import org.apache.log4j.Logger;
+
 import es.ieci.tecdoc.fwktd.util.velocity.VelocityEngine;
 import es.ieci.tecdoc.isicres.terceros.business.manager.InteresadoManager;
 import es.ieci.tecdoc.isicres.terceros.business.manager.TerceroManager;
@@ -29,6 +33,8 @@ import es.ieci.tecdoc.isicres.terceros.business.vo.enums.DireccionType;
  *
  */
 public class InteresadosDecorator {
+
+	private static final Logger logger = Logger.getLogger((Class)InteresadosDecorator.class);
 
 	/**
 	 *
@@ -56,6 +62,7 @@ public class InteresadosDecorator {
 				.getTemplate("es/ieci/tecdoc/isicres/terceros/util/interesados.vm");
 		while (iterator.hasNext()) {
 			InteresadoVO interesado = (InteresadoVO) iterator.next();
+			adapterEncodingInteresados(interesado);
 			VelocityContext ctx = new VelocityContext();
 			ctx.put("interesado", interesado);
 			StringWriter sw = new StringWriter();
@@ -68,6 +75,19 @@ public class InteresadosDecorator {
 		}
 		return sb.toString();
 	}
+
+	private void adapterEncodingInteresados(InteresadoVO interesado) {
+	    try {
+	        if (StringUtils.equals((String)"0", (String)interesado.getTercero().getId())) {
+	            interesado.setNombre(URLEncoder.encode(interesado.getNombre(), "UTF-8"));
+	        }
+	    }
+	    catch (UnsupportedEncodingException e) {
+	        logger.warn((Object)"No se ha podido aplicar el encoding a la informaci\u00f3n del interesado", (Throwable)e);
+	    }
+	}
+
+
 
 	/**
 	 *
@@ -134,18 +154,15 @@ public class InteresadosDecorator {
 					break;
 				case 5:
 					if (!StringUtils.isBlank(tokens[i])) {
-						BaseTerceroVO terceroRepresentante = new BaseTerceroVO();
-						terceroRepresentante.setId(tokens[i]);
+						String terceroRepresentanteId = tokens[i];
+						TerceroValidadoVO representanteVO = (TerceroValidadoVO)this.getTerceroManager().get((Serializable)terceroRepresentanteId);
 						representante = new RepresentanteInteresadoVO();
-						representante.setRepresentante(terceroRepresentante);
+						representante.setRepresentante((BaseTerceroVO)representanteVO);
 						interesado.setRepresentante(representante);
 					}
 					break;
 				case 6:
-					if (null != representante) {
-						interesado.getRepresentante().getRepresentante()
-								.setNombre(tokens[i]);
-					} else {
+					if (null == representante) {
 						interesado
 								.setRepresentante(new RepresentanteInteresadoVO());
 					}

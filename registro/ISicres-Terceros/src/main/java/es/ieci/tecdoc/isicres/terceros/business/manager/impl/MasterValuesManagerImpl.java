@@ -142,6 +142,31 @@ public class MasterValuesManagerImpl implements MasterValuesManager {
 		this.paisDao = paisDao;
 	}
 
+	public List<CiudadVO> getCiudades(int from, int to) {
+	    return this.getCiudadDao().getCiudades(from, to);
+	}
+
+	public Integer getCiudadesCount() {
+	    return this.getCiudadDao().getCiudadesCount();
+	}
+
+	public Integer getCiudadesCount(ProvinciaVO provincia) {
+	    return this.getCiudadDao().getCiudadesByProvinciaCount(provincia);
+	}
+
+	public List<CiudadVO> getCiudades(ProvinciaVO provincia, int from, int to) {
+	    return this.getCiudadDao().getCiudadesByProvincia(provincia, from, to);
+	}
+
+	public List<ProvinciaVO> getProvincias(int from, int to) {
+	    return this.getProvinciaDao().getProvincias(from, to);
+	}
+
+	public Integer getProvinciasCount() {
+	    return this.getProvinciaDao().getProvinciasCount();
+	}
+
+
 	protected TipoDocumentoIdentificativoDao tipoDocumentoIdentificativoDao;
 
 	protected TipoDireccionTelematicaDao tipoDireccionTelematicaDao;

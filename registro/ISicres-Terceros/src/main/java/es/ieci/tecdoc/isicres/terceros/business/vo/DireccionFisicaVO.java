@@ -1,6 +1,7 @@
 package es.ieci.tecdoc.isicres.terceros.business.vo;
 
 import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -13,11 +14,13 @@ import es.ieci.tecdoc.isicres.terceros.business.vo.enums.DireccionType;
  * @version $Revision$
  *
  */
+@Valid
 public class DireccionFisicaVO extends BaseDireccionVO {
 
 	/**
 	 * Nombre de la ciudad asociada a la dirección.
 	 */
+	@Valid
 	protected CiudadVO ciudad;
 
 	/**

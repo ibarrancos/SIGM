@@ -46,4 +46,17 @@ public class CiudadDaoImpl extends
 								ClassUtils.getShortName(getPersistentClass()),
 								"getCiudadesByProvincia" }, "."), provincia);
 	}
+
+	public Integer getCiudadesByProvinciaCount(ProvinciaVO provincia) {
+	    return (Integer)this.getSqlMapClientTemplate().queryForObject(StringUtils.join((Object[])new String[]{ClassUtils.getShortName((Class)this.getPersistentClass()), "getCiudadesByProvinciaCount"}, (String)"."), (Object)provincia);
+	}
+	public List<CiudadVO> getCiudadesByProvincia(ProvinciaVO provincia, int from, int to) {
+	    return this.getSqlMapClientTemplate().queryForList(StringUtils.join((Object[])new String[]{ClassUtils.getShortName((Class)this.getPersistentClass()), "getCiudadesByProvincia"}, (String)"."), (Object)provincia, from, to);
+	}
+	public List<CiudadVO> getCiudades(int from, int to) {
+	    return this.getSqlMapClientTemplate().queryForList(StringUtils.join((Object[])new String[]{ClassUtils.getShortName((Class)this.getPersistentClass()), "getCiudadVOs"}, (String)"."), from, to);
+	}
+	public Integer getCiudadesCount() {
+	    return (Integer)this.getSqlMapClientTemplate().queryForObject(StringUtils.join((Object[])new String[]{ClassUtils.getShortName((Class)this.getPersistentClass()), "getCiudadesCount"}, (String)"."));
+	}
 }

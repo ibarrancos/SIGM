@@ -22,4 +22,13 @@ public interface CiudadDao extends BaseReadOnlyDao<CiudadVO, String> {
 	 * @return
 	 */
 	public List<CiudadVO> getCiudadesByProvincia(ProvinciaVO provincia);
+
+
+	public List<CiudadVO> getCiudades(int var1, int var2);
+
+	public Integer getCiudadesCount();
+
+	public Integer getCiudadesByProvinciaCount(ProvinciaVO var1);
+
+	public List<CiudadVO> getCiudadesByProvincia(ProvinciaVO var1, int var2, int var3);
 }
