@@ -2115,7 +2115,7 @@
 		<name>divHeight</name>
 		<required>false</required>
 		<rtexprvalue>true</rtexprvalue>
-		</attribute>
+	  </attribute>
    </tag>
 
 
@@ -3745,7 +3745,7 @@
    <tag>
 		<name>hasFunction</name>
 		<tagclass>ieci.tdw.ispac.ispacweb.tag.HasFunctionTag</tagclass>
-		<bodycontent>JSP</bodycontent>
+	    <bodycontent>JSP</bodycontent>
 	    <attribute>
 	        <name>functions</name>
 	        <required>true</required>
