@@ -30,9 +30,9 @@
 			</font>
 			</blockquote>
 	    </div>
-		<div id="piecuerpo">
-			<fmt:message key="archigest.archivo.version"/>
-			<!-- <fmt:message key="archigest.archivo.fecha.version"/> -->
+	    <div id="piecuerpo">
+	    	<fmt:message key="archigest.archivo.version"/>
+	    	<!-- <fmt:message key="archigest.archivo.fecha.version"/> -->
 		</div>
 	</div>
   </tiles:put>

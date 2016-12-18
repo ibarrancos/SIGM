@@ -87,9 +87,9 @@
 			</tiles:put>
 			<tiles:put name="buttonBar" direct="true">
 				<TABLE cellpadding=0 cellspacing=0>
-					<TR>
+				  <TR>
 					<td>&nbsp;</td>
-					</TR>
+				 </TR>
 				</TABLE>
 			</tiles:put>
 			<tiles:put name="visibleContent" direct="true">
@@ -198,7 +198,7 @@
 					<tiles:put name="labelKey" direct="true">archigest.archivo.atras</tiles:put>
 					<tiles:put name="imgIcon" direct="true">/pages/images/Previous.gif</tiles:put>
 				</tiles:insert>
-			</td>
+		   	</td>
 			<td width="10">&nbsp;</td>
 			<td>
 				<a class="etiquetaAzul12Bold" href="javascript:goOn()" >
@@ -221,7 +221,7 @@
 					titleKey="archigest.archivo.cerrar"
 					styleClass="imgTextMiddle" />
 				&nbsp;<bean:message key="archigest.archivo.cerrar"/></a>
-			</TD>
+		   	</TD>
 
 		</TR>
 		</TABLE>
@@ -232,3 +232,5 @@
 		<tiles:insert beanName="listadoUdocs" />
 	</tiles:put>
 </tiles:insert>
+
+

@@ -130,7 +130,7 @@ if(window.top &&  window.top.basefrm){
 					                  </td>
 					                  <td width="10px">&nbsp;</td>
 					                  <td>
-										<input type="text" size="12" name="login" class="input"
+					                  	<input type="text" size="12" name="login" class="input"
 					                  		value="<c:out value="${param['login']}"/>"/>
 					                  	<input type="hidden" name="userType" value="3" />
 					                  </td>
@@ -156,7 +156,7 @@ if(window.top &&  window.top.basefrm){
 					                  	<bean:message key="archigest.archivo.login.usuario"/>:
 					                  </td>
 					                  <td width="10px">&nbsp;</td>
-										<td><input type="text" size="12" name="login" class="input"
+					                  <td><input type="text" size="12" name="login" class="input"
 					                  		value="<c:out value="${param['login']}"/>" /></td>
 					                </tr>
 				                  </c:otherwise>
@@ -166,7 +166,7 @@ if(window.top &&  window.top.basefrm){
 				                  	<bean:message key="archigest.archivo.login.password"/>:
 				                  </td>
 				                  <td width="10px">&nbsp;</td>
-									<td><input type="password" size="12" name="password" class="input"
+				                  <td><input type="password" size="12" name="password" class="input"
 				                  		value="<c:out value="${param['password']}"/>"/></td>
 				                </tr>
 				                <%-- Superusuario, visible o no vía configuración --%>

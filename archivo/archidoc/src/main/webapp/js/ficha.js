@@ -279,7 +279,7 @@ function checkFechaFormato(element)
 			document.getElementById("idFechaAValor_" + id).style.display = 'table-cell';
 			document.getElementById("idFechaMValor_" + id).style.display = 'table-cell';
   		}
-	}else if (element.value == 'DDMMAAAA' || element.value == 'DDMMAAAAHHMMSS') {
+  	}else if (element.value == 'DDMMAAAA' || element.value == 'DDMMAAAAHHMMSS') {
 		restaurarFormatoFechaAAAAMMDD(id);
 
   		document.getElementById("idFechaAValor_" + id).style.display = 'block';
@@ -295,7 +295,7 @@ function checkFechaFormato(element)
   			document.getElementById("idFechaG1_" + id).style.display = 'table-cell';
   			document.getElementById("idFechaG2_" + id).style.display = 'table-cell';
   		}
-	}else if (element.value == 'AAAAMMDD' || element.value == 'AAAAMMDDHHMMSS'){
+  	}else if (element.value == 'AAAAMMDD' || element.value == 'AAAAMMDDHHMMSS'){
 		establecerFormatoFechaAAAAMMDD(id);
 
   		document.getElementById("idFechaAValor_" + id).style.display = 'block';
@@ -328,17 +328,17 @@ function checkFechaFormato(element)
   	}
 
 
-	var estilo = 'none';
+  	var estilo = 'none';
 
-	if(element.value == 'AAAAMMDDHHMMSS' || element.value == 'DDMMAAAAHHMMSS'){
+  	if(element.value == 'AAAAMMDDHHMMSS' || element.value == 'DDMMAAAAHHMMSS'){
 
-		if(!document.all){
-			estilo = 'table-cell';
-		}
-		else{
-			estilo = 'block';
-		}
-	}
+  		if(!document.all){
+  			estilo = 'table-cell';
+  		}
+  		else{
+  			estilo = 'block';
+  		}
+  	}
 
 	document.getElementById("idFechaHHValor_" + id).style.display = estilo;
 	document.getElementById("idFechaMMValor_" + id).style.display = estilo;
