@@ -241,42 +241,27 @@ public final class DbTableFns
          	}
          	case DbDataType.SHORT_INTEGER:
          	{
-         	   if (engine == DbEngine.ORACLE)
-         	      tbdr.append("NUMBER(5)");
-         	   else
-         	      tbdr.append("smallint");
+		   tbdr.append(DbTableFns.getTypeShortInteger(engine));
          	   break;
          	}
          	case DbDataType.LONG_INTEGER:
          	{
-         	   if (engine == DbEngine.ORACLE)
-         	      tbdr.append("NUMBER(10)");
-         	   else
-         	      tbdr.append("int");
+		   tbdr.append(DbTableFns.getTypeLongInteger(engine));
          	   break;
          	}
          	case DbDataType.SHORT_DECIMAL:
          	{
-         	   if (engine == DbEngine.ORACLE)
-         	      tbdr.append("NUMBER(12,5)");
-         	   else
-         	      tbdr.append("real");
+		   tbdr.append(DbTableFns.getTypeShortDecimal(engine));
          	   break;
          	}
          	case DbDataType.LONG_DECIMAL:
          	{
-         	   if (engine == DbEngine.ORACLE)
-         	      tbdr.append("NUMBER(20,4)");
-         	   else
-         	      tbdr.append("float");
+		   tbdr.append(DbTableFns.getTypeLongDecimal(engine));
          	   break;
          	}
          	case DbDataType.DATE_TIME:
          	{
-         	   if (engine == DbEngine.ORACLE)
-         	      tbdr.append("DATE");
-         	   else
-         	      tbdr.append("datetime");
+		   tbdr.append(DbTableFns.getTypeDateTime(engine));
          	   break;
          	}
         }
@@ -287,5 +272,61 @@ public final class DbTableFns
       return tbdr.toString();
       
    }
+
+   private static String getTypeShortInteger(int engine) {
+      String result="smallint";
+      if (engine == DbEngine.ORACLE) {
+		result="NUMBER(5)";
+      } else if (engine == DbEngine.POSTGRESQL) {
+         result="INT2";
+      }
+      return result;
+   }
+   private static String getTypeLongInteger(int engine) {
+      String result="int";
+      if (engine == DbEngine.ORACLE) {
+         result="NUMBER(10)";
+      } else if (engine == DbEngine.POSTGRESQL) {
+         result="INT4";
+      } else if (engine == DbEngine.BD2) {
+         result="integer";
+      }
+      return result;
+   }
+   private static String getTypeShortDecimal(int engine) {
+      String result="real";
+      if (engine == DbEngine.ORACLE) {
+         result="NUMBER(12,5)";
+      } else if (engine == DbEngine.POSTGRESQL) {
+         result="FLOAT4";
+      } else if (engine == DbEngine.BD2) {
+         result="double";
+      }
+      return result;
+   }
+   private static String getTypeLongDecimal(int engine) {
+      String result="float";
+      if (engine == DbEngine.ORACLE) {
+         result="NUMBER(20,4)";
+      } else if (engine == DbEngine.POSTGRESQL) {
+         result="FLOAT8";
+      } else if (engine == DbEngine.BD2) {
+         result="double";
+      }
+      return result;
+   }
+   private static String getTypeDateTime(int engine) {
+      String result="datetime";
+      if (engine == DbEngine.ORACLE) {
+         result="DATE";
+      } else if (engine == DbEngine.POSTGRESQL) {
+         result="TIMESTAMP";
+      } else if (engine == DbEngine.BD2) {
+         result="timestamp";
+      }
+      return result;
+   }
+
+
 
 } // class
