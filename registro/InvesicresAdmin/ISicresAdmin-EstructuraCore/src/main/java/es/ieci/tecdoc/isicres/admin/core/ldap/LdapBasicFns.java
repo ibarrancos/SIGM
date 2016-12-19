@@ -3,10 +3,12 @@ package es.ieci.tecdoc.isicres.admin.core.ldap;
 
 import es.ieci.tecdoc.isicres.admin.core.collections.IeciTdShortTextArrayList;
 import es.ieci.tecdoc.isicres.admin.core.exception.IeciTdException;
+import org.apache.log4j.Logger;
 
 public final class LdapBasicFns
 {  
-   
+   private static final Logger logger = Logger.getLogger((Class)LdapBasicFns.class);
+
    private LdapBasicFns()
    {
    }
@@ -16,7 +18,14 @@ public final class LdapBasicFns
                                     String filter)
                         throws Exception
    {
-      
+      if (logger.isDebugEnabled()) {
+         logger.debug((Object)"findEntryDn(LdapConnection, String, int, String) - start");
+         logger.debug((Object)("connection url: [" + conn.getUrl() + "]"));
+         logger.debug((Object)("start: [" + start + "]"));
+         logger.debug((Object)("filter: [" + filter + "]"));
+         logger.debug((Object)("scope: [" + scope + "]"));
+      }      
+
       String     dn       = null;
       LdapSearch search   = null;
       String[]   retAttrs = {};
@@ -33,22 +42,34 @@ public final class LdapBasicFns
          
          if (!search.next())
          {
+	    logger.error((Object)("No se ha encontrado la b\u00fasuqeda ldap con la url [" + conn.getUrl() + "] y el nodo [" + start + "]"));
             throw new IeciTdException(LdapError.EC_NOT_FOUND,
                                       LdapError.EM_NOT_FOUND);
          }
          
          dn = search.getEntryDn();
+         if (logger.isDebugEnabled()) {
+            logger.debug((Object)("Se ha encontrado el nodo [" + dn + "]"));
+         }
          
          search.release();
                           
       }
       catch (Exception e)
       {
+	 logger.error("findEntryDn(LdapConnection, String, int, String)", e);
          LdapSearch.ensureRelease(search, e);
       }
       
       return dn;
       
+   }
+
+   public static String findGroupGuid(LdapConnection conn, String start, int scope, String filter) throws Exception {
+      return LdapBasicFns.findEntryGuid(conn, start, scope, filter, false);
+   }
+   public static String findEntryGuid(LdapConnection conn, String start, int scope, String filter, boolean isEntryUser) throws Exception {
+      return LdapBasicFns.findEntryGuid(conn, start, scope, filter, true);
    }
    
    public static String findEntryGuid(LdapConnection conn, 
@@ -64,7 +85,8 @@ public final class LdapBasicFns
       int        maxCount = 1;
       Object     guidAv;
       
-      guidAn   = LdapAttribute.getGuidAttributeName(conn);      
+      guidAn = isEntryUser ? LdapAttribute.getGuidAttributeName(conn) : LdapAttribute.getGuidGroupAttributeName(conn);
+
       retAttrs = new String[] {guidAn};
       
       try
@@ -156,7 +178,7 @@ public final class LdapBasicFns
       int                      maxCount = 0;
       Object                   guidAv;
       
-      guidAn   = LdapAttribute.getGuidAttributeName(conn);      
+      guidAn   = LdapAttribute.getGuidGroupAttributeName(conn);
       retAttrs = new String[] {guidAn};
       
       try

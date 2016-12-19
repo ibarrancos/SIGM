@@ -1,13 +1,13 @@
 
 package es.ieci.tecdoc.isicres.admin.core.ldap;
 
+import es.ieci.tecdoc.isicres.admin.core.ldap.LdapAttributeUtils;
+import org.apache.log4j.Logger;
+
 public final class LdapAttribute
 {  
 
-   private static final String AD_GUID = "objectGUID";
-   private static final String IP_GUID = "nsuniqueid";
-   private static final String OL_GUID = "uidnumber";
-   
+   private static final Logger logger = Logger.getLogger((Class)LdapAttribute.class);
 
    private static final String AD_OCLS = "objectClass";
    private static final String IP_OCLS = "objectClass";
@@ -26,16 +26,28 @@ public final class LdapAttribute
       engine = conn.getEngine();
       
       if (engine == LdapEngine.ACTIVE_DIRECTORY)
-         name = AD_GUID;
+         name = LdapAttributeUtils.getLdapAttributeActiveDirectoryGUID();
       else if (engine == LdapEngine.I_PLANET)
-         name = IP_GUID;
+         name = LdapAttributeUtils.getLdapAttributeIplanetGUID();
       else
-         name = OL_GUID;
+         name = LdapAttributeUtils.getLdapAttributeOpenLdapGUID();
       
       return name;
       
    }
    
+   public static String getGuidGroupAttributeName(LdapConnection conn) {
+      String name = null;
+      int engine = conn.getEngine();
+      if (engine == LdapEngine.ACTIVE_DIRECTORY)
+         name = LdapAttributeUtils.getLdapAttributeGroupActiveDirectoryGUID();
+      else if (engine == LdapEngine.I_PLANET)
+         name = LdapAttributeUtils.getLdapAttributeGroupIplanetGUID();
+      else
+         name = LdapAttributeUtils.getLdapAttributeGroupOpenLdapGUID();
+      
+      return name;
+   }
    public static String getObjectClassAttributeName(LdapConnection conn)
    {
       

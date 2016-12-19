@@ -11,6 +11,8 @@ public final class LdapConnCfg
    private String  m_pwd;
    private boolean m_pool;
    private int     m_poolTO;
+   private String ldapVersion;
+
 
    public LdapConnCfg(int engine, int provider, String url, String user,
                       String pwd, boolean pool, int poolTimeOut)
@@ -117,6 +119,13 @@ public final class LdapConnCfg
       buffer.append("]");
       
       return buffer.toString();
+   }
+
+   public String getLdapVersion() {
+      return this.ldapVersion;
+   }
+   public void setLdapVersion(String ldapVersion) {
+      this.ldapVersion = ldapVersion;
    }
    
 } // class

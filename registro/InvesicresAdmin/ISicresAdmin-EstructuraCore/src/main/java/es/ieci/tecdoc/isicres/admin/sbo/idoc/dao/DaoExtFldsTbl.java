@@ -30,7 +30,7 @@ public final class DaoExtFldsTbl
    ("FLDID", DbDataType.LONG_INTEGER, false); 
    
    private final DbColumnDef CD_TEXT = new DbColumnDef
-   ("TEXT", DbDataType.LONG_TEXT, 64*1024, false);
+   ("TEXT", DbDataType.LONG_TEXT, 64*1024, true);
 
    private final DbColumnDef CD_TS = new DbColumnDef
    ("TIMESTAMP", DbDataType.DATE_TIME, false);

@@ -6,12 +6,14 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.AuthenticationException;
 
 import es.ieci.tecdoc.isicres.admin.core.exception.IeciTdException;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Hashtable;
 
 public final class LdapConnection
 {
-   
+   public static final String LDAP_VERSION_2 = "2";
+   public static final String LDAP_VERSION_3 = "3";
    private InitialDirContext m_initDirCtx;  
    private int               m_engine;       
    private int               m_provider;
@@ -25,7 +27,12 @@ public final class LdapConnection
       m_engine     = 0;      
       m_provider   = 0;
    }
-   
+
+   public void open(int engine, int provider, String url, String userDn, String userPwd, boolean pool, int poolTimeout, String ldapVersion) throws Exception {
+      String urlEncoded;
+      this.open(engine, provider, url, userDn, userPwd, pool, poolTimeout, "2");
+   }
+
    /*
     
     engine: ActiveDirectory, iPlanet, ...
@@ -52,16 +59,17 @@ public final class LdapConnection
       m_url         = url;
       m_pool        = pool;
       m_poolTimeout = poolTimeout;
+      m_url = urlEncoded = this.encodeURL(url);
             
       env = new Hashtable();
          
       env.put(Context.INITIAL_CONTEXT_FACTORY, getInitCtxFry(provider));
-      env.put(Context.PROVIDER_URL, url);
+      env.put(Context.PROVIDER_URL, urlEncoded);
       env.put(Context.SECURITY_AUTHENTICATION, "simple");
       env.put(Context.SECURITY_PRINCIPAL, userDn);
       env.put(Context.SECURITY_CREDENTIALS, userPwd);
       
-      env.put("java.naming.ldap.version", "2");
+      env.put("java.naming.ldap.version", ldapVersion);
       
       if (engine == LdapEngine.ACTIVE_DIRECTORY)
          env.put("java.naming.ldap.attributes.binary", "objectGUID");
@@ -79,13 +87,20 @@ public final class LdapConnection
       }
       
    }
+
+   private String encodeURL(String url) {
+      String urlEncoded = url.replaceAll(" ", "%20");
+      return urlEncoded;
+   }
    
    public void open(LdapConnCfg cfg) throws Exception
    {
       
-      open(cfg.getEngine(), cfg.getProvider(), cfg.getUrl(), 
-           cfg.getUser(), cfg.getPwd(), cfg.getPool(),
-           cfg.getPoolTimeOut());
+      if (StringUtils.isBlank(cfg.getLdapVersion())) {
+         open(cfg.getEngine(), cfg.getProvider(), cfg.getUrl(), cfg.getUser(), cfg.getPwd(), cfg.getPool(), cfg.getPoolTimeOut());
+      } else {
+         open(cfg.getEngine(), cfg.getProvider(), cfg.getUrl(), cfg.getUser(), cfg.getPwd(), cfg.getPool(), cfg.getPoolTimeOut(), cfg.getLdapVersion());
+      }
       
    }      
    
