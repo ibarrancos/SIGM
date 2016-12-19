@@ -242,6 +242,7 @@ public interface ISicresServicioRPAdmin {
 	public OptionsBean obtenerPerfilesCombo(Entidad entidad)
 			throws ISicresRPAdminException;
 
+	public OptionsBean obtenerPerfilesReportCombo(Entidad entidad) throws ISicresRPAdminException;
 	/**
 	 * Método que obtiene la lista de oficinas
 	 *
@@ -366,8 +367,11 @@ public interface ISicresServicioRPAdmin {
 	 * @return
 	 * @throws RPAdminException
 	 */
+	@Deprecated
 	public OptionsBean obtenerDepartamentosCombo(boolean oficinas,
 			Entidad entidad) throws ISicresRPAdminException;
+
+	public OptionsBean obtenerDepartamentosCombo(Entidad entidad) throws ISicresRPAdminException;
 
 	/**
 	 * Método para asociar una lista de usuario a una oficina
@@ -1492,6 +1496,7 @@ public interface ISicresServicioRPAdmin {
 	 */
 	public List<DatosBasicosUnidadOrganicaDCVO> findUnidadesOrganicasDirectorioComun(Criterios<CriterioUnidadOrganicaEnum> criteriosBusqueda) throws ISicresAdminIntercambioRegistralException ;
 
+	public List<DatosBasicosUnidadOrganicaDCVO> findUnidadesOrganicasDirectorioComunByCodEntidad(String var1, String var2, String var3) throws ISicresAdminIntercambioRegistralException;
 
 	public void actualizarDCO();
 	public void inicializarDCO();

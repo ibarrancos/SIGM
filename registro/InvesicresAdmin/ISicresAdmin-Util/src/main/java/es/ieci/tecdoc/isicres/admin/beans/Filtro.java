@@ -61,7 +61,9 @@ public class Filtro {
 	public static final int ESTADO_COMPLETO = 0;
 	public static final int ESTADO_INCOMPLETO = 1;
 	public static final int ESTADO_RESERVADO = 2;
-	public static final int ESTADO_ANULADO = 3;
+	public static final int VALOR_ESTADO_NO_VALIDO = 3;
+	public static final int ESTADO_ANULADO = 4;
+	public static final int ESTADO_CERRADO = 5;
 
 	/** ******* TIPO REGISTRO ORIGINAL ********** */
 	public static final int TIPO_REGISTRO_ORIGINAL_ENTRADA = 1;

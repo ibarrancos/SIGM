@@ -32,7 +32,6 @@ import es.ieci.tecdoc.isicres.admin.base.dbex.DynamicTable;
 import es.ieci.tecdoc.isicres.admin.core.datetime.DatePattern;
 import es.ieci.tecdoc.isicres.admin.core.datetime.DateTimeUtil;
 import es.ieci.tecdoc.isicres.admin.core.db.DBSessionManager;
-import es.ieci.tecdoc.isicres.admin.core.exception.IeciTdException;
 import es.ieci.tecdoc.isicres.admin.core.textutil.UtilX;
 import es.ieci.tecdoc.isicres.admin.core.types.IeciTdType;
 import es.ieci.tecdoc.isicres.admin.core.xml.lite.XmlTextBuilder;
@@ -71,6 +70,7 @@ import es.ieci.tecdoc.isicres.admin.sbo.idoc.dao.DaoUtil;
 import es.ieci.tecdoc.isicres.admin.sbo.idoc.dao.DaoXNIdTbl;
 import es.ieci.tecdoc.isicres.admin.sbo.util.nextid.NextId;
 import es.ieci.tecdoc.isicres.admin.sbo.util.types.SboType;
+import es.ieci.tecdoc.isicres.admin.base.exception.IeciTdException;
 
 public class ArchiveImpl implements Archive {
 
@@ -4385,9 +4385,6 @@ public class ArchiveImpl implements Archive {
 			// se inicializan las tablas necesarias para el funcionamiento del
 			// archivador
 			initArchTbls(dbConn);
-
-			// se asocia la lista de volúmenes al archivador
-			insertListVols(dbConn);
 
 			commit = true;
 

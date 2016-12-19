@@ -3,6 +3,7 @@ package es.ieci.tecdoc.isicres.admin.estructura.beans;
 import java.util.ArrayList;
 
 import es.ieci.tecdoc.isicres.admin.exception.ISicresAdminEstructuraException;
+import es.ieci.tecdoc.isicres.admin.exception.ISicresAdminBasicException;
 
 public class ArchiveFlds {
 	private ArrayList archiveFldsList;
@@ -227,6 +228,21 @@ public class ArchiveFlds {
 		}
 
 		return valid;
+	}
+
+	public ArchiveFld getFldDefById(int fldId) throws Exception {
+	    ArchiveFld fldDef = null;
+	    boolean find = false;
+	    for (int i = 0; i < this.archiveFldsList.size(); ++i) {
+	        fldDef = (ArchiveFld)this.archiveFldsList.get(i);
+	        if (fldDef.getId() != fldId) continue;
+	        find = true;
+	        break;
+	    }
+	    if (!find) {
+	        ISicresAdminBasicException.throwException(3007004);
+	    }
+	    return fldDef;
 	}
 
 }
