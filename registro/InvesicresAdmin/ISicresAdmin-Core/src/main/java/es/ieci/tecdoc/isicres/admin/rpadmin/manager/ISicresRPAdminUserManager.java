@@ -781,6 +781,9 @@ public class ISicresRPAdminUserManager {
 		try {
 			db.open(DBSessionManager.getSession());
 			permisos.load(id, db);
+		} catch (ISicresRPAdminDAOException iRPAEx) {
+			logger.warn("No se han encontrado los permisos especiales del usuario");
+			return null;
 		} catch (Exception e) {
 			logger
 					.error("No se ha podido recuperar los permisos especiales del usuario", e);
@@ -803,6 +806,9 @@ public class ISicresRPAdminUserManager {
 		try {
 			db.open(DBSessionManager.getSession());
 			identificacion.load(id, db);
+		} catch (ISicresRPAdminDAOException iRPAEx) {
+			logger.warn("No se han encontrado la identificacion del usuario");
+			return null;
 		} catch (Exception e) {
 			logger
 					.error("No se ha podido recuperar la identificacion del usuario", e);
@@ -826,6 +832,9 @@ public class ISicresRPAdminUserManager {
 		try {
 			db.open(DBSessionManager.getSession());
 			localizacion.load(id, db);
+		} catch (ISicresRPAdminDAOException iRPAEx) {
+			logger.warn("No se han encontrado la localizacion del usuario");
+			return null;
 		} catch (Exception e) {
 			logger
 					.error("No se ha podido recuperar la localizacion del usuario", e);

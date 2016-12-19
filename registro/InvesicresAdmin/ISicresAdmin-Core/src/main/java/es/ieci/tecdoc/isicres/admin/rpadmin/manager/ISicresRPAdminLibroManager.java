@@ -56,6 +56,12 @@ import es.ieci.tecdoc.isicres.admin.exception.ISicresAdminException;
 import es.ieci.tecdoc.isicres.admin.exception.ISicresRPAdminDAOException;
 import es.ieci.tecdoc.isicres.admin.service.ISicresAdminEstructuraService;
 
+import es.ieci.tecdoc.isicres.admin.core.exception.ISicresAdminDAOException;
+import es.ieci.tecdoc.isicres.admin.exception.ISicresAdminEstructuraException;
+import java.util.Collection;
+import java.util.List;
+import org.apache.commons.lang.StringUtils;
+
 /*$Id*/
 
 public class ISicresRPAdminLibroManager {
@@ -231,6 +237,8 @@ public class ISicresRPAdminLibroManager {
 
 				DefinicionLibroRegistro defLibro = getDefinicionLibroRegistro(arch.getType());
 
+				List fieldsAddModifRefExpedienteOrFechaDocumento = ISicresRPAdminLibroManager.validarCamposLibro(idLibro, archiveFlds, arch.getType(), defLibro);
+
 				archiveFlds = getArchiveFields(flds);
 
 				if (!isLibroSicres3) {
@@ -259,9 +267,9 @@ public class ISicresRPAdminLibroManager {
 				//comprobamos si el archivador ya tiene registros
 				if(arch.existsFdrsInArch(entidad)){
 					//si es asi, añadimos los nuevos campos, como campos nuevos del archivador, para que actualice los datos
-					ArrayList camposNuevos = (ArrayList) DefinicionLibroSicres3Utils
-							.getCamposNuevosSicres3(!isLibroSicres3,
-									!hasReservedFields);
+					ArrayList<Integer> camposNuevos = new ArrayList<Integer>();
+					camposNuevos.addAll(fieldsAddModifRefExpedienteOrFechaDocumento);
+					camposNuevos.addAll(DefinicionLibroSicres3Utils.getCamposNuevosSicres3(!isLibroSicres3, !hasReservedFields));
 					//setemos los valores con los nuevos campos en el objeto
 					updInfo.setUpdateFlds(camposNuevos, null, false);
 				}
@@ -282,15 +290,121 @@ public class ISicresRPAdminLibroManager {
 				}
 			}
 
+		} catch (ISicresRPAdminDAOException rpaE) {
+			logger.error((Object)"Error actualizando libro a SICRES3", (Throwable)rpaE);
+			throw rpaE;
 		} catch (Exception e) {
-			logger.error("Error actualizando libro a SICRES3");
+			logger.error("Error actualizando libro a SICRES3",e);
 			throw new ISicresRPAdminDAOException(
 					ISicresRPAdminDAOException.EXC_GENERIC_EXCEPCION, e);
 		}
 
 		return;
 	}
-
+	private static List validarCamposLibro(int idLibro, ArchiveFlds archiveFlds, int typeBook, DefinicionLibroRegistro defLibro) throws Exception, ISicresRPAdminDAOException, ISicresAdminEstructuraException {
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		ArchiveFlds camposByDefault = defLibro.getBookDefinition("").getFldsDef();
+		ArchiveFld campo = null;
+		if (typeBook == 1) {
+		    DefinicionLibroEntrada definicionLibroEntrada = new DefinicionLibroEntrada();
+		    Integer fieldId = ISicresRPAdminLibroManager.validateFieldRefExpediente(idLibro, archiveFlds, camposByDefault, definicionLibroEntrada);
+		    if (fieldId != null) {
+		        result.add(fieldId);
+		    }
+		    if (!ISicresRPAdminLibroManager.validateIfExistField(camposByDefault, campo = ISicresRPAdminLibroManager.getFieldById(archiveFlds, DefinicionLibroEntrada.FECHA_DOCUMENTO))) {
+		        definicionLibroEntrada.getFieldFechaDocumento(archiveFlds);
+		        result.add(new Integer(DefinicionLibroEntrada.FECHA_DOCUMENTO));
+		    }
+		} else {
+		    DefinicionLibroSalida definicionLibroSalida = new DefinicionLibroSalida();
+		    campo = ISicresRPAdminLibroManager.getFieldById(archiveFlds, DefinicionLibroSalida.FECHA_DOCUMENTO);
+		    if (!ISicresRPAdminLibroManager.validateIfExistField(camposByDefault, campo)) {
+		        definicionLibroSalida.getFieldFechaDocumento(archiveFlds);
+		        result.add(new Integer(DefinicionLibroSalida.FECHA_DOCUMENTO));
+		    }
+		}
+		return result;
+	}
+	public static boolean validarCampoRefExpediente(ArchiveFlds archiveFlds, DefinicionLibroRegistro defLibro, int typeBook) throws Exception {
+		boolean result = false;
+		ArchiveFlds camposByDefault = defLibro.getBookDefinition("").getFldsDef();
+		if (typeBook == 1) {
+		    ArchiveFld campo = ISicresRPAdminLibroManager.getFieldById(archiveFlds, 19);
+		    if (campo != null && StringUtils.equals((String)campo.getColName(), (String)camposByDefault.getFldDefById(campo.getId()).getColName()) && StringUtils.equals((String)campo.getName(), (String)camposByDefault.getFldDefById(campo.getId()).getName()) && campo.getLen() == 50 && campo.getType() == camposByDefault.getFldDefById(campo.getId()).getType()) {
+		        archiveFlds.getFldDefById(19).setLen(80);
+		    } else if (!ISicresRPAdminLibroManager.validateIfExistField(camposByDefault, campo)) {
+		        result = true;
+		    }
+		}
+		return result;
+	}
+	public static boolean validarCampoFechaDocumento(ArchiveFlds archiveFlds, DefinicionLibroRegistro defLibro, int typeBook) throws Exception {
+		boolean result = false;
+		ArchiveFlds camposByDefault = defLibro.getBookDefinition("").getFldsDef();
+		ArchiveFld campo = null;
+		if (typeBook == 1) {
+		    DefinicionLibroEntrada definicionLibroEntrada = new DefinicionLibroEntrada();
+		    campo = ISicresRPAdminLibroManager.getFieldById(archiveFlds, 20);
+		    if (!ISicresRPAdminLibroManager.validateIfExistField(camposByDefault, campo)) {
+		        result = true;
+		    }
+		} else {
+		    DefinicionLibroSalida definicionLibroSalida = new DefinicionLibroSalida();
+		    campo = ISicresRPAdminLibroManager.getFieldById(archiveFlds, 15);
+		    if (!ISicresRPAdminLibroManager.validateIfExistField(camposByDefault, campo)) {
+		        result = true;
+		    }
+		}
+		return result;
+	}
+	private static Integer validateFieldRefExpediente(int idLibro, ArchiveFlds archiveFlds, ArchiveFlds camposByDefault, DefinicionLibroEntrada definicionLibroEntrada) throws Exception, ISicresRPAdminDAOException, ISicresAdminEstructuraException {
+		Integer result = null;
+		ArchiveFld campo = ISicresRPAdminLibroManager.getFieldById(archiveFlds, DefinicionLibroEntrada.REFERENCIA_EXPEDIENTE);
+		if (campo != null && StringUtils.equals((String)campo.getColName(), (String)camposByDefault.getFldDefById(campo.getId()).getColName()) && StringUtils.equals((String)campo.getName(), (String)camposByDefault.getFldDefById(campo.getId()).getName()) && campo.getLen() == 50 && campo.getType() == camposByDefault.getFldDefById(campo.getId()).getType()) {
+		    archiveFlds.getFldDefById(campo.getId()).setLen(80);
+		    definicionLibroEntrada.updateFieldRefExpediente(idLibro);
+		} else if (!ISicresRPAdminLibroManager.validateIfExistField(camposByDefault, campo)) {
+		    definicionLibroEntrada.getFieldRefExpediente(archiveFlds);
+		    result = new Integer(DefinicionLibroEntrada.REFERENCIA_EXPEDIENTE);
+		}
+		return result;
+	}
+	private static boolean validateIfExistField(ArchiveFlds camposByDefault, ArchiveFld campo) throws Exception, ISicresRPAdminDAOException, ISicresAdminEstructuraException {
+		boolean result = false;
+		if (campo != null) {
+		    if (!ISicresRPAdminLibroManager.validateEqualsFields(campo, camposByDefault.getFldDefById(campo.getId()))) {
+		        StringBuffer sb = new StringBuffer();
+		        sb.append("El libro ya tiene el campo con ID[").append(campo.getId()).append("] creado");
+		        logger.error((Object)sb.toString());
+		        throw new ISicresRPAdminDAOException(58670115);
+		    }
+		    result = true;
+		}
+		return result;
+	}
+	private static ArchiveFld getFieldById(ArchiveFlds flds, int fldId) throws Exception {
+		ArchiveFld result;
+		block2 : {
+		    result = null;
+		    try {
+		        result = flds.getFldDefById(fldId);
+		    }
+		    catch (IeciTdException e) {
+		        if (!logger.isDebugEnabled()) break block2;
+		        StringBuffer sb = new StringBuffer();
+		        sb.append("No se ha encontrado el campo [").append(fldId).append("]");
+		        logger.debug((Object)sb.toString(), (Throwable)e);
+		    }
+		}
+		return result;
+	}
+	private static boolean validateEqualsFields(ArchiveFld campoFld, ArchiveFld campoDefinicionLibroDefault) {
+		boolean result = false;
+		if (StringUtils.equals((String)campoFld.getColName(), (String)campoDefinicionLibroDefault.getColName()) && StringUtils.equals((String)campoFld.getName(), (String)campoDefinicionLibroDefault.getName()) && campoFld.getLen() == campoDefinicionLibroDefault.getLen() && campoFld.getType() == campoDefinicionLibroDefault.getType()) {
+		    result = true;
+		}
+		return result;
+	}
 	/**
 	 * Método que actualiza el formato del archivador
 	 * @param idLibro
@@ -581,8 +695,10 @@ public class ISicresRPAdminLibroManager {
 			try {
 				listaDAO.load(lista.getArchId(), db);
 				new IVolArchListDatos(lista).update(db);
-			} catch (ISicresRPAdminDAOException e) {
-				new IVolArchListDatos(lista).add(db);
+			} catch (ISicresAdminDAOException e) {
+				if (lista.getListId() != 0) {
+					new IVolArchListDatos(lista).add(db);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Error obteniendo lista");

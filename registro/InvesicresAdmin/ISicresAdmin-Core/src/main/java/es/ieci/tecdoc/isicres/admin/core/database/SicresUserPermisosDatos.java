@@ -90,11 +90,13 @@ public class SicresUserPermisosDatos extends SicresUserPermisosImpl {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Datos de scr_usrperms obtenidos.");
 			}
+		} catch (ISicresRPAdminDAOException iRPADAOException) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No se ha encontrado fila en scr_usrperms", iRPADAOException);
+			}
+			throw iRPADAOException;
 		} catch (Exception e) {
-			if(e instanceof ISicresRPAdminDAOException)
-				logger.warn("No se ha encontrado fila en scr_usrperms");
-			else
-				logger.error("Error obteniendo datos de scr_usrperms");
+			logger.error("Error obteniendo datos de scr_usrperms");
 			throw new ISicresRPAdminDAOException(ISicresRPAdminDAOException.EXC_GENERIC_EXCEPCION, e);
 		} 
 	}

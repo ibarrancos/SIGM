@@ -95,11 +95,13 @@ public class SicresUserIdentificacionDatos extends SicresUserIdentificacionImpl 
 			if (logger.isDebugEnabled()) {
 				logger.debug("Datos de scr_userident obtenidos.");
 			}
+		} catch (ISicresRPAdminDAOException iRPADAOException) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No se ha encontrado fila en scr_userident", iRPADAOException);
+			}
+			throw iRPADAOException;
 		} catch (Exception e) {
-			if(e instanceof ISicresRPAdminDAOException)
-				logger.warn("No se ha encontrado fila en scr_userident");
-			else
-				logger.error("Error obteniendo datos de scr_userident");			
+			logger.error("Error obteniendo datos de scr_userident");
 			throw new ISicresRPAdminDAOException(ISicresRPAdminDAOException.EXC_GENERIC_EXCEPCION, e);
 		} 
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 
 import com.ieci.tecdoc.common.keys.ConfigurationKeys;
 import com.ieci.tecdoc.common.utils.Configurator;
@@ -20,6 +21,8 @@ import es.ieci.tecdoc.isicres.admin.exception.ISicresAdminEstructuraException;
  *
  */
 public class DefinicionLibroSicres3Utils {
+
+	public static final Logger logger = Logger.getLogger((Class)DefinicionLibroSicres3Utils.class);
 
 	public static int ADDITIONAL_RESERVED_FIELDS_LOWER_LIMIT_FIELD_ID = 500;
 	public static int ADDITIONAL_RESERVED_FIELDS_UPPER_LIMIT_FIELD_ID = 1000;

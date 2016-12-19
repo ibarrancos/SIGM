@@ -27,10 +27,6 @@ public class IdsGeneratorIDoc {
 			db.open(DBSessionManager.getSession());
 			db.beginTransaction();
 			Connection conn = db.getJdbcConnection();
-			stmtUp = conn
-					.prepareStatement("UPDATE IDOCNEXTID SET ID=ID+1 WHERE TYPE=?");
-			stmtUp.setInt(1, tabla);
-			stmtUp.execute();
 
 			stmtSel = conn
 					.prepareStatement("SELECT ID FROM IDOCNEXTID WHERE TYPE=?");
@@ -44,6 +40,10 @@ public class IdsGeneratorIDoc {
 				conn.createStatement().execute("INSERT INTO IDOCNEXTID(TYPE, ID) VALUES (" + tabla + ", 1)");
 				//throw new RPAdminDAOException(RPAdminDAOException.IDGENERATOR_TABLE_NOT_FOUND);
 			}
+			stmtUp = conn
+					.prepareStatement("UPDATE IDOCNEXTID SET ID=ID+1 WHERE TYPE=?");
+			stmtUp.setInt(1, tabla);
+			stmtUp.execute();
 			db.endTransaction(true);
 			return id;
 		} catch (Exception e) {

@@ -120,6 +120,10 @@ public class SicresTransporteDatos extends Transporte {
 				logger.debug("scr_tt añadida.");
 			}
 		} catch (Exception e) {
+			if (UtilsBD.isErrorDuplicateKey(e.getMessage())) {
+				logger.error("Error añadiendo scr_tt. Error duplicate key");
+				throw new ISicresAdminDAOException( ISicresAdminDAOException.SCR_TT_UNIQUE_KEY_ERROR );
+			}
 			logger.error("Error añadiendo scr_tt.", e);
 			throw new ISicresAdminDAOException(ISicresAdminDAOException.SCR_TT_INSERT,e);
 		}
@@ -168,6 +172,10 @@ public class SicresTransporteDatos extends Transporte {
 				logger.debug("Actualizado scr_tt.");
 			}
 		} catch (Exception e) {
+			if (UtilsBD.isErrorDuplicateKey(e.getMessage())) {
+				logger.error("Error añadiendo scr_tt. Error duplicate key");
+				throw new ISicresAdminDAOException( ISicresAdminDAOException.SCR_TT_UNIQUE_KEY_ERROR );
+			}
 			logger.error("Error actualizando scr_tt", e);
 			throw new ISicresAdminDAOException(ISicresAdminDAOException.SCR_TT_UPDATE,
 					e);

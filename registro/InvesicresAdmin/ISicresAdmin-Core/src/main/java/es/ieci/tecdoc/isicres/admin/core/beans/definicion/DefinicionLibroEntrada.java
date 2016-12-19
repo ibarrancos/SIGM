@@ -16,6 +16,8 @@ import es.ieci.tecdoc.isicres.admin.estructura.beans.Archive;
 import es.ieci.tecdoc.isicres.admin.estructura.beans.ArchiveFlds;
 import es.ieci.tecdoc.isicres.admin.estructura.beans.ArchiveIdxs;
 import es.ieci.tecdoc.isicres.admin.exception.ISicresAdminEstructuraException;
+import es.ieci.tecdoc.isicres.admin.core.db.DBSessionManager;
+import es.ieci.tecdoc.isicres.admin.exception.ISicresRPAdminDAOException;
 
 /*$Id*/
 
@@ -26,6 +28,9 @@ public class DefinicionLibroEntrada implements DefinicionLibroRegistro {
 	private static final Logger logger = Logger
 	.getLogger(DefinicionLibroEntrada.class);
 
+	private static final int LENGTH_REFERENCIA_EXPEDIENTE = 80;
+	public static int REFERENCIA_EXPEDIENTE = 19;
+	public static int FECHA_DOCUMENTO = 20;
 
 	protected ArchiveIdxs getArchiveIdxs(){
 		ArchiveIdxs indices = new ArchiveIdxs();
@@ -62,7 +67,7 @@ public class DefinicionLibroEntrada implements DefinicionLibroRegistro {
 
 		return indices;
 	}
-	protected ArchiveFlds getArchiveFlds(){
+	public ArchiveFlds getArchiveFlds(){
 		ArchiveFlds fields = new ArchiveFlds();
 		try{
 			fields.add(1, "Número de registro", 1, 20, true, false, false, "");
@@ -95,9 +100,8 @@ public class DefinicionLibroEntrada implements DefinicionLibroRegistro {
 			fields.add(16, "Tipo de asunto", 4, 0, true, false, false, "");
 			fields.add(17, "Resumen", 1, 240, true, false, false, "");
 			fields.add(18, "Comentario", 2, 65535, true, false, false, "");
-			fields.add(19, "Referencia de Expediente", 1, 50, true, false,
-					false, "");
-			fields.add(20, "Fecha del documento", 7, 0, true, false, false, "");
+			this.getFieldRefExpediente(fields);
+			this.getFieldFechaDocumento(fields);
 
 			//se añaden campos reservados adicionales que estaran en el rango 500-1000
 			DefinicionLibroSicres3Utils.addAditionalReservedAndSicres3Fields(fields);
@@ -112,6 +116,59 @@ public class DefinicionLibroEntrada implements DefinicionLibroRegistro {
 			return fields;
 	}
 
+	public void updateFieldRefExpediente(int archiveId) throws ISicresRPAdminDAOException {
+	    DbConnection db = new DbConnection();
+	    try {
+	        db.open(DBSessionManager.getSession());
+	        db.beginTransaction();
+	        Connection conn = db.getJdbcConnection();
+	        StringBuffer sb = new StringBuffer();
+	        sb.append("ALTER TABLE A").append(archiveId).append("SF ");
+	        if (db.getEngine() == 5) {
+	            sb.append("ALTER COLUMN FLD").append(REFERENCIA_EXPEDIENTE).append(" SET DATA TYPE VARCHAR(").append(80).append(")");
+	        } else if (db.getEngine() == 4) {
+	            sb.append("ALTER COLUMN FLD").append(REFERENCIA_EXPEDIENTE).append(" TYPE CHARACTER VARYING(").append(80).append(")");
+	        } else if (db.getEngine() == 2) {
+	            sb.append("MODIFY (FLD").append(REFERENCIA_EXPEDIENTE).append(" VARCHAR2 (").append(80).append("CHAR))");
+	        } else {
+	            sb.append("ALTER COLUMN FLD").append(REFERENCIA_EXPEDIENTE).append(" VARCHAR(").append(80).append(")");
+	        }
+	        if (logger.isDebugEnabled()) {
+	            logger.debug((Object)sb.toString());
+	        }
+	        PreparedStatement stmt = conn.prepareStatement(sb.toString());
+	        stmt.execute();
+	        db.endTransaction(true);
+	    }
+	    catch (Exception e) {
+	        if (db != null && db.inTransaction()) {
+	            try {
+	 	         db.endTransaction(false);
+	            }
+	            catch (Exception e1) {
+	                logger.error((Object)"Problemas con rollback");
+	            }
+	        }
+	        logger.error((Object)"Error actualizando campo Referencia Expediente");
+	        throw new ISicresRPAdminDAOException(58670115, (Throwable)e);
+	    }
+	    finally {
+	        try {
+	            if (db != null && db.existConnection()) {
+	                db.close();
+	            }
+	        }
+	        catch (Exception e) {
+	            logger.error((Object)"No se ha podido cerrar la conexi\u00f3n a la BBDD");
+	        }
+	    }
+	}
+	public void getFieldRefExpediente(ArchiveFlds fields) throws ISicresAdminEstructuraException {
+	    fields.add(REFERENCIA_EXPEDIENTE, "Referencia de Expediente", 1, 80, true, false, false, "");
+	}
+	public void getFieldFechaDocumento(ArchiveFlds fields) throws ISicresAdminEstructuraException {
+	    fields.add(FECHA_DOCUMENTO, "Fecha del documento", 7, 0, true, false, false, "");
+	}
 
 	public Archive getBookDefinition(String nombre) {
 		Archive archivador = new Archive();
