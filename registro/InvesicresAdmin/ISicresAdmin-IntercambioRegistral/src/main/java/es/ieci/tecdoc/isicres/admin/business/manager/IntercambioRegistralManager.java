@@ -118,6 +118,7 @@ public interface IntercambioRegistralManager {
 	 * @return Listado de objetos {@link DatosBasicosUnidadOrganicaDCVO}
 	 */
 	public List<DatosBasicosUnidadOrganicaDCVO> findUnidadesOrganicasDirectorioComun(Criterios<CriterioUnidadOrganicaEnum> criteriosBusqueda);
+	public List<DatosBasicosUnidadOrganicaDCVO> findUnidadesOrganicasDirectorioComunByCodEntidad(String var1, String var2, String var3);
 
 	public List<UnidadRegistralVO> findUnidadesRegistrales(UnidadRegistralVO unidad);
 }
