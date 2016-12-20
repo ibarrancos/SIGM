@@ -5,12 +5,12 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd</groupId>
-		<artifactId>fwktd</artifactId>
+		<artifactId>fwktd-parent</artifactId>
 		<version>0.7</version>
 	</parent>
 
 	<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-audit</groupId>
-	<artifactId>fwktd-audit</artifactId>
+	<artifactId>fwktd-audit-parent</artifactId>
 	<version>0.7</version>
 
 	<packaging>pom</packaging>

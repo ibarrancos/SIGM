@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>es.ieci.tecdoc.isicres.admin.documentation</groupId>
 		<artifactId>ISicresAdmin-documentation</artifactId>
-		<version>8.0.1</version>
+		<version>8.0.5-M1</version>
 	</parent>
 
 	<artifactId>IsicresAdmin-documentation-documentos</artifactId>

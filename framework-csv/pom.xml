@@ -4,12 +4,12 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd</groupId>
-		<artifactId>fwktd</artifactId>
+		<artifactId>fwktd-parent</artifactId>
 		<version>0.7</version>
 	</parent>
 
 	<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-csv</groupId>
-	<artifactId>fwktd-csv</artifactId>
+	<artifactId>fwktd-csv-parent</artifactId>
 	<version>1.1</version>
 
 	<packaging>pom</packaging>

@@ -3,13 +3,13 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd</groupId>
-		<artifactId>fwktd</artifactId>
+		<artifactId>fwktd-parent</artifactId>
 		<version>0.7</version>
 	</parent>
 
 	<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
-	<artifactId>fwktd-sir</artifactId>
-	<version>1.0.1</version>
+	<artifactId>fwktd-sir-parent</artifactId>
+	<version>1.0.2-M3</version>
 
 	<packaging>pom</packaging>
 

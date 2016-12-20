@@ -2,7 +2,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.ieci.tecdoc.fwktd</groupId>
-  <artifactId>fwktd</artifactId>
+  <artifactId>fwktd-parent</artifactId>
   <version>0.7</version>
   <packaging>pom</packaging>
   <name>Modulo lanzador del fwktd</name>
