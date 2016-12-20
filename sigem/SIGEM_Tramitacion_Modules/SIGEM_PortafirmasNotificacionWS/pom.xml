@@ -1,31 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main</artifactId>
-		<version>3.0.1-M2</version>
+		<version>3.0.1-M3</version>
 	</parent>
-
+	
 	<artifactId>SIGEM_PortafirmasNotificacionWS</artifactId>
 	<packaging>war</packaging>
 	<name>SIGEM_PortafirmasNotificacionWS</name>
-
+	
 	<properties>
 		<cxf.version>2.5.2</cxf.version>
 		<jaxws-api.version>2.1-1</jaxws-api.version>
 		<geronimo-ws-metadata_2.0_spec.version>1.1.3</geronimo-ws-metadata_2.0_spec.version>
 		<saaj-impl.version>1.3.2</saaj-impl.version>
 	</properties>
-
+	
 	<dependencies>
 
-		<dependency>
-              <groupId>javax.servlet</groupId>
-              <artifactId>servlet-api</artifactId>
-              <version>${servlet-api.version}</version>
-              <scope>provided</scope>
-		</dependency>
+	    <dependency>
+	      <groupId>javax.servlet</groupId>
+	      <artifactId>servlet-api</artifactId>
+	      <version>${servlet-api.version}</version>
+	      <scope>provided</scope>
+	    </dependency>
 
 
 		<dependency>
@@ -33,7 +33,7 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>${commons.beanutils.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
@@ -57,7 +57,7 @@
 				<exclusion>
 					<groupId>es.ieci.tecdoc.isicres</groupId>
 					<artifactId>ISicres-Document-Connector-Alfresco</artifactId>
-				</exclusion>
+				</exclusion>				
 				<exclusion>
 					<groupId>es.ieci.tecdoc.sigem</groupId>
 					<artifactId>sigem_registroPresencialWsClient</artifactId>
@@ -72,7 +72,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -84,24 +84,24 @@
 			<version>${cxf.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.xml.ws</groupId>
-			<artifactId>jaxws-api</artifactId>
-			<version>${jaxws-api.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.jws</groupId>
-					<artifactId>jsr181</artifactId>
-				</exclusion>
-			</exclusions>
+		    <groupId>javax.xml.ws</groupId>
+		    <artifactId>jaxws-api</artifactId>
+		    <version>${jaxws-api.version}</version>
+		    <exclusions>
+		    	<exclusion>
+				    <groupId>javax.jws</groupId>
+				    <artifactId>jsr181</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
-			<version>${geronimo-ws-metadata_2.0_spec.version}</version>
-		</dependency>
-
+		    <groupId>org.apache.geronimo.specs</groupId>
+		    <artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
+		    <version>${geronimo-ws-metadata_2.0_spec.version}</version>
+		</dependency>		
+            
 	</dependencies>
-
+	
 	<build>
 		<finalName>SIGEM_PortafirmasNotificacionWS</finalName>
 		<filters>
@@ -112,7 +112,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-		</resources>
+		</resources>	
 		<plugins>
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
@@ -146,10 +146,10 @@
 						<version>${xerces.version}</version>
 					</dependency>
 				</dependencies>
-			</plugin>
+			</plugin>			
 		</plugins>
 	</build>
-
+	
 	<profiles>
 		<!-- Perfiles de construccion en funcion del S.O. -->
 		<profile>
@@ -174,7 +174,7 @@
 			<properties>
 				<filter.generic.system>${project.basedir}/../../SIGEM_Config/src/main/filters/system/windows.properties</filter.generic.system>
 			</properties>
-		</profile>
+		</profile>	
 	</profiles>
 
 </project>

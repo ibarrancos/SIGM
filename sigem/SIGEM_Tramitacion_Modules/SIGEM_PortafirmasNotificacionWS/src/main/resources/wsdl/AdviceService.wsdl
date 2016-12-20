@@ -2,9 +2,9 @@
 <wsdl:definitions name="AdviceService" targetNamespace="urn:juntadeandalucia:cice:pfirma:advice:v2.0" xmlns:pfirma="urn:juntadeandalucia:cice:pfirma:advice:v2.0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:request="urn:juntadeandalucia:cice:pfirma:advice:request:v2.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:type="urn:juntadeandalucia:cice:pfirma:type:v2.0">
   <wsdl:types>
     <xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:juntadeandalucia:cice:pfirma:advice:request:v2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
-			<xsd:import namespace="urn:juntadeandalucia:cice:pfirma:type:v2.0" schemaLocation="WebServiceTypes.xsd"/>
-
+			
+			<xsd:import namespace="urn:juntadeandalucia:cice:pfirma:type:v2.0" schemaLocation="WebServiceTypes.xsd"/>			
+			
 			<xsd:element name="updateRequestStatus">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -14,7 +14,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
-
+			
 			<xsd:element name="updateRequestStatusResponse">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -67,3 +67,4 @@
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
+

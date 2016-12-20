@@ -1,4 +1,4 @@
-<xsd:schema
+<xsd:schema 
 	targetNamespace="urn:juntadeandalucia:cice:pfirma:type:v2.0"
 	xmlns:type="urn:juntadeandalucia:cice:pfirma:type:v2.0"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -54,7 +54,7 @@
 			<xsd:extension base="type:userJob">
 				<xsd:sequence>
 					<xsd:element name="name" type="xsd:string" nillable="true" minOccurs="0"/>
-					<xsd:element name="surname1" type="xsd:string" nillable="true" minOccurs="0"/>
+					<xsd:element name="surname1" type="xsd:string" nillable="true" minOccurs="0"/> 
 					<xsd:element name="surname2" type="xsd:string" nillable="true" minOccurs="0"/>
 				</xsd:sequence>
 			</xsd:extension>
@@ -104,7 +104,7 @@
 			<xsd:element name="noticeList" type="type:noticeList" nillable="true" minOccurs="0"/>
 			<xsd:element name="actionList" type="type:actionList" nillable="true" minOccurs="0"/>
 			<xsd:element name="commentList" type="type:commentList" nillable="true" minOccurs="0"/>
-			<xsd:element name="requestStatus" type="type:requestStatus" nillable="true" minOccurs="0"/>
+			<xsd:element name="requestStatus" type="type:requestStatus" nillable="true" minOccurs="0"/>			
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="document">
@@ -126,7 +126,7 @@
 	</xsd:complexType>
 	<xsd:complexType name="signLine">
 		<xsd:sequence>
-			<xsd:element name="signerList" type="type:signerList" nillable="true" minOccurs="0" />
+			<xsd:element name="signerList" type="type:signerList" nillable="true" minOccurs="0" /> 
 			<xsd:element name="type" type="type:signLineType" nillable="true" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -186,61 +186,61 @@
 		<xsd:sequence>
 			<xsd:element name="comment" type="type:comment" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:sequence>
-	</xsd:complexType>
+	</xsd:complexType>	
 	<xsd:complexType name="authentication">
 		<xsd:sequence>
 			<xsd:element name="userName" type="xsd:string" nillable="false" />
 			<xsd:element name="password" type="xsd:string" nillable="false" />
 		</xsd:sequence>
 	</xsd:complexType>
-
+	
 	<xsd:simpleType name="signLineType">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="FIRMA"/>
 			<xsd:enumeration value="VISTOBUENO"/>
 		</xsd:restriction>
-	</xsd:simpleType>
-
+	</xsd:simpleType>	
+	
 	<xsd:simpleType name="signType">
 		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="CASCADA"/>
+			<xsd:enumeration value="CASCADA"/>			
 			<xsd:enumeration value="PARALELA"/>
 			<xsd:enumeration value="PRIMER FIRMANTE"/>
 		</xsd:restriction>
-	</xsd:simpleType>
-
+	</xsd:simpleType>	
+	
 	<xsd:simpleType name="signFormat">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="PKCS7"/>
 			<xsd:enumeration value="CMS"/>
 			<!-- xsd:enumeration value="XADES-BES"/>
 			<xsd:enumeration value="XADES-T"/ -->
-			<xsd:enumeration value="CADES"/>
+			<xsd:enumeration value="CADES"/>			
 			<xsd:enumeration value="XADES"/>
 			<xsd:enumeration value="XADES IMPLICITO"/>
 			<xsd:enumeration value="XADES EXPLICITO"/>
 			<xsd:enumeration value="XADES ENVELOPING"/>
 			<xsd:enumeration value="PDF"/>
 		</xsd:restriction>
-	</xsd:simpleType>
-
+	</xsd:simpleType>	
+	
 	<xsd:simpleType name="requestStatus">
 		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="ACEPTADO" />
-			<xsd:enumeration value="RECHAZADO" />
+			<xsd:enumeration value="ACEPTADO" />			
+			<xsd:enumeration value="RECHAZADO" />			
 			<xsd:enumeration value="CADUCADO" />
 			<xsd:enumeration value="EN PROCESO" />
 			<xsd:enumeration value="RETIRADO" />
 		</xsd:restriction>
-	</xsd:simpleType>
+	</xsd:simpleType>	
 
 	<xsd:complexType name="signature">
 		<xsd:sequence>
 			<xsd:element name="identifier" type="xsd:string" nillable="true" minOccurs="0"/>
 			<xsd:element name="sign" type="xsd:boolean" nillable="true" minOccurs="0"/>
-			<xsd:element name="signFormat" type="type:signFormat" nillable="true" minOccurs="0"/>
-			<xsd:element name="content" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" nillable="true" minOccurs="0"/>
+			<xsd:element name="signFormat" type="type:signFormat" nillable="true" minOccurs="0"/>		
+			<xsd:element name="content" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" nillable="true" minOccurs="0"/>			
 		</xsd:sequence>
-	</xsd:complexType>
-
+	</xsd:complexType>		
+	
 </xsd:schema>

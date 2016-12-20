@@ -20,13 +20,14 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"
 		xmlns:ns="urn:juntadeandalucia:cice:pfirma:advice:v2.0"
 		serviceName="ns:AdviceService"
 		endpointName="ns:AdviceServicePort"
-		address="/AdviceService"
+		address="/AdviceService" 
 		name="AdviceService"
 		>
 	</jaxws:endpoint>
 
-	<bean id="sigem_servicioPortafirmasNotificacionImpl" name="sigem_ServicioPortafirmasNotificacionService"
+ 	<bean id="sigem_servicioPortafirmasNotificacionImpl" name="sigem_ServicioPortafirmasNotificacionService"
 		class="ieci.tecdoc.sgm.portafirmas.notificacion.ws.ServicioPortafirmasNotificacionWebServiceImpl">
 	</bean>
 
 </beans>
+

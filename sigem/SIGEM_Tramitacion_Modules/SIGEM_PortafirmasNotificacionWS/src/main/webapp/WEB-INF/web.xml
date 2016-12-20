@@ -19,7 +19,7 @@
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
-
+	
 	<!-- Inicializacion de log4j -->
 	<servlet>
 		<servlet-name>log4j-init</servlet-name>
