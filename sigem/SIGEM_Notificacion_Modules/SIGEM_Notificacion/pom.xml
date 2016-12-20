@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main</artifactId>
-		<version>3.0.1-M2</version>
+		<version>3.0.1-M3</version>
 	</parent>
 
 
@@ -117,17 +117,13 @@
   						<artifactItems>
   							<artifactItem>
   								<groupId>es.ieci.tecdoc.sigem</groupId>
-  								<artifactId>
-  								sigem_notificacion-configurable-resources
-  								</artifactId>
+  								<artifactId>sigem_notificacion-configurable-resources</artifactId>
   								<version>${pom.version}</version>
   								<type>zip</type>
   								<classifier>configurableSigem</classifier>
   							</artifactItem>
   						</artifactItems>
-  						<outputDirectory>
-  							${unpackConfigurableResourcesPath}
-  						</outputDirectory>
+  						<outputDirectory>${unpackConfigurableResourcesPath}</outputDirectory>
   					</configuration>
   				</execution>
   			</executions>
