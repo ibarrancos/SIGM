@@ -4,7 +4,7 @@
 	<artifactId>InvesSicres</artifactId>
 	<packaging>pom</packaging>
 	<name>InvesSicres</name>
-	<version>8.0.1</version>
+	<version>8.0.5-M1</version>
 	<inceptionYear>2009</inceptionYear>
 	<description>Producto InvesSicres</description>
 	<issueManagement>
