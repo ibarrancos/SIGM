@@ -1,8 +1,11 @@
 package es.ieci.tecdoc.isicres.api.audit.business.manager.impl;
 
+import es.ieci.tecdoc.fwktd.audit.core.service.AuditoriaService;
 import es.ieci.tecdoc.fwktd.audit.core.service.impl.AuditoriaServiceFactory;
+import es.ieci.tecdoc.fwktd.audit.integration.business.manager.TrazaAuditoriaBuilder;
 import es.ieci.tecdoc.fwktd.audit.integration.business.manager.impl.AuditoriaAplicationManagerImpl;
 import es.ieci.tecdoc.isicres.api.audit.business.manager.IsicresAuditoriaManager;
+import es.ieci.tecdoc.isicres.api.audit.business.manager.impl.IsicresTrazaAuditoriaBuilderImpl;
 
 /**
  * Implementacion del sistema de auditoria para registro

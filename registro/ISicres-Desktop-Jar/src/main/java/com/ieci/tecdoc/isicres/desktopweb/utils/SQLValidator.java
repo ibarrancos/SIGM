@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -194,8 +195,8 @@ public class SQLValidator {
         DistributionSearchFields distributionSearchFields = new DistributionSearchFields(new Integer(2), typeDist, useCaseConf.getLocale(), dataBaseType);
         List fieldSearch = distributionSearchFields.getResult();
         HashMap<String, DistributionFields> camposDeBusqueda = new HashMap<String, DistributionFields>();
-        DistributionFields datosCampo2 = null;
-        for (DistributionFields datosCampo2 : fieldSearch) {
+	for (Iterator it03 = fieldSearch.iterator(); it03.hasNext();) {
+	    DistributionFields datosCampo2=(DistributionFields) it03.next();
             camposDeBusqueda.put(datosCampo2.getFieldName(), datosCampo2);
         }
         return camposDeBusqueda;
@@ -226,7 +227,8 @@ public class SQLValidator {
 
     private String validateCamposStringOrNumeric(String campo, DistributionFields datosCampo, String cadenaConsultaAux, Map operadores) throws ValidationException {
         String result = null;
-        for (String key : operadores.keySet()) {
+	for (Iterator it03 = operadores.keySet().iterator(); it03.hasNext();) {
+	    String key=(String) it03.next();
             String valueOperator = (String)operadores.get(key);
             if (!cadenaConsultaAux.startsWith(valueOperator)) continue;
             String whereCampo = cadenaConsultaAux.substring(valueOperator.length());

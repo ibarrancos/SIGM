@@ -28,7 +28,7 @@ public final class LdapConnection
       m_provider   = 0;
    }
 
-   public void open(int engine, int provider, String url, String userDn, String userPwd, boolean pool, int poolTimeout, String ldapVersion) throws Exception {
+   public void open(int engine, int provider, String url, String userDn, String userPwd, boolean pool, int poolTimeout) throws Exception {
       String urlEncoded;
       this.open(engine, provider, url, userDn, userPwd, pool, poolTimeout, "2");
    }
@@ -44,7 +44,7 @@ public final class LdapConnection
    
    public void open(int engine, int provider, String url,
                     String userDn, String userPwd,
-                    boolean pool, int poolTimeout)
+                    boolean pool, int poolTimeout, String ldapVersion)
                     throws Exception
    {
       
@@ -55,11 +55,11 @@ public final class LdapConnection
       
       checkProvider(provider);
       m_provider = provider;
-      
-      m_url         = url;
+
+      String urlEncoded = this.encodeURL(url);
+      m_url         = urlEncoded;
       m_pool        = pool;
       m_poolTimeout = poolTimeout;
-      m_url = urlEncoded = this.encodeURL(url);
             
       env = new Hashtable();
          

@@ -14,7 +14,6 @@ import es.ieci.tecdoc.isicres.terceros.business.vo.enums.DireccionType;
  * @version $Revision$
  *
  */
-@Valid
 public class DireccionFisicaVO extends BaseDireccionVO {
 
 	/**

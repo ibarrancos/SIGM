@@ -57,7 +57,7 @@ implements GrupoUsuarioDAO {
         }
         LinkedList<GrupoUsuarioVO> result = new LinkedList<GrupoUsuarioVO>();
         try {
-            List grupos = ISicresQueries.getGroups((Session)this.getSession(), (List)null);
+            List<Iusergrouphdr> grupos = ISicresQueries.getGroups((Session)this.getSession(), (List)null);
             for (Iusergrouphdr iusergrouphdr : grupos) {
                 GrupoUsuarioVO grupo = this.grupoUsuarioVOMapper.map(iusergrouphdr);
                 result.add(grupo);
@@ -80,7 +80,7 @@ implements GrupoUsuarioDAO {
         }
         LinkedList<GrupoUsuarioVO> result = new LinkedList<GrupoUsuarioVO>();
         try {
-            List grupos = ISicresQueries.getLdapGroups((Session)this.getSession(), (List)null);
+            List<Iuserldapgrphdr> grupos = ISicresQueries.getLdapGroups((Session)this.getSession(), (List)null);
             for (Iuserldapgrphdr iuserldapgrphdr : grupos) {
                 GrupoUsuarioVO grupo = this.grupoUsuarioVOMapper.map(iuserldapgrphdr);
                 result.add(grupo);
@@ -103,7 +103,7 @@ implements GrupoUsuarioDAO {
         }
         LinkedList<BaseUsuarioVO> result = new LinkedList<BaseUsuarioVO>();
         try {
-            List lista = ISicresQueries.getIUserGroupUserByGroupId((Session)this.getSession(), (Integer)idGrupo);
+            List<Iusergroupuser> lista = ISicresQueries.getIUserGroupUserByGroupId((Session)this.getSession(), (Integer)idGrupo);
             for (Iusergroupuser iusergroupuser : lista) {
                 Iuseruserhdr iuseruserhdr = ISicresQueries.getUserUserHdr((Session)this.getSession(), (Integer)iusergroupuser.getUserid());
                 result.add(this.usuarioVOMapper.map(iuseruserhdr));
@@ -123,7 +123,7 @@ implements GrupoUsuarioDAO {
         }
         LinkedList<GrupoUsuarioVO> result = new LinkedList<GrupoUsuarioVO>();
         try {
-            List lista = ISicresQueries.getIUserGroupUser((Session)this.getSession(), (Integer)idUsuario);
+            List<Iusergroupuser> lista = ISicresQueries.getIUserGroupUser((Session)this.getSession(), (Integer)idUsuario);
             for (Iusergroupuser iusergroupuser : lista) {
                 GrupoUsuarioVO grupoUsuarioVO = this.grupoUsuarioVOMapper.map(iusergroupuser);
                 result.add(grupoUsuarioVO);
@@ -148,7 +148,7 @@ implements GrupoUsuarioDAO {
         GrupoUsuarioVOMapper grupoUsuarioVOMapper = new GrupoUsuarioVOMapper();
         try {
             List gruposUsuario = ISicresQueries.getIUserGroupUser((Session)this.getSession(), (Integer)idUsuario);
-            List gruposNoPertenecientesUsuario = ISicresQueries.getGroups((Session)this.getSession(), (List)gruposUsuario);
+            List<Iusergrouphdr> gruposNoPertenecientesUsuario = ISicresQueries.getGroups((Session)this.getSession(), (List)gruposUsuario);
             for (Iusergrouphdr iusergrouphdr : gruposNoPertenecientesUsuario) {
                 GrupoUsuarioVO grupoUsuarioVO = grupoUsuarioVOMapper.map(iusergrouphdr);
                 result.add(grupoUsuarioVO);

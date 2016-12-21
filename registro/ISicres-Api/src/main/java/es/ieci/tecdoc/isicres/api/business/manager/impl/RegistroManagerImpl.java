@@ -132,7 +132,7 @@ extends RegistroManager {
         if (logger.isDebugEnabled()) {
             logger.debug((Object)sb.toString());
         }
-        throw new RegistroException(sb.toString());
+        //throw new RegistroException(sb.toString());
         return registro;
     }
 
@@ -182,7 +182,7 @@ extends RegistroManager {
         if (logger.isDebugEnabled()) {
             logger.debug((Object)sb.toString());
         }
-        throw new RegistroException(sb.toString());
+        //throw new RegistroException(sb.toString());
         return registro;
     }
 
@@ -230,7 +230,7 @@ extends RegistroManager {
         if (logger.isDebugEnabled()) {
             logger.debug((Object)sb.toString());
         }
-        throw new RegistroException(sb.toString());
+        //throw new RegistroException(sb.toString());
         return registro;
     }
 
@@ -276,7 +276,7 @@ extends RegistroManager {
         if (logger.isDebugEnabled()) {
             logger.debug((Object)sb.toString());
         }
-        throw new RegistroException(sb.toString());
+        //throw new RegistroException(sb.toString());
         return registro;
     }
 
@@ -354,11 +354,12 @@ extends RegistroManager {
 
     @Override
     public ResultadoBusquedaRegistroVO findAllRegistroEntradaByCriterioWhereSql(UsuarioVO usuario, LibroEntradaVO libro, CriterioBusquedaRegistroSqlVO criterioBusqueda) {
-        List axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), Integer.valueOf(libro.getId()), TipoLibroEnum.ENTRADA, criterioBusqueda.getSql());
+        List<AxSfQueryResults> axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), Integer.valueOf(libro.getId()), TipoLibroEnum.ENTRADA, criterioBusqueda.getSql());
         int total = this.queryForAxSfQueryResultsTotalCount(axSfQueryResults);
         ArrayList<RegistroEntradaVO> registers = new ArrayList<RegistroEntradaVO>();
         for (AxSfQueryResults results : axSfQueryResults) {
-            for (AxSf axSf : results.getResults()) {
+	    for (Iterator it03 = results.getResults().iterator(); it03.hasNext();) {
+                AxSf axSf = (AxSf) it03.next();
                 RegistroEntradaVO result = this.mapToRegistroEntradaVO(usuario, results.getBookId(), axSf);
                 registers.add(result);
             }
@@ -368,11 +369,12 @@ extends RegistroManager {
 
     @Override
     public ResultadoBusquedaRegistroVO findAllRegistroEntradaForUserByCriterioWhereSql(UsuarioVO usuario, CriterioBusquedaRegistroSqlVO criterioBusqueda) {
-        List axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.ENTRADA, criterioBusqueda.getSql(), true);
+        List<AxSfQueryResults> axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.ENTRADA, criterioBusqueda.getSql(), true);
         int total = this.queryForAxSfQueryResultsTotalCount(axSfQueryResults);
         ArrayList<RegistroEntradaVO> registers = new ArrayList<RegistroEntradaVO>();
         for (AxSfQueryResults results : axSfQueryResults) {
-            for (AxSf axSf : results.getResults()) {
+	    for (Iterator it03 = results.getResults().iterator(); it03.hasNext();) {
+                AxSf axSf = (AxSf) it03.next();
                 RegistroEntradaVO result = this.mapToRegistroEntradaVO(usuario, results.getBookId(), axSf);
                 registers.add(result);
             }
@@ -421,11 +423,12 @@ extends RegistroManager {
 
     @Override
     public ResultadoBusquedaRegistroVO findAllRegistroSalidaByCriterioWhereSql(UsuarioVO usuario, LibroSalidaVO libro, CriterioBusquedaRegistroSqlVO criterioBusqueda) {
-        List axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), Integer.valueOf(libro.getId()), TipoLibroEnum.SALIDA, criterioBusqueda.getSql());
+        List<AxSfQueryResults> axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), Integer.valueOf(libro.getId()), TipoLibroEnum.SALIDA, criterioBusqueda.getSql());
         int total = this.queryForAxSfQueryResultsTotalCount(axSfQueryResults);
         ArrayList<BaseRegistroVO> registers = new ArrayList<BaseRegistroVO>();
         for (AxSfQueryResults results : axSfQueryResults) {
-            for (AxSf axSf : results.getResults()) {
+	    for (Iterator it03 = results.getResults().iterator(); it03.hasNext();) {
+                AxSf axSf = (AxSf) it03.next();
                 registers.add(this.getBaseRegistroVOBuilder().build(usuario, axSf, String.valueOf(results.getBookId()), new RegistroSalidaVO()));
             }
         }
@@ -434,11 +437,12 @@ extends RegistroManager {
 
     @Override
     public ResultadoBusquedaRegistroVO findAllRegistroSalidaForUserByCriterioWhereSql(UsuarioVO usuario, CriterioBusquedaRegistroSqlVO criterioBusqueda) {
-        List axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.SALIDA, criterioBusqueda.getSql(), true);
+        List<AxSfQueryResults> axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.SALIDA, criterioBusqueda.getSql(), true);
         int total = this.queryForAxSfQueryResultsTotalCount(axSfQueryResults);
         ArrayList<BaseRegistroVO> registers = new ArrayList<BaseRegistroVO>();
         for (AxSfQueryResults results : axSfQueryResults) {
-            for (AxSf axSf : results.getResults()) {
+	    for (Iterator it03 = results.getResults().iterator(); it03.hasNext();) {
+                AxSf axSf = (AxSf) it03.next();
                 registers.add(this.getBaseRegistroVOBuilder().build(usuario, axSf, String.valueOf(results.getBookId()), new RegistroSalidaVO()));
             }
         }
@@ -640,11 +644,11 @@ extends RegistroManager {
         return new ListOfAxDochToListOfDocumentoRegistroVOMapper(usuario.getConfiguracionUsuario().getIdEntidad()).map(bookDocsWithPages);
     }
 
-    @Override
     public List attachDocuments(IdentificadorRegistroVO id, List documentos, UsuarioVO usuario) {
         LinkedList<DocumentoRegistroVO> documentosAdjuntados = new LinkedList<DocumentoRegistroVO>();
         if (documentos != null) {
-            for (DocumentoRegistroVO documento : documentos) {
+            for (Iterator it03 = documentos.iterator(); it03.hasNext();) {
+                DocumentoRegistroVO documento=(DocumentoRegistroVO) it03.next();
                 DocumentoRegistroVO documentoAdjuntado = this.attachDocument(id, documento, usuario);
                 documentosAdjuntados.add(documentoAdjuntado);
             }
@@ -672,11 +676,12 @@ extends RegistroManager {
 
     @Override
     public ResultadoBusquedaRegistroVO findAllRegistroEntradaByCriterioWhereSql(UsuarioVO usuario, CriterioBusquedaRegistroSqlVO criterioBusqueda) {
-        List axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.ENTRADA, criterioBusqueda.getSql());
+        List<AxSfQueryResults> axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.ENTRADA, criterioBusqueda.getSql());
         int total = this.queryForAxSfQueryResultsTotalCount(axSfQueryResults);
         ArrayList<RegistroEntradaVO> registers = new ArrayList<RegistroEntradaVO>();
         for (AxSfQueryResults results : axSfQueryResults) {
-            for (AxSf axSf : results.getResults()) {
+	    for (Iterator it03 = results.getResults().iterator(); it03.hasNext();) {
+                AxSf axSf = (AxSf) it03.next();
                 RegistroEntradaVO result = this.mapToRegistroEntradaVO(usuario, results.getBookId(), axSf);
                 registers.add(result);
             }
@@ -686,11 +691,12 @@ extends RegistroManager {
 
     @Override
     public ResultadoBusquedaRegistroVO findAllRegistroSalidaByCriterioWhereSql(UsuarioVO usuario, CriterioBusquedaRegistroSqlVO criterioBusqueda) {
-        List axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.SALIDA, criterioBusqueda.getSql());
+        List<AxSfQueryResults> axSfQueryResults = this.queryForAxSfQueryResults(usuario, criterioBusqueda.getOffset().intValue(), criterioBusqueda.getLimit().intValue(), null, TipoLibroEnum.SALIDA, criterioBusqueda.getSql());
         int total = this.queryForAxSfQueryResultsTotalCount(axSfQueryResults);
         ArrayList<BaseRegistroVO> registers = new ArrayList<BaseRegistroVO>();
         for (AxSfQueryResults results : axSfQueryResults) {
-            for (AxSf axSf : results.getResults()) {
+	    for (Iterator it03 = results.getResults().iterator(); it03.hasNext();) {
+                AxSf axSf = (AxSf) it03.next();
                 registers.add(this.getBaseRegistroVOBuilder().build(usuario, axSf, String.valueOf(results.getBookId()), new RegistroSalidaVO()));
             }
         }
@@ -699,13 +705,13 @@ extends RegistroManager {
 
     @Override
     public byte[] getPaginaById(IdentificadorRegistroVO identificadorRegistro, String documentId, String pageId, UsuarioVO usuario) {
-        Object page = null;
+        byte[] page = null;
         try {
             page = FolderFileSession.getFile((String)usuario.getConfiguracionUsuario().getSessionID(), (Integer)Integer.valueOf(identificadorRegistro.getIdLibro()), (Integer)Integer.valueOf(identificadorRegistro.getIdRegistro()), (Integer)Integer.valueOf(pageId), (String)usuario.getConfiguracionUsuario().getIdEntidad());
         }
         catch (Exception e) {
             StringBuffer sb = new StringBuffer("Error al recuperar la p\u00e1gina con identificador [").append(pageId).append("] del documento con id [").append(documentId).append("] del registro [").append(identificadorRegistro.getIdRegistro()).append("] para el libro [").append(identificadorRegistro.getIdLibro()).append("]");
-            logger.error((Object)sb.toString(), (Throwable)e);
+            logger.error(sb.toString(), e);
             throw new RegistroException(sb.toString(), e);
         }
         return page;
@@ -742,8 +748,8 @@ extends RegistroManager {
     private ResultadoBusquedaDistribucionVO getDistribucionesPendientes(UsuarioVO usuario, Integer idRegistro) {
         CriterioBusquedaDistribucionVO criterio = new CriterioBusquedaDistribucionVO();
         criterio.setEstado(EstadoDistribucionEnum.PENDIENTE);
-        criterio.setLimit(Integer.MAX_VALUE);
-        criterio.setOffset(0);
+        criterio.setLimit(Long.valueOf(Integer.MAX_VALUE));
+        criterio.setOffset(0L);
         return this.distribucionManager.getDistributionsByRegistry(usuario, criterio, idRegistro, 1);
     }
 
@@ -754,7 +760,8 @@ extends RegistroManager {
         try {
             String idEntidad = usuario.getConfiguracionUsuario().getIdEntidad();
             ResultadoBusquedaDistribucionVO distribucionesPendientes = this.getDistribucionesPendientes(usuario, Integer.valueOf(id.getIdRegistro()));
-            for (DistribucionVO distribucion : distribucionesPendientes.getDistributions()) {
+	    for (Iterator it03 = distribucionesPendientes.getDistributions().iterator(); it03.hasNext();) {
+		DistribucionVO distribucion=(DistribucionVO) it03.next();
                 logger.debug((Object)("Se eliminar\u00e1 la siguiente distribuci\u00f3n [" + distribucion.getId() + "] al cancelar el registro asociado"));
                 this.distribucionManager.deleteDistribution(idEntidad, Integer.valueOf(distribucion.getId()));
             }
@@ -843,7 +850,7 @@ extends RegistroManager {
         Integer reportOption = new Integer(0);
         ArrayList<Integer> bookIds = new ArrayList<Integer>();
         if (null == bookID) {
-            List booksByUser = this.getLibroManager().findLibrosByUser(usuario, bookType);
+            List<BaseLibroVO> booksByUser = this.getLibroManager().findLibrosByUser(usuario, bookType);
             for (BaseLibroVO libro : booksByUser) {
                 bookIds.add(Integer.valueOf(libro.getId()));
             }
@@ -851,9 +858,10 @@ extends RegistroManager {
             bookIds.add(bookID);
         }
         ArrayList<AxSfQueryResults> results = new ArrayList<AxSfQueryResults>();
-        Integer aBookId2 = null;
+	Integer aBookId2=null;
         try {
-            for (Integer aBookId2 : bookIds) {
+	    for (Iterator it03 = bookIds.iterator(); it03.hasNext();) {
+		aBookId2=(Integer) it03.next();
                 this.getLibroManager().abrirLibro(usuario, new BaseLibroVO(String.valueOf(aBookId2)));
                 if (SecuritySession.canQuery((String)usuario.getConfiguracionUsuario().getSessionID(), (Integer)aBookId2)) {
                     CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(usuario.getConfiguracionUsuario().getSessionID());
@@ -892,7 +900,7 @@ extends RegistroManager {
         return results;
     }
 
-    private int queryForAxSfQueryResultsTotalCount(List axSfQueryResults) {
+    private int queryForAxSfQueryResultsTotalCount(List<AxSfQueryResults> axSfQueryResults) {
         int total = 0;
         for (AxSfQueryResults results : axSfQueryResults) {
             total+=results.getTotalQuerySize();
@@ -919,7 +927,7 @@ extends RegistroManager {
         return newOffset;
     }
 
-    private void checkExistAllFlushFdrFields(AxSf register, List atts) {
+    private void checkExistAllFlushFdrFields(AxSf register, List<FlushFdrField> atts) {
         if (!CollectionUtils.isEmpty((Collection)atts)) {
             for (FlushFdrField field : atts) {
                 if (register.getAttributesNames().contains(StringUtils.join((Object[])new String[]{"fld", String.valueOf(field.getFldid())})) || register.getProposedExtendedFields().contains(field.getFldid())) continue;
@@ -935,8 +943,8 @@ extends RegistroManager {
     @Override
     public BaseRegistroVO findRegistroByNumRegistro(UsuarioVO usuario, String numRegistro) {
         CriterioBusquedaRegistroSqlVO criterioBusqueda = new CriterioBusquedaRegistroSqlVO();
-        criterioBusqueda.setLimit(1);
-        criterioBusqueda.setOffset(0);
+        criterioBusqueda.setLimit(1L);
+        criterioBusqueda.setOffset(0L);
         criterioBusqueda.setSql("fld1='" + numRegistro + "'");
         ResultadoBusquedaRegistroVO resultado = this.findAllRegistroEntradaByCriterioWhereSql(usuario, criterioBusqueda);
         if (resultado == null || resultado.getRegisters().size() == 0) {

@@ -171,7 +171,7 @@ public class AsientoRegistralMapper {
     }
 
     private void validarInteresados(AsientoRegistralFormVO asientoRegistral) {
-        List interesados = asientoRegistral.getInteresados();
+        List<InteresadoFormVO> interesados = asientoRegistral.getInteresados();
         for (InteresadoFormVO interesadoFormVO : interesados) {
             if (interesadoFormVO.getDireccionInteresado() != null && interesadoFormVO.getDireccionInteresado().length() > 160) {
                 throw new IntercambioRegistralException("La longitud de la direccion del interesado debe de ser menor de 160 caracteres.", IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_INTERESADOS_DIRECCION_LENGTH);
@@ -305,7 +305,6 @@ public class AsientoRegistralMapper {
 
     public int countAnexosIR(List<AnexoFormVO> anexos) {
         int result = 0;
-        AnexoFormVO anexo2 = null;
         for (AnexoFormVO anexo2 : anexos) {
             if (anexo2.getTipoDocumento() == TipoDocumentoEnum.FICHERO_TECNICO_INTERNO) continue;
             ++result;

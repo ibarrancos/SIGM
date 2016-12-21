@@ -71,8 +71,8 @@ implements Keys {
         XMLBookTree.addUserConfig(root, usrConf, locale);
         if (!(formFormat.getDlgDef().getPagedefs() == null || formFormat.getDlgDef().getPagedefs().isEmpty())) {
             FPageDef page = null;
-            Integer key2 = null;
-            for (Integer key2 : formFormat.getDlgDef().getPagedefs().keySet()) {
+	    for (Iterator it03 = formFormat.getDlgDef().getPagedefs().keySet().iterator(); it03.hasNext();) {
+		Integer key2=(Integer) it03.next();
                 page = (FPageDef)formFormat.getDlgDef().getPagedefs().get(key2);
                 if (page.getCtrldefs().isEmpty()) continue;
                 String title = "";
@@ -121,8 +121,8 @@ implements Keys {
         XMLBookTree.addParams(folderName, url, folderPId, readOnlyS, folderId, 1, row, bookType, true, root);
         if (!(formFormat.getDlgDef().getPagedefs() == null || formFormat.getDlgDef().getPagedefs().isEmpty())) {
             FPageDef page = null;
-            Integer key2 = null;
-            for (Integer key2 : formFormat.getDlgDef().getPagedefs().keySet()) {
+	    for (Iterator it03 = formFormat.getDlgDef().getPagedefs().keySet().iterator(); it03.hasNext();) {
+		Integer key2=(Integer) it03.next();
                 page = (FPageDef)formFormat.getDlgDef().getPagedefs().get(key2);
                 if (page.getCtrldefs().isEmpty()) continue;
                 String title = "";
@@ -147,9 +147,9 @@ implements Keys {
             List checkFields = usrConf.getFieldConf();
             Element fields = root.addElement("Fields");
             Element field = null;
-            FieldConf fieldConf2 = null;
             if (!(checkFields == null || checkFields.isEmpty())) {
-                for (FieldConf fieldConf2 : checkFields) {
+	        for (Iterator it03 = checkFields.iterator(); it03.hasNext();) {
+		    FieldConf fieldConf2=(FieldConf) it03.next();
                     field = fields.addElement("Field");
                     field.addAttribute("Id", new Integer(fieldConf2.getFieldId()).toString());
                     field.addAttribute("Checked", new Integer(fieldConf2.getFieldCheck()).toString());
@@ -284,18 +284,17 @@ implements Keys {
         node.addElement("Ext").add(DocumentHelper.createCDATA((String)ext));
     }
 
-    private static void addNodeDocs(List docs, Element parent) {
+    private static void addNodeDocs(List<AxDoch> docs, Element parent) {
         Element infDoc = parent.addElement("Node");
         infDoc.addAttribute("Type", "InfDoc");
         if (!(docs == null || docs.isEmpty())) {
-            AxDoch axdoch2 = null;
-            AxPageh axpageh2 = null;
             for (AxDoch axdoch2 : docs) {
                 Element doc = infDoc.addElement("Node");
                 doc.addAttribute("Type", "Doc");
                 doc.addElement("Title").add(DocumentHelper.createCDATA((String)axdoch2.getName()));
                 doc.addElement("Id").addText(Integer.toString(axdoch2.getId()));
-                for (AxPageh axpageh2 : axdoch2.getPages()) {
+		for (Iterator it03 = axdoch2.getPages().iterator(); it03.hasNext();) {
+		    AxPageh axpageh2=(AxPageh) it03.next();
                     XMLBookTree.addNodePage(axpageh2.getName(), axpageh2.getId(), axpageh2.getSortOrder(), axpageh2.getLoc(), doc);
                 }
             }
@@ -309,9 +308,9 @@ implements Keys {
             List checkFields = usrConf.getFieldConf();
             Element fields = usrCf.addElement("Fields");
             Element field = null;
-            FieldConf fieldConf2 = null;
             if (!(checkFields == null || checkFields.isEmpty())) {
-                for (FieldConf fieldConf2 : checkFields) {
+		for (Iterator it03 = checkFields.iterator(); it03.hasNext();) {
+		    FieldConf fieldConf2=(FieldConf) it03.next();
                     if (fieldConf2.getFieldCheck() != 1) continue;
                     field = fields.addElement("Field");
                     field.addAttribute("Id", new Integer(fieldConf2.getFieldId()).toString());

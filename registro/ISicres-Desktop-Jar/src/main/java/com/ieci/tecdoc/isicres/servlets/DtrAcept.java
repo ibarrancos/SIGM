@@ -115,9 +115,9 @@ public class DtrAcept extends HttpServlet implements Keys {
         // de sesión para este usuario en el servidor de aplicaciones.
         UseCaseConf useCaseConf = (UseCaseConf) session.getAttribute(J_USECASECONF);
         PrintWriter writer = response.getWriter();
-	SQLValidator.getInstance().validateDistributionDistWhere(distWhere);
-	regWhere = SQLValidator.getInstance().validateDistributionRegWhere(useCaseConf, lnTypeDistr, regWhere);
         try {
+	    SQLValidator.getInstance().validateDistributionDistWhere(distWhere);
+            regWhere = SQLValidator.getInstance().validateDistributionRegWhere(useCaseConf, lnTypeDistr, regWhere);
             // Transformamos el xml mediante la xsl en html.
             // Los errores pueden ser de comunicación, de validación, de
             // transformación, etc...

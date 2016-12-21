@@ -319,7 +319,7 @@
 		<!-- SIGEM_Consolidacion -->
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
-			<artifactId>sigem_consolidacion</artifactId>
+			<artifactId>SIGEM_Consolidacion</artifactId>
 			<version>${pom.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>

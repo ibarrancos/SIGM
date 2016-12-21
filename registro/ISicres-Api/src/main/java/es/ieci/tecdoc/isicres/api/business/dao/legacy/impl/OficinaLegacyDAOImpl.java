@@ -66,7 +66,7 @@ implements OficinaDAO {
     public List<OficinaVO> getOficinas(Locale locale) {
         ArrayList<OficinaVO> result = new ArrayList<OficinaVO>();
         try {
-            List scrOficList = this.findScrOfic(locale);
+            List<ScrOfic> scrOficList = this.findScrOfic(locale);
             for (ScrOfic scrOfic : scrOficList) {
                 ScrTmzofic scrTmzofic = this.getScrTmzofic(scrOfic.getId());
                 OficinaVO oficina = this.oficinaAdapter(scrOfic, scrTmzofic);
@@ -119,7 +119,7 @@ implements OficinaDAO {
         ArrayList<OficinaVO> result = new ArrayList<OficinaVO>();
         String idUsuario = usuario.getId();
         try {
-            List scrOficList = this.findScrOficByUsuario(locale, idUsuario);
+            List<ScrOfic> scrOficList = this.findScrOficByUsuario(locale, idUsuario);
             for (ScrOfic scrOfic : scrOficList) {
                 ScrTmzofic scrTmzofic = this.getScrTmzofic(scrOfic.getId());
                 OficinaVO oficina = this.oficinaAdapter(scrOfic, scrTmzofic);
@@ -216,7 +216,7 @@ implements OficinaDAO {
     }
 
     protected static Class getScrOficLanguage(String language) {
-        reference scrOficClass = ScrOfic.class;
+        Class scrOficClass = ScrOfic.class;
         if (language.equals("es")) {
             scrOficClass = ScrOfic.class;
         }

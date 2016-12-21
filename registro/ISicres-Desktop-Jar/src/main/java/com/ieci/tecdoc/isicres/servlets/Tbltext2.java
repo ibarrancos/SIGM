@@ -97,8 +97,8 @@ public class Tbltext2 extends HttpServlet implements Keys {
         // Número del idioma. Ej: 10
         Long numIdioma = (Long) session.getAttribute(Keys.J_NUM_IDIOMA);
 		PrintWriter writer = response.getWriter ();
-	SQLValidator.getInstance().validateOrderQueryRegister(orderByTable);
         try {
+	    SQLValidator.getInstance().validateOrderQueryRegister(orderByTable);
             Document xmlDocument = null;
 
             switch (row.intValue()) {

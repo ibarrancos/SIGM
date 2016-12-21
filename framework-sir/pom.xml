@@ -22,7 +22,7 @@
           <fwktd-dm.version>0.7</fwktd-dm.version>
           <!-- fwktd-signature.version>0.7</fwktd-signature.version-->
   <fwktd-time.version>0.5</fwktd-time.version>
-  <fwktd-dir3.version>1.0</fwktd-dir3.version>
+  <fwktd-dir3.version>1.0.3</fwktd-dir3.version>
 
   <!-- Third party dependencies -->
   <axis.version>1.4</axis.version>

@@ -146,7 +146,7 @@ implements IntercambioRegistralGeneradorObjetosManager {
         if (asientoRegistralVO != null) {
             infoAsientoRegistralVO = new InfoAsientoRegistralVO();
             BeanUtils.copyProperties((Object)asientoRegistralVO, (Object)infoAsientoRegistralVO);
-            List listInteresados = asientoRegistralVO.getInteresados();
+            List<InteresadoVO> listInteresados = asientoRegistralVO.getInteresados();
             LinkedList<InteresadoExReg> listInteresadoExReg = new LinkedList<InteresadoExReg>();
             if (listInteresados != null) {
                 for (InteresadoVO interesadoVO : listInteresados) {

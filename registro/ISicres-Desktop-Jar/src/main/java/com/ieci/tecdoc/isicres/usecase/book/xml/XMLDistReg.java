@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Iterator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.CDATA;
@@ -22,14 +23,13 @@ implements Keys {
     private static Logger _logger = Logger.getLogger((Class)XMLDistReg.class);
     private static SimpleDateFormat dateFormat = null;
 
-    public static Document createXMLDistReg(List list, Integer bookID, int fdrid, Locale locale) {
+    public static Document createXMLDistReg(List<DtrFdrResults> list, Integer bookID, int fdrid, Locale locale) {
         dateFormat = XMLUtils.getDateFormatView(locale);
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement("Sicreslist");
         XMLDistReg.addContext(list.size(), locale, root);
         XMLDistReg.addHeadMinuta(locale, root);
         XMLDistReg.addBodyMinuta(locale, root);
-        DtrFdrResults result2 = null;
         int i = 0;
         for (DtrFdrResults result2 : list) {
             XMLDistReg.addMinuta(i++, bookID, fdrid, result2, locale, root);
@@ -37,7 +37,7 @@ implements Keys {
         return document;
     }
 
-    public static Document createXMLDistRegWithRemarkDistribution(List list, Integer bookID, int fdrid, Locale locale, String nameBook, String numReg) {
+    public static Document createXMLDistRegWithRemarkDistribution(List<DtrFdrResults> list, Integer bookID, int fdrid, Locale locale, String nameBook, String numReg) {
         dateFormat = XMLUtils.getDateFormatView(locale);
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement("Sicreslist");
@@ -45,7 +45,6 @@ implements Keys {
         XMLDistReg.addHead(locale, root, nameBook, numReg);
         XMLDistReg.addHeadMinutaWithRemarkDistribution(locale, root);
         XMLDistReg.addBodyMinuta(locale, root);
-        DtrFdrResults result2 = null;
         int i = 0;
         for (DtrFdrResults result2 : list) {
             XMLDistReg.addMinutaWithRemarkDistribution(i++, bookID, fdrid, result2, locale, root);
@@ -109,9 +108,9 @@ implements Keys {
         }
         head.addElement("COL").addText(dateFormat.format(result.getScrDistReg().getStateDate()));
         Element body = minuta.addElement("BODY");
-        ScrDistregstate scr2 = null;
         Element row = null;
-        for (ScrDistregstate scr2 : result.getScrDistRegState()) {
+	for (Iterator it03 = result.getScrDistRegState().iterator(); it03.hasNext();) {
+	    ScrDistregstate scr2 = (ScrDistregstate) it03.next();
             row = body.addElement("ROW").addAttribute("Id", result.getScrDistReg().getId().toString()).addAttribute("IdArch", bookID.toString()).addAttribute("IdFdr", Integer.toString(fdrid));
             row.addElement("COL").add(DocumentHelper.createCDATA((String)RBUtil.getInstance(locale).getProperty("bookusecase.distributionhistory.minuta.dist.state." + scr2.getState())));
             row.addElement("COL").addText(dateFormat.format(scr2.getStateDate()));
@@ -135,9 +134,9 @@ implements Keys {
         Element comentarioDistr = head.addElement("COL").addAttribute("TextLong", "1");
         comentarioDistr.add(DocumentHelper.createCDATA((String)result.getScrDistReg().getMessage()));
         Element body = minuta.addElement("BODY");
-        ScrDistregstate scr2 = null;
         Element row = null;
-        for (ScrDistregstate scr2 : result.getScrDistRegState()) {
+	for (Iterator it03 = result.getScrDistRegState().iterator(); it03.hasNext();) {
+	    ScrDistregstate scr2 = (ScrDistregstate) it03.next();
             row = body.addElement("ROW").addAttribute("Id", result.getScrDistReg().getId().toString()).addAttribute("IdArch", bookID.toString()).addAttribute("IdFdr", Integer.toString(fdrid));
             row.addElement("COL").add(DocumentHelper.createCDATA((String)RBUtil.getInstance(locale).getProperty("bookusecase.distributionhistory.minuta.dist.state." + scr2.getState())));
             row.addElement("COL").addText(dateFormat.format(scr2.getStateDate()));

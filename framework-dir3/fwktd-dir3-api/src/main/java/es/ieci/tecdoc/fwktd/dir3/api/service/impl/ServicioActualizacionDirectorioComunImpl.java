@@ -52,7 +52,7 @@ implements ServicioActualizacionDirectorioComun {
             logger.debug("Actualizados los datos de oficinas, organismos y sus relaciones");
         }
         estadoActualizacion.setFechaActualizacion(Calendar.getInstance().getTime());
-        this.getEstadoActualizacionDCOManager().update((Object)estadoActualizacion);
+        this.getEstadoActualizacionDCOManager().update(estadoActualizacion);
         if (logger.isDebugEnabled()) {
             logger.debug("Finaliza la actualizaci\u00f3n del sistema");
         }

@@ -233,7 +233,7 @@ implements UnidadAdministrativaDAO {
             result = criteriaResults.list();
             Object var7_6 = null;
         }
-        catch (Throwable var6_8) {
+        catch (HibernateException var6_8) {
             Object var7_7 = null;
             this.closeSession(session);
             throw var6_8;
@@ -259,7 +259,7 @@ implements UnidadAdministrativaDAO {
             result = criteriaResults.list();
             Object var9_8 = null;
         }
-        catch (Throwable var8_10) {
+        catch (HibernateException var8_10) {
             Object var9_9 = null;
             this.closeSession(session);
             throw var8_10;
@@ -281,7 +281,7 @@ implements UnidadAdministrativaDAO {
             result = (Integer)session.iterate(querySize.toString()).next();
             Object var6_5 = null;
         }
-        catch (Throwable var5_7) {
+        catch (HibernateException var5_7) {
             Object var6_6 = null;
             this.closeSession(session);
             throw var5_7;
@@ -318,7 +318,7 @@ implements UnidadAdministrativaDAO {
             result = criteriaResults.list();
             Object var8_7 = null;
         }
-        catch (Throwable var7_9) {
+        catch (HibernateException var7_9) {
             Object var8_8 = null;
             this.closeSession(session);
             throw var7_9;
@@ -342,7 +342,7 @@ implements UnidadAdministrativaDAO {
             result = (Integer)session.iterate(querySize.toString()).next();
             Object var7_6 = null;
         }
-        catch (Throwable var6_8) {
+        catch (HibernateException var6_8) {
             Object var7_7 = null;
             this.closeSession(session);
             throw var6_8;
@@ -355,8 +355,7 @@ implements UnidadAdministrativaDAO {
 
     protected List executeCriteriaReturnListUnidadAdministrativaVO(Locale locale, StringBuffer query, CriterioBusquedaTipoUnidadAdministrativaVO limitQuery) throws HibernateException {
         ArrayList<UnidadAdministrativaVO> result = new ArrayList<UnidadAdministrativaVO>();
-        List listado = null;
-        ScrOrg scrOrg2 = null;
+        List<ScrOrg> listado = null;
         UnidadAdministrativaVO unidadAdministrativa = null;
         listado = this.executeCriteriaReturnScrOrgsList(locale, query, limitQuery);
         for (ScrOrg scrOrg2 : listado) {
@@ -473,7 +472,7 @@ implements UnidadAdministrativaDAO {
     }
 
     protected static Class getScrTypeAdmLanguage(String language) {
-        reference scrTypeAdmClass = ScrTypeadm.class;
+        Class scrTypeAdmClass = ScrTypeadm.class;
         if (language.equals("es")) {
             scrTypeAdmClass = ScrTypeadm.class;
         }
@@ -490,7 +489,7 @@ implements UnidadAdministrativaDAO {
     }
 
     protected static Class getScrOrgLanguage(String language) {
-        reference scrTypeAdmClass = ScrOrg.class;
+        Class scrTypeAdmClass = ScrOrg.class;
         if (language.equals("es")) {
             scrTypeAdmClass = ScrOrg.class;
         }

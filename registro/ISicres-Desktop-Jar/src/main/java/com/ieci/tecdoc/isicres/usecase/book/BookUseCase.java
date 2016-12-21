@@ -309,9 +309,10 @@ implements Keys {
         int setRegisterDate = 0;
         AxSf axsf = FolderSession.getBookFolder((String)useCaseConf.getSessionID(), (Integer)bookId, (int)fldid, (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
         axsf.setFormat(axsfQ.getFormat());
-        String key2 = null;
         ArrayList<String> toRemove = new ArrayList<String>();
-        for (String key2 : axsf.getAttributesNames()) {
+
+        for (Iterator it03 = axsf.getAttributesNames().iterator(); it03.hasNext();) {
+            String key2 = (String) it03.next();
             try {
                 if (Integer.parseInt(key2.substring(3, key2.length())) >= 7) continue;
                 toRemove.add(key2);
@@ -434,10 +435,10 @@ implements Keys {
         AxSf axsfQ = this.getQueryFormat(useCaseConf.getSessionID(), bookId, useCaseConf.getEntidadId());
         QueryFormat formatter = new QueryFormat(axsfQ.getFormat().getData());
         Collection formatterFields = formatter.getDlgDef().getCtrldefs().values();
-        QCtrlDef ctrlDef2 = null;
         int fldid = 0;
         int id = 0;
-        for (QCtrlDef ctrlDef2 : formatterFields) {
+        for (Iterator it03 = formatterFields.iterator(); it03.hasNext();) {
+            QCtrlDef ctrlDef2 = (QCtrlDef) it03.next();
             fldid = ctrlDef2.getFldId();
             id = ctrlDef2.getId();
             if (!ctrlDef2.getName().startsWith("IDOC_EDIT") || params.get(Integer.toString(id)) == null || params.get(Integer.toString(id)).toString().length() <= 0) continue;
@@ -501,10 +502,10 @@ implements Keys {
         AxSf axsfQ = this.getQueryFormat(useCaseConf.getSessionID(), bookId, useCaseConf.getEntidadId());
         QueryFormat formatter = new QueryFormat(axsfQ.getFormat().getData());
         Collection formatterFields = formatter.getDlgDef().getCtrldefs().values();
-        QCtrlDef ctrlDef2 = null;
         int fldid = 0;
         int id = 0;
-        for (QCtrlDef ctrlDef2 : formatterFields) {
+        for (Iterator it03 = formatterFields.iterator(); it03.hasNext();) {
+            QCtrlDef ctrlDef2 = (QCtrlDef) it03.next();
             String value;
             fldid = ctrlDef2.getFldId();
             id = ctrlDef2.getId();
@@ -560,8 +561,8 @@ implements Keys {
         }
         if (!idsToValidate.isEmpty()) {
             List aux = AttributesSession.validateFixedValues((String)useCaseConf.getSessionID(), (Integer)bookId, idsToValidate, (boolean)false, (String)useCaseConf.getEntidadId());
-            Integer auxFldid2 = null;
-            for (Integer auxFldid2 : aux) {
+            for (Iterator it03 = aux.iterator(); it03.hasNext();) {
+            	Integer auxFldid2 = (Integer) it03.next();
                 result.add((Integer)controlsMemo.get(auxFldid2));
             }
         }
@@ -573,7 +574,8 @@ implements Keys {
         QueryFormat formatter = new QueryFormat(axsfQ.getFormat().getData());
         Collection formatterFields = formatter.getDlgDef().getCtrldefs().values();
         ArrayList<Integer> result = new ArrayList<Integer>();
-        for (QCtrlDef ctrlDef : formatterFields) {
+        for (Iterator it04 = formatterFields.iterator(); it04.hasNext();) {
+            QCtrlDef ctrlDef = (QCtrlDef) it04.next();
             int fldid = ctrlDef.getFldId();
             int id = ctrlDef.getId();
             if (!badCtrls.contains(new Integer(id))) continue;
@@ -623,8 +625,8 @@ implements Keys {
         axsfQuery.setPageSize(Integer.parseInt(Configurator.getInstance().getProperty("/ISicres-Configuration/ISicres-DesktopWeb/DefaultPageTableResultsSize")));
         QueryFormat formatter = new QueryFormat(axsfQ.getFormat().getData());
         Collection formatterFields = formatter.getDlgDef().getCtrldefs().values();
-        QCtrlDef ctrlDef2 = null;
-        for (QCtrlDef ctrlDef2 : formatterFields) {
+        for (Iterator it04 = formatterFields.iterator(); it04.hasNext();) {
+            QCtrlDef ctrlDef2 = (QCtrlDef) it04.next();
             String value;
             if (!ctrlDef2.getName().startsWith("IDOC_EDIT") || (value = this.getValue(params, Integer.toString(ctrlDef2.getId()))) == null || value.toString().length() <= 0) continue;
             try {
@@ -644,13 +646,13 @@ implements Keys {
         ArrayList<Integer> bookIds = new ArrayList<Integer>();
         if (reportOption != 0) {
             if (BookSession.isInBook((String)useCaseConf.getSessionID(), (Integer)bookId, (String)useCaseConf.getEntidadId())) {
-                List inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
+                List<ScrRegStateByLanguage> inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
                 for (ScrRegStateByLanguage scrregstate : inList) {
                     if (reportOption != 2 && scrregstate.getScrregstateState() != 0) continue;
                     bookIds.add(scrregstate.getIdocarchhdrId());
                 }
             } else {
-                List outList = BookSession.getOutBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
+                List<ScrRegStateByLanguage> outList = BookSession.getOutBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
                 for (ScrRegStateByLanguage scrregstate : outList) {
                     if (reportOption != 2 && scrregstate.getScrregstateState() != 0) continue;
                     bookIds.add(scrregstate.getIdocarchhdrId());
@@ -754,13 +756,13 @@ implements Keys {
         }
         ArrayList<Integer> bookIds = new ArrayList<Integer>();
         if (axsf instanceof AxSfIn) {
-            List inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
+            List<ScrRegStateByLanguage> inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
             for (ScrRegStateByLanguage scrRegStateByLanguage : inList) {
                 if (opcion != 2 && scrRegStateByLanguage.getScrregstateState() != 0) continue;
                 bookIds.add(scrRegStateByLanguage.getIdocarchhdrId());
             }
         } else {
-            List outList = BookSession.getOutBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
+            List<ScrRegStateByLanguage> outList = BookSession.getOutBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
             for (ScrRegStateByLanguage scrRegStateByLanguage : outList) {
                 if (opcion != 2 && scrRegStateByLanguage.getScrregstateState() != 0) continue;
                 bookIds.add(scrRegStateByLanguage.getIdocarchhdrId());
@@ -1034,9 +1036,9 @@ implements Keys {
     public String saveAsocRegs(UseCaseConf useCaseConf, String asocRegsSelected, String primaryReg, int code, Integer bookId, Integer folderId) throws BookException {
         Document doc = null;
         String resultCode = "10";
+        List listaRegs;
+        List listaRegs2;
         switch (code) {
-            List listaRegs;
-            List listaRegs2;
             case 0: {
                 try {
                     Integer[] primario = BookUseCaseAsocRegsUtil.getAsocRegPrimario(useCaseConf, bookId, folderId);
@@ -1093,10 +1095,10 @@ implements Keys {
             }
             case 4: {
                 try {
-                    List listaPrimaryRegs = BookUseCaseAsocRegsUtil.getAsocRegsResults(primaryReg, useCaseConf.getLocale());
+                    List<AsocRegsResults> listaPrimaryRegs = BookUseCaseAsocRegsUtil.getAsocRegsResults(primaryReg, useCaseConf.getLocale());
                     if (listaPrimaryRegs == null || listaPrimaryRegs.isEmpty()) break;
                     AsocRegsResults asocRegsResultsPrimary = (AsocRegsResults)listaPrimaryRegs.get(0);
-                    ArrayList<AsocRegsResults> listaRegs3 = BookUseCaseAsocRegsUtil.getAsocRegsResults(asocRegsSelected, useCaseConf.getLocale());
+                    List<AsocRegsResults> listaRegs3 = BookUseCaseAsocRegsUtil.getAsocRegsResults(asocRegsSelected, useCaseConf.getLocale());
                     if ((listaRegs3 = BookUseCaseAsocRegsUtil.filterRegsResultByCurrent(listaRegs3, asocRegsResultsPrimary.getBookId(), asocRegsResultsPrimary.getFolderId())) == null) {
                         listaRegs3 = new ArrayList<AsocRegsResults>();
                     }
@@ -1159,13 +1161,13 @@ implements Keys {
     }
 
     public Document saveOrigDocs(UseCaseConf useCaseConf, Integer bookID, Integer folderID, String datas, Integer openType) throws ValidationException, SecurityException, AttributesException, BookException, SessionException {
-        SaveOrigDocDataDocInput doc2 = null;
         SaveOrigDocDatasInput datasInput = new SaveOrigDocDatasInput(datas);
         datasInput.analize();
         FolderFileSession.saveOrigDoc((String)useCaseConf.getSessionID(), (Integer)bookID, (int)folderID, (SaveOrigDocDatasInput)datasInput, (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
         boolean badProc = false;
         ArrayList<SaveOrigDocDataDocInput> datasOutput = new ArrayList<SaveOrigDocDataDocInput>();
-        for (SaveOrigDocDataDocInput doc2 : datasInput.getDocs().values()) {
+	for (Iterator it03 = datasInput.getDocs().values().iterator(); it03.hasNext();) {
+            SaveOrigDocDataDocInput doc2 = (SaveOrigDocDataDocInput) it03.next();
             datasOutput.add(doc2);
             if (doc2.getProcId() >= 0) continue;
             badProc = true;
@@ -1202,9 +1204,9 @@ implements Keys {
 
     public List validateFolder(UseCaseConf useCaseConf, Integer bookId, int fdrid, List files, List atts, Map documents) throws ValidationException, SecurityException, AttributesException, BookException, SessionException {
         Locale locale;
-        FlushFdrField flushFdrField22 = null;
         HashMap<Integer, Integer> ctrlIds = new HashMap<Integer, Integer>();
-        for (FlushFdrField flushFdrField22 : atts) {
+	for (Iterator it03 = atts.iterator(); it03.hasNext();) {
+	    FlushFdrField flushFdrField22 = (FlushFdrField) it03.next();
             ctrlIds.put(new Integer(flushFdrField22.getFldid()), new Integer(flushFdrField22.getCtrlid()));
         }
         AxSf axsfQ = BookSession.getFormFormat((String)useCaseConf.getSessionID(), (Integer)bookId, (String)useCaseConf.getEntidadId());
@@ -1227,7 +1229,8 @@ implements Keys {
         shortFormatter.setLenient(false);
         boolean dateError = fdrid != -1;
         AttributesSession.getExtendedValidationFieldsForBook((String)useCaseConf.getSessionID(), (Integer)bookId, (String)useCaseConf.getEntidadId());
-        for (FlushFdrField flushFdrField22 : atts) {
+	for (Iterator it03 = atts.iterator(); it03.hasNext();) {
+	    FlushFdrField flushFdrField22 = (FlushFdrField) it03.next();
             if (flushFdrField22.getValue() == null || flushFdrField22.getValue().equals("")) continue;
             if (flushFdrField22.getFldid() == 2) {
                 try {
@@ -1370,10 +1373,12 @@ implements Keys {
         }
         FormFormat formFormat = new FormFormat(axsfQ.getFormat().getData());
         TreeMap pages = formFormat.getDlgDef().getPagedefs();
-        for (FPageDef pageDef : pages.values()) {
+	for (Iterator it03 = pages.values().iterator(); it03.hasNext();) {
+	    FPageDef pageDef = (FPageDef) it03.next();
+
             TreeMap ctrls = pageDef.getCtrldefs();
-            FCtrlDef ctrlDef2 = null;
-            for (FCtrlDef ctrlDef2 : ctrls.values()) {
+	    for (Iterator it04 = ctrls.values().iterator(); it04.hasNext();) {
+	        FCtrlDef ctrlDef2 = (FCtrlDef) it04.next();
                 if (ctrlDef2.getFldId() != fldId) continue;
                 if (_logger.isDebugEnabled()) {
                     _logger.debug((Object)("getCtrlDefByFldId FldId: " + fldId + " ctrlDef: " + ctrlDef2.toString()));
@@ -1395,8 +1400,8 @@ implements Keys {
         HashMap<Integer, String> idsToTranslate = new HashMap<Integer, String>();
         Idocarchdet idocarchdet = BookSession.getIdocarchdetFld((String)sessionId, (Integer)bookId);
         FieldFormat fieldFormat = new FieldFormat(idocarchdet.getDetval());
-        FlushFdrField flushFdrField22 = null;
-        for (FlushFdrField flushFdrField22 : atts) {
+        for (Iterator it03 = atts.iterator(); it03.hasNext();) {
+            FlushFdrField flushFdrField22 = (FlushFdrField) it03.next();
             if (flushFdrField22.getFldid() == 5 || flushFdrField22.getFldid() == 7 || flushFdrField22.getFldid() == 8) {
                 idsToTranslate.put(new Integer(flushFdrField22.getFldid()), flushFdrField22.getValue());
             }
@@ -1407,7 +1412,7 @@ implements Keys {
             idsToTranslate.put(new Integer(flushFdrField22.getFldid()), flushFdrField22.getValue());
         }
         Map translatedIds = AttributesSession.translateFixedValuesForSaveOrUpdate((String)sessionId, (Integer)bookId, idsToTranslate, (String)idEntidad);
-        AxSfIn newAxSF = null;
+        AxSf newAxSF = null;
         if (axsfQ instanceof AxSfIn) {
             newAxSF = new AxSfIn();
             newAxSF.setLiteralBookType(RBUtil.getInstance(locale).getProperty("bookusecase.node.inBook.name"));
@@ -1415,14 +1420,15 @@ implements Keys {
             newAxSF = new AxSfOut();
             newAxSF.setLiteralBookType(RBUtil.getInstance(locale).getProperty("bookusecase.node.outBook.name"));
         }
-        Integer id2 = null;
-        for (Integer id2 : translatedIds.keySet()) {
+        for (Iterator it03 = translatedIds.keySet().iterator(); it03.hasNext();) {
+            Integer id2 = (Integer) it03.next(); 
             newAxSF.addAttributeName("fld" + id2.toString());
             newAxSF.addAttributeValue("fld" + id2.toString(), translatedIds.get(id2));
         }
         SimpleDateFormat longFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty("date.longFormat"));
         SimpleDateFormat shortFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty("date.shortFormat"));
-        for (FlushFdrField flushFdrField22 : atts) {
+        for (Iterator it03 = atts.iterator(); it03.hasNext();) {
+            FlushFdrField flushFdrField22 = (FlushFdrField) it03.next();
             if (flushFdrField22.getFldid() == 17 && axsfQ instanceof AxSfIn) {
                 newAxSF.addAttributeName("fld" + flushFdrField22.getFldid());
                 newAxSF.addAttributeValue("fld" + flushFdrField22.getFldid(), (Object)flushFdrField22.getValue());
@@ -1542,14 +1548,13 @@ implements Keys {
         return this.saveOrUpdateFolder(idEntidad, sessionId, locale, bookId, fldid, files, atts, inter, documents);
     }
 
-    public String updateFieldOrg(UseCaseConf useCaseConf, Integer bookId, Integer fldid, String code, List listIdsRegister) throws ValidationException, SecurityException, AttributesException, BookException, SessionException, ParseException {
+    public String updateFieldOrg(UseCaseConf useCaseConf, Integer bookId, Integer fldid, String code, List<Integer> listIdsRegister) throws ValidationException, SecurityException, AttributesException, BookException, SessionException, ParseException {
         FlushFdrField field = new FlushFdrField();
         field.setFldid(fldid.intValue());
         field.setValue(code);
         ArrayList<FlushFdrField> atts = new ArrayList<FlushFdrField>(1);
         atts.add(field);
         ScrOrg scrOrg = BookSession.preUpdateFieldOrg((String)useCaseConf.getSessionID(), (Integer)bookId, (String)code, (List)listIdsRegister, (String)useCaseConf.getEntidadId());
-        Integer folderID2 = null;
         for (Integer folderID2 : listIdsRegister) {
             this.saveOrUpdateFolder(useCaseConf, bookId, folderID2, null, atts, null, null);
         }
@@ -1744,8 +1749,7 @@ implements Keys {
         String data = axsf.getFormat().getData();
         TableFormat tableFormat = new TableFormat(data);
         ArrayList<Integer> result = new ArrayList<Integer>();
-        List flds = axsf.getAttributesNames();
-        String key2 = null;
+        List<String> flds = axsf.getAttributesNames();
         int aux = 0;
         for (String key2 : flds) {
             if (!key2.startsWith("fld")) continue;
@@ -1782,8 +1786,9 @@ implements Keys {
     }
 
     private boolean existAttributeInQueryFormat(TableFormat tf, int fldid) {
-        TColDef colDef2 = null;
-        for (TColDef colDef2 : tf.getDlgDef().getColdefs().values()) {
+
+	for (Iterator it03 = tf.getDlgDef().getColdefs().values().iterator(); it03.hasNext();) {
+            TColDef colDef2 = (TColDef)  it03.next();
             if (colDef2.getFldId() != fldid) continue;
             return true;
         }
@@ -1794,8 +1799,8 @@ implements Keys {
         TreeMap pages = ff.getDlgDef().getPagedefs();
         FPageDef pageDef = (FPageDef)pages.get(new Integer(page));
         TreeMap ctrls = pageDef.getCtrldefs();
-        FCtrlDef ctrlDef2 = null;
-        for (FCtrlDef ctrlDef2 : ctrls.values()) {
+        for (Iterator it03 = ctrls.values().iterator(); it03.hasNext();) {
+            FCtrlDef ctrlDef2 = (FCtrlDef) it03.next();
             if (ctrlDef2.getFldId() != fldid) continue;
             return true;
         }
@@ -1803,17 +1808,16 @@ implements Keys {
     }
 
     private void assignValidationFields(AxSf axsf, AxSfQueryResults queryResults, UseCaseConf useCaseConf, Integer bookID) throws ValidationException, AttributesException, BookException, SessionException, SecurityException {
-        List list = this.getAttributesForValidationForTable(axsf);
+        List<Integer> list = this.getAttributesForValidationForTable(axsf);
         if (!list.isEmpty()) {
             Map fldids = new HashMap(list.size());
-            Integer fldid22 = null;
             String fldName = null;
             ArrayList<String> fldidsValues = null;
-            AxSf auxAxsf2 = null;
             for (Integer fldid22 : list) {
                 fldName = "fld" + fldid22.toString();
                 fldidsValues = new ArrayList<String>();
-                for (AxSf auxAxsf2 : queryResults.getResults()) {
+		for (Iterator it03 = queryResults.getResults().iterator(); it03.hasNext();) {
+		    AxSf auxAxsf2  = (AxSf) it03.next();
                     fldidsValues.add(auxAxsf2.getAttributeValueAsString(fldName));
                 }
                 fldids.put((Integer)fldid22, fldidsValues);
@@ -1821,12 +1825,15 @@ implements Keys {
             Map result = AttributesSession.getExtendedValidationFieldValues((String)useCaseConf.getSessionID(), (Integer)bookID, fldids, (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
             String oldValue2 = null;
             String newValue = null;
-            for (Integer fldid22 : result.keySet()) {
+            for (Iterator it03 = result.keySet().iterator(); it03.hasNext();) {
+		Integer fldid22=(Integer) it03.next();
                 fldName = "fld" + fldid22.toString();
                 fldids = (Map)result.get(fldid22);
-                for (String oldValue2 : fldids.keySet()) {
+                for (Iterator it04 = fldids.keySet().iterator(); it04.hasNext();) {
+		    oldValue2 = (String) it04.next();
                     newValue = (String)fldids.get(oldValue2);
-                    for (AxSf auxAxsf2 : queryResults.getResults()) {
+                    for (Iterator it05 = queryResults.getResults().iterator(); it05.hasNext();) {
+			AxSf auxAxsf2 = (AxSf) it05.next();
                         if (auxAxsf2.getAttributeValueAsString(fldName) == null || auxAxsf2.getAttributeValueAsString(fldName).length() <= 0 || !auxAxsf2.getAttributeValueAsString(fldName).equals(oldValue2)) continue;
                         auxAxsf2.setAttributeValue(fldName, (Object)newValue);
                     }
@@ -1836,11 +1843,10 @@ implements Keys {
     }
 
     private Map getValidationFields(AxSf axsf, UseCaseConf useCaseConf, Integer bookID, int page) throws ValidationException, AttributesException, BookException, SessionException {
-        List list = this.getAttributesForValidationForForm(useCaseConf, bookID, axsf, page);
+        List<Integer> list = this.getAttributesForValidationForForm(useCaseConf, bookID, axsf, page);
         Map result = new HashMap();
         if (!list.isEmpty()) {
             HashMap fldids = new HashMap(list.size());
-            Integer fldid2 = null;
             String fldName = null;
             ArrayList<String> values = null;
             for (Integer fldid2 : list) {
@@ -2034,18 +2040,16 @@ implements Keys {
         }
     }
 
-    public void updateRegisterToClose(UseCaseConf useCaseConf, Integer bookId, List fields, List listIdsRegister) throws ValidationException, SecurityException, AttributesException, BookException, SessionException, ParseException {
+    public void updateRegisterToClose(UseCaseConf useCaseConf, Integer bookId, List fields, List<Integer> listIdsRegister) throws ValidationException, SecurityException, AttributesException, BookException, SessionException, ParseException {
         BookSession.preUpdateRegisterToClose((String)useCaseConf.getSessionID(), (Integer)bookId, (List)listIdsRegister, (String)useCaseConf.getEntidadId());
-        Integer folderID2 = null;
         for (Integer folderID2 : listIdsRegister) {
             this.saveOrUpdateFolder(useCaseConf, bookId, folderID2, null, fields, null, null);
         }
         BookSession.postUpdateFields((String)useCaseConf.getSessionID(), (Integer)bookId, (List)listIdsRegister, (String)useCaseConf.getEntidadId());
     }
 
-    public void updateFields(UseCaseConf useCaseConf, Integer bookId, List fields, List listIdsRegister) throws ValidationException, SecurityException, AttributesException, BookException, SessionException, ParseException {
+    public void updateFields(UseCaseConf useCaseConf, Integer bookId, List fields, List<Integer> listIdsRegister) throws ValidationException, SecurityException, AttributesException, BookException, SessionException, ParseException {
         BookSession.preUpdateFields((String)useCaseConf.getSessionID(), (Integer)bookId, (List)listIdsRegister, (String)useCaseConf.getEntidadId());
-        Integer folderID2 = null;
         for (Integer folderID2 : listIdsRegister) {
             this.saveOrUpdateFolder(useCaseConf, bookId, folderID2, null, fields, null, null);
         }
@@ -2069,27 +2073,28 @@ implements Keys {
     public Map getOperadores(AxSf axsf, FieldFormat fieldFormat, Integer archiveId, long archivePId, Map fieldsNotEqual, Locale locale, String dataBaseType) {
         String data = axsf.getFormat().getData();
         QueryFormat queryFormat = new QueryFormat(data);
-        Integer ctrlId2 = null;
         Integer fldId = null;
         QCtrlDef ctrlDef = null;
         HashMap<String, Integer> ctrBoxDisabled = new HashMap<String, Integer>();
         HashMap<Integer, Integer> ctrBoxOfFldId = new HashMap<Integer, Integer>();
         HashMap<String, List> operadoresCampos = new HashMap<String, List>();
         if (!(fieldsNotEqual == null || fieldsNotEqual.isEmpty())) {
-            for (Integer ctrlId2 : queryFormat.getDlgDef().getCtrldefs().keySet()) {
+	    for (Iterator it03 = queryFormat.getDlgDef().getCtrldefs().keySet().iterator(); it03.hasNext();) {
+ 		Integer ctrlId2 = (Integer) it03.next();
                 ctrlDef = (QCtrlDef)queryFormat.getDlgDef().getCtrldefs().get(ctrlId2);
                 if (!fieldsNotEqual.containsKey("FLD" + ctrlDef.getFldId()) || !ctrlDef.getName().startsWith("IDOC_EDIT")) continue;
                 ctrBoxDisabled.put("CTR" + (ctrlId2 - 1), new Integer(ctrlId2 - 1));
             }
         }
-        for (Integer ctrlId2 : queryFormat.getDlgDef().getCtrldefs().keySet()) {
+	for (Iterator it03 = queryFormat.getDlgDef().getCtrldefs().keySet().iterator(); it03.hasNext();) {
+ 	    Integer ctrlId2 = (Integer) it03.next();
             ctrlDef = (QCtrlDef)queryFormat.getDlgDef().getCtrldefs().get(ctrlId2);
             if (!ctrlDef.getName().startsWith("IDOC_EDIT")) continue;
             ctrBoxOfFldId.put(new Integer(ctrlDef.getRelCtrlId()), new Integer(ctrlDef.getFldId()));
         }
         Iterator it = queryFormat.getDlgDef().getCtrldefs().keySet().iterator();
         while (it.hasNext()) {
-            ctrlId2 = (Integer)it.next();
+            Integer ctrlId2 = (Integer)it.next();
             ctrlDef = (QCtrlDef)queryFormat.getDlgDef().getCtrldefs().get(ctrlId2);
             List operators = null;
             fldId = new Integer(ctrlDef.getId());
@@ -2189,15 +2194,16 @@ implements Keys {
         AxSf axsfQ = this.getQueryFormat(useCaseConf.getSessionID(), bookId, useCaseConf.getEntidadId());
         QueryFormat formatter = new QueryFormat(axsfQ.getFormat().getData());
         Collection formatterFields = formatter.getDlgDef().getCtrldefs().values();
-        QCtrlDef ctrlDef2 = null;
         int fldid = 0;
         String fld = null;
-        for (QCtrlDef ctrlDef2 : formatterFields) {
+	for (Iterator it03 = formatterFields.iterator(); it03.hasNext();) {
+	    QCtrlDef ctrlDef2=(QCtrlDef) it03.next();
             List fieldValuesList;
             fldid = ctrlDef2.getFldId();
             fld = "fld" + new Integer(fldid).toString();
             if (!ctrlDef2.getName().startsWith("IDOC_EDIT") || fieldSearchAdvancedValues.get(fld) == null || (fieldValuesList = (List)fieldSearchAdvancedValues.get(fld)) == null || fieldValuesList.size() <= 0) continue;
-            for (RowQuerySearchAdvanced rowSearchAdv : fieldValuesList) {
+	    for (Iterator it04 = fieldValuesList.iterator(); it04.hasNext();) {
+		RowQuerySearchAdvanced rowSearchAdv=(RowQuerySearchAdvanced) it04.next();
                 Integer rowId = new Integer(rowSearchAdv.getFieldSearchAvanced().getRowId());
                 try {
                     HashMap<Integer, String> idToTranslate;
@@ -2272,15 +2278,16 @@ implements Keys {
         AxSf axsfQ = this.getQueryFormat(useCaseConf.getSessionID(), bookId, useCaseConf.getEntidadId());
         QueryFormat formatter = new QueryFormat(axsfQ.getFormat().getData());
         Collection formatterFields = formatter.getDlgDef().getCtrldefs().values();
-        QCtrlDef ctrlDef2 = null;
         int fldid = 0;
         String fld = null;
-        for (QCtrlDef ctrlDef2 : formatterFields) {
+	for (Iterator it03 = formatterFields.iterator(); it03.hasNext();) {
+	    QCtrlDef ctrlDef2=(QCtrlDef) it03.next();
             List fieldValuesList;
             fldid = ctrlDef2.getFldId();
             fld = "fld" + new Integer(fldid).toString();
             if (!ctrlDef2.getName().startsWith("IDOC_EDIT") || fieldSearchAdvancedValues.get(fld) == null || (fieldValuesList = (List)fieldSearchAdvancedValues.get(fld)) == null || fieldValuesList.size() <= 0) continue;
-            for (RowQuerySearchAdvanced rowSearchAdv : fieldValuesList) {
+	    for (Iterator it04 = fieldValuesList.iterator(); it04.hasNext();) {
+		RowQuerySearchAdvanced rowSearchAdv=(RowQuerySearchAdvanced) it04.next();
                 Map idTranslated;
                 HashMap<Integer, String> idToTranslate;
                 AxSfQueryField field = new AxSfQueryField();
@@ -2353,7 +2360,7 @@ implements Keys {
         return this.getValue(axsfQ, field, valueWhere, ctrlDef, locale);
     }
 
-    public int openTableResults(UseCaseConf useCaseConf, Integer bookId, List fieldList, String listOrder) throws ValidationException, BookException, SessionException, SecurityException {
+    public int openTableResults(UseCaseConf useCaseConf, Integer bookId, List<AxSfQueryField> fieldList, String listOrder) throws ValidationException, BookException, SessionException, SecurityException {
         AxSfQuery axsfQuery = new AxSfQuery();
         axsfQuery.setOrderBy(listOrder);
         axsfQuery.setBookId(bookId);

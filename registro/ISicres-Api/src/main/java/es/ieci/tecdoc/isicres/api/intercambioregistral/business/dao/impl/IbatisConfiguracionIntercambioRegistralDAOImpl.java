@@ -1,6 +1,7 @@
 package es.ieci.tecdoc.isicres.api.intercambioregistral.business.dao.impl;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

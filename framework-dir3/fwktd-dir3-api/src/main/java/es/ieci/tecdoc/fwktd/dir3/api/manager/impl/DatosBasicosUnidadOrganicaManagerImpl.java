@@ -176,7 +176,7 @@ public class DatosBasicosUnidadOrganicaManagerImpl extends
 		if ("V".equals(organismo.getDatosVigencia().getEstado())) {
 			DatosBasicosUnidadOrganicaVO datosBasicosUnidadOrganica = new DatosBasicosUnidadOrganicaVO();
 			this.setDatosBasicosOrganismo(datosBasicosUnidadOrganica, organismo);
-			((DatosBasicosUnidadOrganicaDao)this.getDao()).save((Object)datosBasicosUnidadOrganica);
+			((DatosBasicosUnidadOrganicaDao)this.getDao()).save(datosBasicosUnidadOrganica);
 		}
 	}
 

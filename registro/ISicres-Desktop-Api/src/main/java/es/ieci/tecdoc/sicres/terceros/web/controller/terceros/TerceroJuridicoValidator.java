@@ -21,7 +21,7 @@ public class TerceroJuridicoValidator extends
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "razonSocial",
 				"tercero.juridico.nombre.required",
 				"Razon social es obligatorio");
-		if ((!StringUtils.isEmpty(target.getTipoDocumento().getId())) && (! TIPO_DOCUMENTO_OTROS.equal(target.getTipoDocumento().getId()))) {
+		if ((!StringUtils.isEmpty(target.getTipoDocumento().getId())) && (! TIPO_DOCUMENTO_OTROS.equals(target.getTipoDocumento().getId()))) {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
 					"numeroDocumento",
 					"tercero.juridico.numeroDocumento.required",

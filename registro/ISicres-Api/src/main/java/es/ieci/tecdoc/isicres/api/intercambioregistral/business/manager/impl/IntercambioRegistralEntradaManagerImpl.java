@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -396,7 +397,7 @@ implements IntercambioRegistralEntradaManager {
     }
 
     private void mapearComentariosAnexos(AsientoRegistralVO asientoRegistral, RegistroEntradaVO registro) {
-        List listaAnexos = asientoRegistral.getAnexos();
+        List<AnexoVO> listaAnexos = asientoRegistral.getAnexos();
         if (CollectionUtils.isNotEmpty((Collection)listaAnexos)) {
             StringBuffer comentariosAnexos = new StringBuffer();
             comentariosAnexos.append("\n");
@@ -710,7 +711,6 @@ implements IntercambioRegistralEntradaManager {
     }
 
     private List<PaginaDocumentoRegistroVO> generatePaginasDocumentoRegistro(List<AnexoVO> anexos) {
-        AnexoVO anexo2 = null;
         int numPagina = 1;
         ArrayList<PaginaDocumentoRegistroVO> paginas = new ArrayList<PaginaDocumentoRegistroVO>();
         for (AnexoVO anexo2 : anexos) {
@@ -926,7 +926,8 @@ implements IntercambioRegistralEntradaManager {
         PaginatedArrayList bandejaEntrada = (PaginatedArrayList)this.intercambioRegistralSIRManager.findAsientosRegistrales(criteriosSIR);
         PaginatedArrayList bandejaEntradaItems = new PaginatedArrayList(bandejaEntrada.getPageInfo());
         AsientoRegistralMapper mapper = new AsientoRegistralMapper();
-        for (AsientoRegistralVO asientoRegistralVO : bandejaEntrada.getList()) {
+	for (Iterator it03 = bandejaEntrada.getList().iterator(); it03.hasNext();) {
+	    AsientoRegistralVO asientoRegistralVO=(AsientoRegistralVO) it03.next();
             BandejaEntradaItemVO bandejaItem = mapper.toBandejaEntradaItemVO(asientoRegistralVO);
             bandejaEntradaItems.add((Object)bandejaItem);
         }

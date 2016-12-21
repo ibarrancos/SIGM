@@ -86,7 +86,7 @@ implements UsuarioDAO {
         UsuarioVOMapper usuarioVOMapper = new UsuarioVOMapper();
         LinkedList<BaseUsuarioVO> lista = new LinkedList<BaseUsuarioVO>();
         try {
-            List users = ISicresQueries.getUsers((Session)this.getSession());
+            List<Iuseruserhdr> users = ISicresQueries.getUsers((Session)this.getSession());
             if (CollectionUtils.isNotEmpty((Collection)users)) {
                 for (Iuseruserhdr iuseruserhdr : users) {
                     BaseUsuarioVO usuarioVO = usuarioVOMapper.map(iuseruserhdr);
@@ -109,7 +109,7 @@ implements UsuarioDAO {
         UsuarioVOMapper usuarioVOMapper = new UsuarioVOMapper();
         LinkedList<BaseUsuarioVO> lista = new LinkedList<BaseUsuarioVO>();
         try {
-            List users = ISicresQueries.getLdapUsers((Session)this.getSession());
+            List<Iuserldapuserhdr> users = ISicresQueries.getLdapUsers((Session)this.getSession());
             if (CollectionUtils.isNotEmpty((Collection)users)) {
                 for (Iuserldapuserhdr iuseruserhdr : users) {
                     BaseUsuarioVO usuarioVO = usuarioVOMapper.map(iuseruserhdr);

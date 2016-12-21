@@ -13,7 +13,7 @@ public final class DbEngine
     * Inicio modificaciones
     */
    public static final int	  POSTGRESQL	= 4;
-   public static final int	  DB2			= 5;
+   public static final int	  DB2		= 5;
    /*
     * Fin modificaciones
     */

@@ -136,7 +136,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 		return getDistribution(sessionID, state, firstRow, maxResults,
 				typeDist, distWhere, regWhere, oficAsoc, locale, entidad,
-				LDAPAuthenticationPolicy.isLdap(entidad), bookListi, null);
+				LDAPAuthenticationPolicy.isLdap(entidad), bookList, null);
 	}
 
 	public static DistributionResults getDistribution(String sessionID,
@@ -293,7 +293,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 	}
 
 
-	private static String createTableTempOrderQuery(String entidad, Locale locale, AuthenticationUser user, String regWhere, String finalWhere, List idArchs) throws Exception, SQLException {
+	private static String createTableTempOrderQuery(String entidad, Locale locale, AuthenticationUser user, String regWhere, String finalWhere, List<Integer> idArchs) throws Exception, SQLException {
 	    StringBuffer createSentence = new StringBuffer();
 	    String tableName = DistributionSession.getTableName((AuthenticationUser)user, (List)idArchs);
 	    if (log.isDebugEnabled()) {
@@ -1116,7 +1116,7 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 		return saveDistribution(sessionID, ids, state, firstRow, maxResults,
 				typeDist, distWhere, regWhere, locale, entidad,
-				LDAPAuthenticationPolicy.isLdap(entidad),null);
+				LDAPAuthenticationPolicy.isLdap(entidad),null,null);
 	}
 
 	public static List saveDistribution(String sessionID, List ids, int state,

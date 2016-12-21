@@ -1428,9 +1428,10 @@ implements DBEntityDAO {
 
     public void assignAxSFPreparedStatement(AxSfQuery axsfQuery, AxSf axsfP, PreparedStatement ps) throws SQLException {
         if (!(axsfQuery == null || axsfQuery.getFields() == null || axsfQuery.getFields().isEmpty())) {
-            AxSfQueryField field2 = null;
             int index = 1;
-            for (AxSfQueryField field2 : axsfQuery.getFields()) {
+	    for (Iterator it01 = axsfQuery.getFields().iterator(); it01.hasNext();) {
+                AxSfQueryField field2 = (AxSfQueryField) it01.next();
+
                 if (field2.getFldId().equals("fld9")) {
                     field2.setBookId(axsfQuery.getBookId());
                 }
@@ -1438,7 +1439,7 @@ implements DBEntityDAO {
                     if (!field2.getFldId().equals("fld9")) {
                         List list = (List)field2.getValue();
                         int i = 0;
-                        Iterator<E> it2 = list.iterator();
+                        Iterator it2 = list.iterator();
                         while (it2.hasNext()) {
                             if (!field2.getOperator().equals("..")) {
                                 this.assignAttribute(field2, axsfP, ps, index, it2.next());
@@ -1495,7 +1496,6 @@ implements DBEntityDAO {
             buffer.append(filter);
             buffer.append(ESPACIO);
         }
-        AxSfQueryField field2 = null;
         if (!(axsfQuery == null || axsfQuery.getFields() == null || axsfQuery.getFields().isEmpty())) {
             if (filter == null) {
                 buffer.append(WHERE);
@@ -1505,9 +1505,10 @@ implements DBEntityDAO {
                 buffer.append(ESPACIO);
             }
             int i = 0;
-            for (AxSfQueryField field2 : axsfQuery.getFields()) {
+	    for (Iterator it02 = axsfQuery.getFields().iterator(); it02.hasNext();) {
+                AxSfQueryField field2 = (AxSfQueryField) it02.next();
                 List list;
-                Iterator<E> it2;
+                Iterator it2;
                 String aux;
                 int j;
                 int size;
@@ -1715,7 +1716,6 @@ implements DBEntityDAO {
                 buffer.append(ESPACIO);
             }
         }
-        AxSfQueryField field2 = null;
         if (!(axsfQuery == null || axsfQuery.getFields() == null || axsfQuery.getFields().isEmpty())) {
             if (filter == null && axsfQuery.getSelectDefWhere2() == null) {
                 buffer.append(WHERE);
@@ -1725,7 +1725,8 @@ implements DBEntityDAO {
                 buffer.append(ESPACIO);
             }
             int i = 0;
-            for (AxSfQueryField field2 : axsfQuery.getFields()) {
+	    for (Iterator it03 = axsfQuery.getFields().iterator(); it03.hasNext();) {
+                AxSfQueryField field2 = (AxSfQueryField) it03.next();
                 List list;
                 if (field2.getOperator().equals("|")) {
                     list = (List)field2.getValue();
@@ -1733,7 +1734,7 @@ implements DBEntityDAO {
                         int j = 0;
                         int size = list.size();
                         buffer.append(PAR_IZQ);
-                        Iterator<E> it2 = list.iterator();
+                        Iterator it2 = list.iterator();
                         while (it2.hasNext()) {
                             if (field2.getFldId().equals("fld9")) {
                                 if (j == 0) {
@@ -1788,7 +1789,7 @@ implements DBEntityDAO {
                             buffer.append(ESPACIO);
                             buffer.append(BETWEEN);
                             buffer.append(ESPACIO);
-                            Iterator<E> it2 = list.iterator();
+                            Iterator it2 = list.iterator();
                             while (it2.hasNext()) {
                                 axsfQuery.setSentenceField9OrBetween((String)it2.next(), BETWEEN);
                             }

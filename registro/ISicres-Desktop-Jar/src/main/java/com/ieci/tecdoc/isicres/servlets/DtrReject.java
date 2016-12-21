@@ -116,9 +116,9 @@ public class DtrReject extends HttpServlet implements Keys{
         Integer userType = 0;
         Integer userId = 0;
         String messageForUser = null;
-	SQLValidator.getInstance().validateDistributionDistWhere(distWhere);
-	regWhere = SQLValidator.getInstance().validateDistributionRegWhere(useCaseConf, lnTypeDistr, regWhere);
         try {
+	    SQLValidator.getInstance().validateDistributionDistWhere(distWhere);
+    	    regWhere = SQLValidator.getInstance().validateDistributionRegWhere(useCaseConf, lnTypeDistr, regWhere);
             if(StringUtils.isNotBlank(infoDistribution)){
     			if (_logger.isDebugEnabled()){
     				_logger.debug("Redistribucion infoDistribucion [" + infoDistribution +"]");

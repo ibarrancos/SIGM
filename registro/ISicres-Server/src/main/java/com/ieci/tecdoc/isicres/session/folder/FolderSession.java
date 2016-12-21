@@ -819,7 +819,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 
 		FolderDataSession data = new FolderDataSession(false, false, axsfNew,
-				inter, documents, true, idDistFather);
+				inter, documents, true);
 
 		data = preparationOfFolder(sessionID, bookID, fdrid, updateDate,
 				launchDistOutRegister, locale.getLanguage(), entidad, data);
@@ -835,7 +835,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 		data = updateRegister(sessionID, bookID, fdrid, inter, data
 				.getNewAssociatedBookID(), data.getNewAssociatedRegisterID(),
-				entidad, data);
+				entidad, data,idDistFather);
 
 		// Modificación del registro
 		updateNewOutputRegister(sessionID, updateDate, launchDistOutRegister,

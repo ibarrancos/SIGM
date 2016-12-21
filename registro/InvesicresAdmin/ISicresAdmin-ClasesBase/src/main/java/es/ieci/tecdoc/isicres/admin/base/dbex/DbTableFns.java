@@ -288,7 +288,7 @@ public final class DbTableFns
          result="NUMBER(10)";
       } else if (engine == DbEngine.POSTGRESQL) {
          result="INT4";
-      } else if (engine == DbEngine.BD2) {
+      } else if (engine == DbEngine.DB2) {
          result="integer";
       }
       return result;
@@ -299,7 +299,7 @@ public final class DbTableFns
          result="NUMBER(12,5)";
       } else if (engine == DbEngine.POSTGRESQL) {
          result="FLOAT4";
-      } else if (engine == DbEngine.BD2) {
+      } else if (engine == DbEngine.DB2) {
          result="double";
       }
       return result;
@@ -310,7 +310,7 @@ public final class DbTableFns
          result="NUMBER(20,4)";
       } else if (engine == DbEngine.POSTGRESQL) {
          result="FLOAT8";
-      } else if (engine == DbEngine.BD2) {
+      } else if (engine == DbEngine.DB2) {
          result="double";
       }
       return result;
@@ -321,7 +321,7 @@ public final class DbTableFns
          result="DATE";
       } else if (engine == DbEngine.POSTGRESQL) {
          result="TIMESTAMP";
-      } else if (engine == DbEngine.BD2) {
+      } else if (engine == DbEngine.DB2) {
          result="timestamp";
       }
       return result;

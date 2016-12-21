@@ -480,6 +480,7 @@ public class ISicresServicioRPAdminAdapter implements ISicresServicioRPAdmin {
 		OptionsBean options = new OptionsBean();
 		for (int i = 0; i < PerfilesUsuario.getEnumList().size(); ++i) {
 			PerfilesUsuario perfil = (PerfilesUsuario)PerfilesUsuario.getEnumList().get(i);
+			OptionBean option = new OptionBean();
 			option.setCodigo(Integer.toString(perfil.getValue()));
 			option.setDescripcion(perfil.getName());
 			options.add(option);
@@ -3158,7 +3159,7 @@ public class ISicresServicioRPAdminAdapter implements ISicresServicioRPAdmin {
 			ISicresRPAdminLibroManager.actualizarLibroASicres3(idLibro, entidad.getIdentificador());
 		} catch (Exception e) {
 			logger.error("Error al actualizar el libro a SICRES3", e);
-			throw new ISicresRPAdminException(ISicresRPAdminException.IUSERUSERTYPE_NOT_FOUND,
+			throw new ISicresRPAdminException(ISicresRPAdminDAOException.IUSERUSERTYPE_NOT_FOUND,
 					e);
 		}
 	}

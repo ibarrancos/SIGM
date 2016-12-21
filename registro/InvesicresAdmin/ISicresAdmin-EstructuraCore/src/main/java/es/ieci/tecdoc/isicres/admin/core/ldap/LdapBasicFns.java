@@ -68,13 +68,13 @@ public final class LdapBasicFns
    public static String findGroupGuid(LdapConnection conn, String start, int scope, String filter) throws Exception {
       return LdapBasicFns.findEntryGuid(conn, start, scope, filter, false);
    }
-   public static String findEntryGuid(LdapConnection conn, String start, int scope, String filter, boolean isEntryUser) throws Exception {
+   public static String findEntryGuid(LdapConnection conn, String start, int scope, String filter) throws Exception {
       return LdapBasicFns.findEntryGuid(conn, start, scope, filter, true);
    }
    
    public static String findEntryGuid(LdapConnection conn, 
                                       String start, int scope,
-                                      String filter)
+                                      String filter, boolean isEntryUser)
                         throws Exception
    {
       

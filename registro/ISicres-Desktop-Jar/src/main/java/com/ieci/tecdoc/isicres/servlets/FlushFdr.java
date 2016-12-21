@@ -292,7 +292,8 @@ implements Keys {
             if (!strFilesScan.equals("")) {
                 fileData.insert(0, strFilesScan);
             }
-            for (FlushFdrField flushFdrField : fieldItems) {
+	    for (Iterator it03 = fieldItems.iterator(); it03.hasNext();) {
+		FlushFdrField flushFdrField = (FlushFdrField) it03.next();
                 if (_logger.isDebugEnabled()) {
                     _logger.debug((Object)flushFdrField);
                 }
@@ -310,9 +311,9 @@ implements Keys {
             }
             Map documents = this.generateTreeUpdateMap(docItems, pageItems, keys);
             FlushFdrDocument flushFdrDocument = null;
-            FlushFdrPage flushFdrPage2 = null;
             FlushFdrFile flushFdrFile = null;
-            for (String key : documents.keySet()) {
+	    for (Iterator it03 = documents.keySet().iterator(); it03.hasNext();) {
+		String key=(String) it03.next();
                 if (_logger.isDebugEnabled()) {
                     _logger.debug((Object)("===================> Map keysdocument " + key));
                 }
@@ -320,7 +321,8 @@ implements Keys {
                 if (_logger.isDebugEnabled()) {
                     _logger.debug((Object)("===================> Map flushFdrDocument " + flushFdrDocument.toString()));
                 }
-                for (FlushFdrPage flushFdrPage2 : flushFdrDocument.getPages()) {
+		for (Iterator it04 = flushFdrDocument.getPages().iterator(); it04.hasNext();) {
+		    FlushFdrPage flushFdrPage2=(FlushFdrPage) it04.next();
                     if (_logger.isDebugEnabled()) {
                         _logger.debug((Object)("===================> Map flushFdrPage " + flushFdrPage2.toString()));
                     }
@@ -360,8 +362,8 @@ implements Keys {
             List badCtrls = this.bookUseCase.validateFolder(useCaseConf, bookID, folderID, filesInfo, fieldItems, documents);
             if (badCtrls.isEmpty()) {
                 folderIdAux = new Integer(this.bookUseCase.saveOrUpdateFolder(useCaseConf, bookID, folderID, filesInfo, fieldItems, inter, documents));
-                FlushFdrFile file2 = null;
-                for (FlushFdrFile file2 : filesInfo) {
+		for (Iterator it03 = filesInfo.iterator(); it03.hasNext();) {
+		    FlushFdrFile file2 = (FlushFdrFile) it03.next();
                     try {
                         new File(file2.getFileNameFis()).delete();
                     }
@@ -739,7 +741,7 @@ implements Keys {
         return mostrar;
     }
 
-    private Map generateTreeUpdateMap(List docItems, List pageItems, List claves) {
+    private Map generateTreeUpdateMap(List<FlushFdrDocument> docItems, List pageItems, List claves) {
         HashMap<String, FlushFdrDocument> documents = new HashMap<String, FlushFdrDocument>();
         ArrayList<FlushFdrPage> resultPages = null;
         Object docExist = null;
@@ -748,7 +750,8 @@ implements Keys {
             clavedocument = flushFdrDocument.getTreeId();
             if (claves.contains(clavedocument)) {
                 resultPages = new ArrayList<FlushFdrPage>();
-                for (FlushFdrPage flushFdrPage : pageItems) {
+		for (Iterator it03 = pageItems.iterator(); it03.hasNext();) {
+		    FlushFdrPage flushFdrPage = (FlushFdrPage) it03.next();
                     if (!flushFdrPage.getFatherId().equals(clavedocument)) continue;
                     resultPages.add(flushFdrPage);
                 }

@@ -68,7 +68,7 @@ implements DepartamentoDAO {
         LinkedList<BaseDepartamentoVO> results = new LinkedList<BaseDepartamentoVO>();
         BaseDepartamentoVOMapper mapper = new BaseDepartamentoVOMapper();
         try {
-            List list = ISicresQueries.getUserDeptHdrByCrtrId((Session)this.getSession(), (Integer)idGrupoLdap);
+            List<Iuserdepthdr> list = ISicresQueries.getUserDeptHdrByCrtrId((Session)this.getSession(), (Integer)idGrupoLdap);
             for (Iuserdepthdr iuserdepthdr : list) {
                 BaseDepartamentoVO departamentoVO = mapper.map(iuserdepthdr);
                 results.add(departamentoVO);
@@ -85,7 +85,7 @@ implements DepartamentoDAO {
         LinkedList<BaseDepartamentoVO> results = new LinkedList<BaseDepartamentoVO>();
         try {
             BaseDepartamentoVOMapper mapper = new BaseDepartamentoVOMapper();
-            List depts = ISicresQueries.getDepts((Session)this.getSession(), (Integer)null);
+            List<Iuserdepthdr> depts = ISicresQueries.getDepts((Session)this.getSession(), (Integer)null);
             if (depts != null) {
                 for (Iuserdepthdr iuserdepthdr : depts) {
                     BaseDepartamentoVO departamento = mapper.map(iuserdepthdr);

@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
@@ -155,7 +156,7 @@ public class InteresadosDecorator {
 				case 5:
 					if (!StringUtils.isBlank(tokens[i])) {
 						String terceroRepresentanteId = tokens[i];
-						TerceroValidadoVO representanteVO = (TerceroValidadoVO)this.getTerceroManager().get((Serializable)terceroRepresentanteId);
+						TerceroValidadoVO representanteVO = (TerceroValidadoVO)this.getTerceroManager().get(terceroRepresentanteId);
 						representante = new RepresentanteInteresadoVO();
 						representante.setRepresentante((BaseTerceroVO)representanteVO);
 						interesado.setRepresentante(representante);

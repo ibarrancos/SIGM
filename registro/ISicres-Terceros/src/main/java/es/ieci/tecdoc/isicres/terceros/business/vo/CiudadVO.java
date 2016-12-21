@@ -8,7 +8,6 @@ import javax.validation.constraints.Size;
  * @author IECISA
  *
  */
-@Size(max=40)
 public class CiudadVO extends Entity {
 
 	public String getNombre() {

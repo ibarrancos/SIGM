@@ -65,7 +65,7 @@ implements DatosBasicosRelacionUnidOrgOficinaManager {
 
     private void guardarRelacionUnidOrgOficina(RelacionUnidOrgOficinaVO relacionUnidOrgOficina) {
         DatosBasicosRelacionUnidOrgOficinaVO datosBasicos = this.setDatosRelacionUniOrgOficinaVO(relacionUnidOrgOficina);
-        ((DatosBasicosRelacionUnidOrgOficinaDao)this.getDao()).save((Object)datosBasicos);
+        ((DatosBasicosRelacionUnidOrgOficinaDao)this.getDao()).save(datosBasicos);
     }
 
     private DatosBasicosRelacionUnidOrgOficinaVO setDatosRelacionUniOrgOficinaVO(RelacionUnidOrgOficinaVO relacionUnidOrgOficina) {
@@ -91,13 +91,13 @@ implements DatosBasicosRelacionUnidOrgOficinaManager {
                 continue;
             }
             if (!"V".equals(relacionUnidOrgOficina.getEstadoRelacion())) continue;
-            ((DatosBasicosRelacionUnidOrgOficinaDao)this.getDao()).save((Object)this.setDatosRelacionUniOrgOficinaVO(relacionUnidOrgOficina));
+            ((DatosBasicosRelacionUnidOrgOficinaDao)this.getDao()).save(this.setDatosRelacionUniOrgOficinaVO(relacionUnidOrgOficina));
         }
     }
 
     private void actualizarOBorrarRelacionUnidOrgOficina(RelacionUnidOrgOficinaVO relacionUnidOrgOficina, DatosBasicosRelacionUnidOrgOficinaVO datosBasicosUnidadOrganica) {
         if ("V".equals(relacionUnidOrgOficina.getEstadoRelacion())) {
-            ((DatosBasicosRelacionUnidOrgOficinaDao)this.getDao()).update((Object)this.setDatosRelacionUniOrgOficinaVO(relacionUnidOrgOficina));
+            ((DatosBasicosRelacionUnidOrgOficinaDao)this.getDao()).update(this.setDatosRelacionUniOrgOficinaVO(relacionUnidOrgOficina));
         } else {
             ((DatosBasicosRelacionUnidOrgOficinaDao)this.getDao()).deleteRelacionesUnidOrgOficina(relacionUnidOrgOficina.getCodigoOficina(), relacionUnidOrgOficina.getCodigoUnidadOrganica());
         }

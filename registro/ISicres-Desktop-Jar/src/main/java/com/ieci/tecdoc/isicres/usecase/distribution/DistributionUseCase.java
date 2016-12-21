@@ -99,7 +99,8 @@ public class DistributionUseCase {
         Map booksReg = this.descompBookIDRegs(distributionResults);
         HashMap<String, AxSf> axsfs = new HashMap<String, AxSf>();
         HashMap vldAttribMap = new HashMap();
-        for (Integer bookID : booksReg.keySet()) {
+	for (Iterator it03 = booksReg.keySet().iterator(); it03.hasNext();) {
+	    Integer bookID=(Integer) it03.next();
             if (bookID == 0 || booksReg.get(bookID) == null) continue;
             BookSession.openBook((String)useCaseConf.getSessionID(), (Integer)bookID, (String)useCaseConf.getEntidadId());
             Validator.validate_String_NotNull_LengthMayorZero((String)useCaseConf.getSessionID(), (String)"session");
@@ -191,7 +192,7 @@ public class DistributionUseCase {
         ArrayList<Integer> createPermBooks = null;
         HashMap<Integer, String> createPermBooksInfo = null;
         if (bookId == 0) {
-            List inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
+            List<ScrRegStateByLanguage> inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
             boolean canCreate = false;
             createPermBooks = new ArrayList<Integer>();
             createPermBooksInfo = new HashMap<Integer, String>();
@@ -205,8 +206,7 @@ public class DistributionUseCase {
                 createPermBooksInfo.put(id, name);
             }
         }
-        List archidFdr = null;
-        ScrDistreg distReg2 = null;
+        List<ScrDistreg> archidFdr = null;
         Object result = null;
         int maxResults = Integer.parseInt(Configurator.getInstance().getProperty("/ISicres-Configuration/ISicres-DesktopWeb/DefaultPageDistributionMinutaSize"));
         Integer launchDistOutRegister = new Integer(BookSession.invesicresConf((String)useCaseConf.getEntidadId()).getDistSRegister());
@@ -236,7 +236,7 @@ public class DistributionUseCase {
         ArrayList<Integer> createPermBooks = null;
         HashMap<Integer, String> createPermBooksInfo = null;
         if (bookId == 0) {
-            List inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
+            List<ScrRegStateByLanguage> inList = BookSession.getInBooks((String)useCaseConf.getSessionID(), (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
             boolean canCreate = false;
             createPermBooks = new ArrayList<Integer>();
             createPermBooksInfo = new HashMap<Integer, String>();
@@ -250,8 +250,7 @@ public class DistributionUseCase {
                 createPermBooksInfo.put(id, name);
             }
         }
-        List archidFdr = null;
-        ScrDistreg distReg2 = null;
+        List<ScrDistreg> archidFdr = null;
         Object result = null;
         int maxResults = Integer.parseInt(Configurator.getInstance().getProperty("/ISicres-Configuration/ISicres-DesktopWeb/DefaultPageDistributionMinutaSize"));
         Integer launchDistOutRegister = new Integer(BookSession.invesicresConf((String)useCaseConf.getEntidadId()).getDistSRegister());
@@ -287,8 +286,7 @@ public class DistributionUseCase {
     }
 
     public void rejectDistribution(UseCaseConf useCaseConf, List dis, int state, int firstRow, int typeDist, String remarks, String distWhere, String regWhere, String orderBy) throws ValidationException, DistributionException, SessionException, BookException {
-        List archidFdr = new ArrayList();
-        ScrDistreg distReg2 = null;
+        List<ScrDistreg> archidFdr = new ArrayList();
         int maxResults = Integer.parseInt(Configurator.getInstance().getProperty("/ISicres-Configuration/ISicres-DesktopWeb/DefaultPageDistributionMinutaSize"));
         try {
             archidFdr = DistributionSession.rejectDistribution((String)useCaseConf.getSessionID(), (List)dis, (String)remarks, (int)state, (int)firstRow, (int)maxResults, (int)typeDist, (String)distWhere, (String)regWhere, (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId(), (boolean)useCaseConf.getUseLdap(), (String)orderBy);
@@ -301,8 +299,7 @@ public class DistributionUseCase {
     }
 
     public void saveDistribution(UseCaseConf useCaseConf, List dis, int state, int firstRow, int typeDist, String distWhere, String regWhere, String orderBy, String remarks) throws ValidationException, DistributionException, SessionException, BookException {
-        List archidFdr = new ArrayList();
-        ScrDistreg distReg2 = null;
+        List<ScrDistreg> archidFdr = new ArrayList();
         int maxResults = Integer.parseInt(Configurator.getInstance().getProperty("/ISicres-Configuration/ISicres-DesktopWeb/DefaultPageDistributionMinutaSize"));
         try {
             archidFdr = DistributionSession.saveDistribution((String)useCaseConf.getSessionID(), (List)dis, (int)state, (int)firstRow, (int)maxResults, (int)typeDist, (String)distWhere, (String)regWhere, (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId(), (boolean)useCaseConf.getUseLdap(), (String)orderBy, (String)remarks);
@@ -320,8 +317,7 @@ public class DistributionUseCase {
         DistributionSession.changeDistribution((String)useCaseConf.getSessionID(), (List)dis, (String)code, (int)typeDist, (Integer)launchDistOutRegister, (Integer)canDestWithoutList, (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId(), (boolean)useCaseConf.getUseLdap());
     }
 
-    public String createDistribution(UseCaseConf useCaseConf, Integer bookId, List listIdsRegister, Integer userType, Integer userId, String messageForUser) throws BookException, DistributionException, ValidationException, SessionException {
-        Integer folderID2 = null;
+    public String createDistribution(UseCaseConf useCaseConf, Integer bookId, List<Integer> listIdsRegister, Integer userType, Integer userId, String messageForUser) throws BookException, DistributionException, ValidationException, SessionException {
         try {
             String string = DistributionSession.createDistribution((String)useCaseConf.getSessionID(), (Integer)bookId, (List)listIdsRegister, (Integer)userType, (Integer)userId, (String)messageForUser, (Locale)useCaseConf.getLocale(), (String)useCaseConf.getEntidadId());
             return string;
@@ -334,8 +330,7 @@ public class DistributionUseCase {
     }
 
     public String saveRemarks(UseCaseConf useCaseConf, int id, String remarks) throws ValidationException, DistributionException, SessionException, BookException {
-        List archidFdr = new ArrayList();
-        ScrDistreg distReg2 = null;
+        List<ScrDistreg> archidFdr = new ArrayList();
         try {
             String xml;
             archidFdr = DistributionSession.saveRemarks((String)useCaseConf.getSessionID(), (int)id, (String)remarks, (String)useCaseConf.getEntidadId());
@@ -453,7 +448,7 @@ public class DistributionUseCase {
         return result;
     }
 
-    private String getWhere(String fieldName, Integer type, String operator, String value, Map operators, Locale locale, String dataBaseType) throws Exception {
+    private String getWhere(String fieldName, Integer type, String operator, String value, Map<String,String> operators, Locale locale, String dataBaseType) throws Exception {
         String conversionOperator = null;
         StringBuffer buffer = new StringBuffer();
         for (String key : operators.keySet()) {
@@ -807,7 +802,8 @@ public class DistributionUseCase {
         TreeMap treemap = new TreeMap(new XMLDistributionList.IntegerComparator());
         treemap.putAll(distributionResults.getResults());
         ArrayList<ScrDistRegResults> listScrDistRegResults = new ArrayList<ScrDistRegResults>();
-        for (Integer distId : treemap.keySet()) {
+	for (Iterator it03 = treemap.keySet().iterator(); it03.hasNext();) {
+	    Integer distId=(Integer) it03.next();
             Map aux = (Map)treemap.get(distId);
             if (aux == null || aux.size() <= 0) continue;
             String id = (String)aux.keySet().iterator().next();

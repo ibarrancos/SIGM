@@ -52,7 +52,7 @@ implements ServicioInicializacionDirectorioComun {
             logger.debug("Relaciones entre las oficinas y las unid. org\u00e1nicas inicializados");
         }
         EstadoActualizacionDcoVO estadoActualizacion = this.getDataEstadoActualizacionDCO();
-        this.getEstadoActualizacionDCOManager().save((Object)estadoActualizacion);
+        this.getEstadoActualizacionDCOManager().save(estadoActualizacion);
         if (logger.isDebugEnabled()) {
             logger.debug("EstadoActualizacion inicializados");
             logger.debug("Finalizada la inicializaci\u00f3n del sistema");

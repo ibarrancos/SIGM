@@ -15,6 +15,7 @@ import es.ieci.tecdoc.isicres.admin.base.dbex.DynamicTable;
 import es.ieci.tecdoc.isicres.admin.beans.Transporte;
 import es.ieci.tecdoc.isicres.admin.beans.Transportes;
 import es.ieci.tecdoc.isicres.admin.core.exception.ISicresAdminDAOException;
+import es.ieci.tecdoc.isicres.admin.core.UtilsBD;
 
 public class SicresTransporteDatos extends Transporte {
 	private static Logger logger = Logger.getLogger(SicresTransporteDatos.class);

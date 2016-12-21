@@ -1296,18 +1296,18 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 					&& (data.getOldAttributeValue("fld8") != null)) {
 
 				String destinoOldAttributeValue = data.getOldAttributeValueAsString("fld8");
-				scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoOldAttributeValue));
+				scrorg = (ScrOrg)session.load((Class)ScrOrg.class, new Integer(destinoOldAttributeValue));
 			} else {
 				String destinoNewAttributeValue = data.getNewAttributeValueAsString("fld8");
 				if (!data.isCreate() && data.getAxsfOld() != null) {
 					String destinoOldAttributeValue = data.getOldAttributeValueAsString("fld8");
 					if (StringUtils.isNotEmpty( destinoOldAttributeValue )) {
-						scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoOldAttributeValue));
+						scrorg = (ScrOrg)session.load((Class)ScrOrg.class, new Integer(destinoOldAttributeValue));
 					} else if (StringUtils.isNotEmpty((String)destinoNewAttributeValue)) {
-						scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoNewAttributeValue));
+						scrorg = (ScrOrg)session.load((Class)ScrOrg.class, new Integer(destinoNewAttributeValue));
 					}
 				} else if (StringUtils.isNotEmpty((String)destinoNewAttributeValue)) {
-					scrorg = (ScrOrg)session.load((Class)ScrOrg.class, (Serializable)new Integer(destinoNewAttributeValue));
+					scrorg = (ScrOrg)session.load((Class)ScrOrg.class, new Integer(destinoNewAttributeValue));
 				}
 			}
 

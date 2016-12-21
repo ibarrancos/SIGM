@@ -382,14 +382,15 @@ public class DistributionSessionUtil extends UtilsSession {
 		} else {
 			selectCount.append(finalWhere);
 		}
+
+		int distributionCount = DBEntityDAOFactory.getCurrentDBEntityDAO()
+				.getDistributionSize(selectCount.toString(), entidad);
+
 		if (log.isDebugEnabled()) {
 			StringBuffer sb = new StringBuffer();
 			sb.append("getDistributionCount distributionCount: ").append(distributionCount);
 			log.debug((Object)sb.toString());
 		}
-		int distributionCount = DBEntityDAOFactory.getCurrentDBEntityDAO()
-				.getDistributionSize(selectCount.toString(), entidad);
-
 		return distributionCount;
 	}
 
@@ -453,7 +454,7 @@ public class DistributionSessionUtil extends UtilsSession {
 		return distributionResults;
 	}
 
-	protected static DistributionResults getDistributionResultsOrderBy(Session session, List list, int distributionCount, Date currentDate, int typeDist, Locale locale, String entidad, boolean isLdap) throws HibernateException {
+	protected static DistributionResults getDistributionResultsOrderBy(Session session, List<ScrDistreg> list, int distributionCount, Date currentDate, int typeDist, Locale locale, String entidad, boolean isLdap) throws HibernateException {
 	    DistributionResults distributionResults = new DistributionResults();
 	    distributionResults.setTotalSize(distributionCount);
 	    distributionResults.setActualDate(currentDate);
@@ -472,7 +473,7 @@ public class DistributionSessionUtil extends UtilsSession {
 	                distributionResults.getBooks().add("" + distReg.getIdArch() + "_" + distReg.getIdFdr());
 	                Integer auxID = new Integer(distReg.getIdArch());
 	                if (distributionResults.getIdocarchhdr().containsKey(auxID)) continue;
-	                distributionResults.getIdocarchhdr().put(auxID, session.load(EntityByLanguage.getIdocarchhdrLanguage((String)locale.getLanguage()), (Serializable)auxID));
+	                distributionResults.getIdocarchhdr().put(auxID, session.load(EntityByLanguage.getIdocarchhdrLanguage((String)locale.getLanguage()), auxID));
 	                continue;
 	            }
 	            result.remove(positionElement);
@@ -2679,7 +2680,7 @@ public class DistributionSessionUtil extends UtilsSession {
 		return result;
 	}
 
-	protected static void insertDestinoActualChangeDistribution(String sessionID, String entidad, boolean isLdap, List scrs) throws ValidationException, DistributionException {
+	protected static void insertDestinoActualChangeDistribution(String sessionID, String entidad, boolean isLdap, List<ScrDistreg> scrs) throws ValidationException, DistributionException {
 	    Validator.validate_String_NotNull_LengthMayorZero((String)sessionID, (String)"session");
 	    Transaction tran = null;
 	    try {
@@ -2703,9 +2704,8 @@ public class DistributionSessionUtil extends UtilsSession {
 	}
 	private static void insertDestActualRedistribution(String entidad, boolean isLdap, Integer idDistribucion, Session session) throws HibernateException, SQLException, Exception {
 	    StringBuffer listadoDestinos = new StringBuffer();
-	    List list = ISicresQueries.getScrDistregByIdDistFather((Session)session, (int)idDistribucion);
+	    List<ScrDistreg> list = ISicresQueries.getScrDistregByIdDistFather((Session)session, (int)idDistribucion);
 	    if (!(list == null || list.isEmpty())) {
-	        ScrDistreg distReg2 = null;
 	        for (ScrDistreg distReg2 : list) {
 	            if (StringUtils.isNotEmpty((String)listadoDestinos.toString())) {
 	                listadoDestinos.append("\n");
